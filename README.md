@@ -11,4 +11,5 @@ Online class planner for Umass Amherst students.
   <li>Exporting to spire</li>
   <li>Calendar integration</li>
 </ol>
+
 </p>
