@@ -19,8 +19,10 @@
     padding: 0;
     font-size: .7rem;
 }
-
 .input-group{
     padding-top: .8rem;
     padding-right: 0;
+}
+.search-container{
+    padding-top: .8rem;
 }
