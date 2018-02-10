@@ -1,6 +1,9 @@
 .bg-umass{
     background-color: #881c1c;
 }
+.bg-umass-lite{
+    background-color: #a92323;
+}
 .navbar-dark .navbar-nav .nav-link {
     color: rgba(255, 255, 255, .7);
 }
@@ -8,4 +11,11 @@
     border-radius: .5rem;
     background-color: #a92323;
     outline: none;
+}
+.footer-text{
+    color: #ffff;
+    text-align: right;
+    margin: 0; 
+    padding: 0;
+    font-size: .7rem;
 }
