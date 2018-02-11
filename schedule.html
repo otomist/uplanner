@@ -63,9 +63,12 @@
 
       <!-- Begin Search Column -->
       <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 bg-light">
+        <button type="button" class="btn btn-secondary btn-sm" id="searchToggleBTN">
+            <span>Toggle Search Criteria</span>
+        </button>
 
         <!-- Begin Course Number Radios -->
-        <div class="search-container">
+        <div class="search-container search-toggle">
           <label class="label label-default">
             Course Number:
           </label>
@@ -86,7 +89,7 @@
         <!-- End Course Number Radios-->
 
         <!-- Begin Days to include Checkboxes -->
-        <div class="search-container">
+        <div class="search-container search-toggle">
           <label class="label label-default">
             Weekdays to include:
           </label>
@@ -114,7 +117,7 @@
         <!-- End Days-to-include Checkboxes -->
 
         <!-- Begin Start Search Button -->
-        <button class="btn btn-primary btn-md" type="button">Start Search</button>
+        <button class="btn btn-primary btn-md search-toggle" type="button">Start Search</button>
         <!-- End Start Search Button -->
 
       </div>
@@ -140,6 +143,8 @@
     crossorigin="anonymous"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
     crossorigin="anonymous"></script>
+  <!-- Our javascript -->
+  <script src="scripts.js"></script>
 </body>
 
 </html>
