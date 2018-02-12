@@ -78,7 +78,7 @@
         </thead>
         <tbody>
           <tr>
-            <td>Parallel Algorithm and Architecture</td>
+            <td id="testest">Parallel Algorithm and Architecture</td>
             <td>CS711</td>
             <td>10:00 TuTh</td>
             <td>CS Room 151</td>
@@ -131,8 +131,6 @@
           </tr>
           <tr>
             <td colspan="5">
-              <button type="button" class="btn-primary">Add Course</button>
-              <button type="button" class="btn-info">Edit Course</button>
               <button type="button" class="btn-danger">Remove Course</button>
             </td>
           </tr>
@@ -204,14 +202,69 @@
             </div>
           </div>
         </div>
-        <!-- End Days-to-include Checkboxes -->
-
         <!-- Begin Start Search Button -->
         <button class="btn btn-primary btn-sm search-toggle" type="button">Start Search</button>
         <!-- End Start Search Button -->
+        <!-- End Days-to-include Checkboxes -->
 
+
+        <!-- Start add new course -->
+        <div>
+          <h6 class="search-toggle">Add New Course: </h6>
+          <div class="row">
+              
+              
+            <!-- Begin Days to include Checkboxes -->
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 bg-light">
+              <div class="search-container search-toggle">
+                <input class="rounded" type="text" placeholder="Course Name">
+                <input class="rounded" type="text" placeholder="Course Number">
+                <label class="label label-default">
+                  Weekdays to include:
+                </label>
+                <!-- Begin actual checkboxes -->
+                <div class="checkbox">
+                  <label>
+                    <input type="checkbox" value=""> Monday</label>
+                </div>
+                <div class="checkbox">
+                  <label>
+                    <input type="checkbox" value=""> Tuesday</label>
+                </div>
+                <div class="checkbox disabled">
+                  <label>
+                    <input type="checkbox" value=""> Wednesday</label>
+                </div>
+                <div class="checkbox">
+                  <label>
+                    <input type="checkbox" value=""> Thursday</label>
+                </div>
+                <div class="checkbox">
+                  <label>
+                    <input type="checkbox" value=""> Friday</label>
+                </div>
+                <!-- End Actual Checkboxes -->
+  
+              </div>
+            </div>
+
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 bg-light">
+              <div class="search-container search-toggle">
+                <input class="rounded" type="text" placeholder="Course Location">
+                <input class="rounded" type="time" placeholder="Course Time">
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Begin Add Course Button -->
+          <button class="btn btn-info btn-sm" type="button">Add Course</button>
+          <!-- End Add Course Button -->
+        </div>
+        <!-- End add new course -->
       </div>
       <!-- End Search Column -->
+      
     </div>
     <!-- End table -->
   </div>
