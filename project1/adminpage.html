@@ -57,9 +57,156 @@
     <span class="footer-text">Spectale</span>
     <span class="footer-text">copyright © 2018</span>
   </nav>
-  <!-- End footer -->
+  <!-- End Footer -->
 
+  <!-- Container -->
+  <div class="container-fluid">
+    <div>
+      <h4>Hello Joseph!</h4>
+    </div>
+    <!-- Start table -->
+    <div class="row">
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th>Course Name</th>
+            <th>Course Number</th>
+            <th>Course Schedule</th>
+            <th>Location</th>
+            <th>Option</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Parallel Algorithm and Architecture</td>
+            <td>CS711</td>
+            <td>10:00 TuTh</td>
+            <td>CS Room 151</td>
+            <td>
+              <div class="checkbox">
+                <label><input type="checkbox" value=""></label>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>Intro to Computation</td>
+            <td>CS250</td>
+            <td>1:25 MWF</td>
+            <td>Thompson 104</td>
+            <td>
+                <div class="checkbox">
+                  <label><input type="checkbox" value=""></label>
+                </div>
+              </td>
+          </tr>
+          <tr>
+            <td>Web Programming</td>
+            <td>CS326</td>
+            <td>4:00 TuThu</td>
+            <td>Lgrc 220</td>
+            <td>
+                <div class="checkbox">
+                  <label><input type="checkbox" value=""></label>
+                </div>
+              </td>
+          </tr>
+          <tr>
+            <td>Data Structure</td>
+            <td>CS187</td>
+            <td>1:25 MWF</td>
+            <td>ILC211</td>
+            <td>
+                <div class="checkbox">
+                  <label><input type="checkbox" value=""></label>
+                </div>
+              </td>
+          </tr>
+          <tr>
+            <td colspan="5">
+              <button type="button" class="btn-primary">Add Course</button>
+              <button type="button" class="btn-info">Edit Course</button>
+              <button type="button" class="btn-danger">Remove Course</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      
+      <!-- Begin Search Column -->
+      <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 bg-light" style="padding-top:1em;height:20%;">
+        <!-- Begin Course Number Radios -->
+        <h6 class="search-toggle">Search filters: </h6>
+        <div class="row">
+          <div class="col-lg-6 col-md-4 col-sm-6 col-xs-6 bg-light">
+            <div class="search-container search-toggle">
+              <label class="label label-default">
+                Course Number:
+              </label>
+              <div class="radio">
+                <label>
+                  <input type="radio" name="optradio"> is exactly</label>
+              </div>
+              <div class="radio">
+                <label>
+                  <input type="radio" name="optradio"> greater than or equal to</label>
+              </div>
+              <div class="radio">
+                <label>
+                  <input type="radio" name="optradio"> begins with</label>
+              </div>
+              <div class="radio">
+                  <label>
+                    <input type="radio" name="optradio"> contains</label>
+                </div>
+              <input class="rounded" type="text" placeholder="Course Number">
+            </div>
+          </div>
+          <!-- End Course Number Radios-->
 
+          <!-- Begin Days to include Checkboxes -->
+          <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 bg-light">
+            <div class="search-container search-toggle">
+              <label class="label label-default">
+                Weekdays to include:
+              </label>
+
+              <!-- Begin actual checkboxes -->
+              <div class="checkbox">
+                <label>
+                  <input type="checkbox" value=""> Monday</label>
+              </div>
+              <div class="checkbox">
+                <label>
+                  <input type="checkbox" value=""> Tuesday</label>
+              </div>
+              <div class="checkbox disabled">
+                <label>
+                  <input type="checkbox" value=""> Wednesday</label>
+              </div>
+              <div class="checkbox">
+                <label>
+                  <input type="checkbox" value=""> Thursday</label>
+              </div>
+              <div class="checkbox">
+                <label>
+                  <input type="checkbox" value=""> Friday</label>
+              </div>
+              <!-- End Actual Checkboxes -->
+
+            </div>
+          </div>
+        </div>
+        <!-- End Days-to-include Checkboxes -->
+
+        <!-- Begin Start Search Button -->
+        <button class="btn btn-primary btn-sm search-toggle" type="button">Start Search</button>
+        <!-- End Start Search Button -->
+
+      </div>
+      <!-- End Search Column -->
+    </div>
+    <!-- End table -->
+  </div>
+  <!-- End of Container -->
 
 
   <!-- Optional JavaScript -->
