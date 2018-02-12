@@ -64,62 +64,98 @@
       <!-- Begin Search Column -->
       <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 bg-light">
         <button type="button" class="btn btn-secondary btn-sm" id="searchToggleBTN">
-            <span>Toggle Search Criteria</span>
+          <span>Toggle filters</span>
         </button>
 
         <!-- Begin Course Number Radios -->
-        <div class="search-container search-toggle">
-          <label class="label label-default">
-            Course Number:
-          </label>
-          <div class="radio">
-            <label>
-              <input type="radio" name="optradio">is exactly</label>
+        <h6 class="search-toggle">Search filters: </h6>
+        <div class="row">
+          <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 bg-light">
+            <div class="search-container search-toggle">
+              <label class="label label-default">
+                Course Number:
+              </label>
+              <div class="radio">
+                <label>
+                  <input type="radio" name="optradio"> is exactly</label>
+              </div>
+              <div class="radio">
+                <label>
+                  <input type="radio" name="optradio"> greater than or equal to</label>
+              </div>
+              <div class="radio">
+                <label>
+                  <input type="radio" name="optradio"> begins with</label>
+              </div>
+              <div class="radio">
+                  <label>
+                    <input type="radio" name="optradio"> contains</label>
+                </div>
+              <input class="rounded" type="text" placeholder="Course Number">
+            </div>
           </div>
-          <div class="radio">
-            <label>
-              <input type="radio" name="optradio">greater than or equal to</label>
-          </div>
-          <div class="radio disabled">
-            <label>
-              <input type="radio" name="optradio">begins with</label>
-          </div>
-          <input class="rounded" type="text" placeholder="Course Number">
-        </div>
-        <!-- End Course Number Radios-->
+          <!-- End Course Number Radios-->
 
-        <!-- Begin Days to include Checkboxes -->
-        <div class="search-container search-toggle">
-          <label class="label label-default">
-            Weekdays to include:
-          </label>
-          <div class="checkbox">
-            <label>
-              <input type="checkbox" value="">Monday</label>
-          </div>
-          <div class="checkbox">
-            <label>
-              <input type="checkbox" value="">Tuesday</label>
-          </div>
-          <div class="checkbox disabled">
-            <label>
-              <input type="checkbox" value="">Wednesday</label>
-          </div>
-          <div class="checkbox">
-            <label>
-              <input type="checkbox" value="">Thursday</label>
-          </div>
-          <div class="checkbox">
-            <label>
-              <input type="checkbox" value="">Friday</label>
+          <!-- Begin Days to include Checkboxes -->
+          <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 bg-light">
+            <div class="search-container search-toggle">
+              <label class="label label-default">
+                Weekdays to include:
+              </label>
+
+              <!-- Begin actual checkboxes -->
+              <div class="checkbox">
+                <label>
+                  <input type="checkbox" value=""> Monday</label>
+              </div>
+              <div class="checkbox">
+                <label>
+                  <input type="checkbox" value=""> Tuesday</label>
+              </div>
+              <div class="checkbox disabled">
+                <label>
+                  <input type="checkbox" value=""> Wednesday</label>
+              </div>
+              <div class="checkbox">
+                <label>
+                  <input type="checkbox" value=""> Thursday</label>
+              </div>
+              <div class="checkbox">
+                <label>
+                  <input type="checkbox" value=""> Friday</label>
+              </div>
+              <!-- End Actual Checkboxes -->
+
+            </div>
           </div>
         </div>
         <!-- End Days-to-include Checkboxes -->
 
         <!-- Begin Start Search Button -->
-        <button class="btn btn-primary btn-md search-toggle" type="button">Start Search</button>
+        <button class="btn btn-primary btn-sm search-toggle" type="button">Start Search</button>
         <!-- End Start Search Button -->
 
+        <!-- Begin Search Results -->
+        <div clas="container-fluid">
+          <h6>Results: </h6>
+          <ul>
+            <li>COMPSCI 121 MWF</li>
+            <li>COMPSCI 121 TuTh</li>
+            <li>COMPSCI 187 MWF</li>
+            <li>COMPSCI 187 TuTh</li>
+            <li>COMPSCI 220 MWF</li>
+            <li>COMPSCI 230 TuTh</li>
+            <li>COMPSCI 240 MWF</li>
+            <li>COMPSCI 250 TuTh</li>
+            <li>COMPSCI 311 MWF</li>
+            <li>COMPSCI 326 TuTh</li>
+            <li>COMPSCI 345 Mon</li>
+            <li>COMPSCI 377 TuTh</li>
+            <li>COMPSCI 453 TuTh</li>
+            <li>COMPSCI 445 MWF</li>
+          </ul>
+        </div>
+        <!-- End Search Results -->
       </div>
       <!-- End Search Column -->
 
