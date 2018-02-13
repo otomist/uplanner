@@ -53,3 +53,11 @@ h6{
 h4{
     padding:0.5em;
 }
+#flowchartplaceholder{
+    background-image:url("fchartPlacehold.png");
+    position: absolute;
+    background-position: center top;
+    background-repeat: no-repeat;
+    height: 75%;
+    width:100%;
+}
