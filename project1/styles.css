@@ -2,6 +2,17 @@ body{
     /* Padding so that the footer doesn't block anything */
     margin-bottom: 35px;
 }
+#landing{
+    background-image: url("grad_landing.jpeg");
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
+    background-size: cover;
+}
+.jumbotron{
+    background: none;
+    color: white;
+}
 .bg-umass{
     background-color: #881c1c;
 }
