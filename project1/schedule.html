@@ -88,9 +88,9 @@
                   <input type="radio" name="optradio"> begins with</label>
               </div>
               <div class="radio">
-                  <label>
-                    <input type="radio" name="optradio"> contains</label>
-                </div>
+                <label>
+                  <input type="radio" name="optradio"> contains</label>
+              </div>
               <input class="rounded" type="text" placeholder="Course Number">
             </div>
           </div>
@@ -136,23 +136,121 @@
         <!-- End Start Search Button -->
 
         <!-- Begin Search Results -->
-        <div clas="container-fluid">
+        <div class="container-fluid">
           <h6>Results: </h6>
-          <ul>
-            <li>COMPSCI 121 MWF 1:00pm-1:50pm</li>
-            <li>COMPSCI 121 TuTh 10:00am-11:15am</li>
-            <li>COMPSCI 187 MWF 9:00am-9:50am</li>
-            <li>COMPSCI 187 TuTh 1:00pm-2:15pm</li>
-            <li>COMPSCI 220 MWF 1:00pm-1:50pm</li>
-            <li>COMPSCI 230 TuTh 2:30pm-3:45pm</li>
-            <li>COMPSCI 240 MWF 1:00pm-1:50pm</li>
-            <li>COMPSCI 250 TuTh 2:30pm-3:45pm</li>
-            <li>COMPSCI 311 MWF 1:00pm-1:50pm</li>
-            <li>COMPSCI 326 TuTh 4:00pm-5:15pm</li>
-            <li>COMPSCI 345 Mon 10:10am-12:00pm</li>
-            <li>COMPSCI 377 TuTh 4:00pm-5:15pm</li>
-            <li>COMPSCI 453 TuTh 2:30pm-3:45pm</li>
-            <li>COMPSCI 445 MWF 1:00pm-1:50pm</li>
+          <ul class="list-group fixed-panel">
+            <li class="list-group-item">
+              <button class="btn btn-info btn-xs btn-results">+</button>COMPSCI 121 MWF 1:00pm-1:50pm
+              <p class="result-details">Prof: Tim Richards</p>
+              <p class="result-details">Lab Required: No</p>
+              <p class="result-details">Location: ILC N151</p>
+              <p class="result-details">Description: This course will is required to obtain a CS degree blah blah blah intro to java.</p>
+              <p class="result-details">Required courses: None</p>
+            </li>
+            <li class="list-group-item">
+              <button class="btn btn-info btn-xs btn-results">+</button>COMPSCI 121 TuTh 10:00am-11:15am
+              <p class="result-details">Prof: Tim Richards</p>
+              <p class="result-details">Lab Required: No</p>
+              <p class="result-details">Location: ILC N151</p>
+              <p class="result-details">Description: This course will is required to obtain a CS degree blah blah blah intro to java.</p>
+              <p class="result-details">Required courses: None</p>
+            </li>
+            <li class="list-group-item">
+              <button class="btn btn-info btn-xs btn-results">+</button>COMPSCI 187 MWF 9:00am-9:50am
+              <p class="result-details">Prof: Tim Richards</p>
+              <p class="result-details">Lab Required: No</p>
+              <p class="result-details">Location: ILC N151</p>
+              <p class="result-details">Description: This course will is required to obtain a CS degree blah blah blah intro to java.</p>
+              <p class="result-details">Required courses: None</p>
+            </li>
+            <li class="list-group-item">
+              <button class="btn btn-info btn-xs btn-results">+</button>COMPSCI 187 TuTh 1:00pm-2:15pm
+              <p class="result-details">Prof: Tim Richards</p>
+              <p class="result-details">Lab Required: No</p>
+              <p class="result-details">Location: ILC N151</p>
+              <p class="result-details">Description: This course will is required to obtain a CS degree blah blah blah intro to java.</p>
+              <p class="result-details">Required courses: None</p>
+            </li>
+            <li class="list-group-item">
+              <button class="btn btn-info btn-xs btn-results">+</button>COMPSCI 220 MWF 1:00pm-1:50pm
+              <p class="result-details">Prof: Tim Richards</p>
+              <p class="result-details">Lab Required: No</p>
+              <p class="result-details">Location: ILC N151</p>
+              <p class="result-details">Description: This course will is required to obtain a CS degree blah blah blah intro to java.</p>
+              <p class="result-details">Required courses: None</p>
+            </li>
+            <li class="list-group-item">
+              <button class="btn btn-info btn-xs btn-results">+</button>COMPSCI 230 TuTh 2:30pm-3:45pm
+              <p class="result-details">Prof: Tim Richards</p>
+              <p class="result-details">Lab Required: No</p>
+              <p class="result-details">Location: ILC N151</p>
+              <p class="result-details">Description: This course will is required to obtain a CS degree blah blah blah intro to java.</p>
+              <p class="result-details">Required courses: None</p>
+            </li>
+            <li class="list-group-item">
+              <button class="btn btn-info btn-xs btn-results">+</button>COMPSCI 240 MWF 1:00pm-1:50pm
+              <p class="result-details">Prof: Tim Richards</p>
+              <p class="result-details">Lab Required: No</p>
+              <p class="result-details">Location: ILC N151</p>
+              <p class="result-details">Description: This course will is required to obtain a CS degree blah blah blah intro to java.</p>
+              <p class="result-details">Required courses: None</p>
+            </li>
+            <li class="list-group-item">
+              <button class="btn btn-info btn-xs btn-results">+</button>COMPSCI 250 TuTh 2:30pm-3:45pm
+              <p class="result-details">Prof: Tim Richards</p>
+              <p class="result-details">Lab Required: No</p>
+              <p class="result-details">Location: ILC N151</p>
+              <p class="result-details">Description: This course will is required to obtain a CS degree blah blah blah intro to java.</p>
+              <p class="result-details">Required courses: None</p>
+            </li>
+            <li class="list-group-item">
+              <button class="btn btn-info btn-xs btn-results">+</button>COMPSCI 311 MWF 1:00pm-1:50pm
+              <p class="result-details">Prof: Tim Richards</p>
+              <p class="result-details">Lab Required: No</p>
+              <p class="result-details">Location: ILC N151</p>
+              <p class="result-details">Description: This course will is required to obtain a CS degree blah blah blah intro to java.</p>
+              <p class="result-details">Required courses: None</p>
+            </li>
+            <li class="list-group-item">
+              <button class="btn btn-info btn-xs btn-results">+</button>COMPSCI 326 TuTh 4:00pm-5:15pm
+              <p class="result-details">Prof: Tim Richards</p>
+              <p class="result-details">Lab Required: No</p>
+              <p class="result-details">Location: ILC N151</p>
+              <p class="result-details">Description: This course will is required to obtain a CS degree blah blah blah intro to java.</p>
+              <p class="result-details">Required courses: None</p>
+            </li>
+            <li class="list-group-item">
+              <button class="btn btn-info btn-xs btn-results">+</button>COMPSCI 345 Mon 10:10am-12:00pm
+              <p class="result-details">Prof: Tim Richards</p>
+              <p class="result-details">Lab Required: No</p>
+              <p class="result-details">Location: ILC N151</p>
+              <p class="result-details">Description: This course will is required to obtain a CS degree blah blah blah intro to java.</p>
+              <p class="result-details">Required courses: None</p>
+            </li>
+            <li class="list-group-item">
+              <button class="btn btn-info btn-xs btn-results">+</button>COMPSCI 377 TuTh 4:00pm-5:15pm
+              <p class="result-details">Prof: Tim Richards</p>
+              <p class="result-details">Lab Required: No</p>
+              <p class="result-details">Location: ILC N151</p>
+              <p class="result-details">Description: This course will is required to obtain a CS degree blah blah blah intro to java.</p>
+              <p class="result-details">Required courses: None</p>
+            </li>
+            <li class="list-group-item">
+              <button class="btn btn-info btn-xs btn-results">+</button>COMPSCI 453 TuTh 2:30pm-3:45pm
+              <p class="result-details">Prof: Tim Richards</p>
+              <p class="result-details">Lab Required: No</p>
+              <p class="result-details">Location: ILC N151</p>
+              <p class="result-details">Description: This course will is required to obtain a CS degree blah blah blah intro to java.</p>
+              <p class="result-details">Required courses: None</p>
+            </li>
+            <li class="list-group-item">
+              <button class="btn btn-info btn-xs btn-results">+</button>COMPSCI 445 MWF 1:00pm-1:50pm
+              <p class="result-details">Prof: Tim Richards</p>
+              <p class="result-details">Lab Required: No</p>
+              <p class="result-details">Location: ILC N151</p>
+              <p class="result-details">Description: This course will is required to obtain a CS degree blah blah blah intro to java.</p>
+              <p class="result-details">Required courses: None</p>
+            </li>
           </ul>
         </div>
         <!-- End Search Results -->

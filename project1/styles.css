@@ -61,3 +61,19 @@ h4{
     height: 75%;
     width:100%;
 }
+.result-details{
+    display: none;
+}
+.btn-results{
+    margin: 0;
+    padding: 0;
+    line-height: 1;
+}
+.list-group-item{
+    font-size: .9rem;
+}
+.fixed-panel {
+    min-height: 25rem;
+    max-height: 25rem;
+    overflow-y: scroll;
+}
