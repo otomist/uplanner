@@ -59,14 +59,12 @@
   </nav>
   <!-- End Footer -->
 
-  <!-- Container -->
+  <!-- Start Container -->
   <div class="container-fluid">
-    <div>
-      <h4>Modify Database</h4>
-    </div>
+    <h4>Modify Database</h4>
     <!-- Start table -->
     <div class="row">
-      <table class="table table-hover">
+      <table class="table table-hover" id="admin-table">
         <thead>
           <tr>
             <th>Course Name</th>
@@ -78,7 +76,7 @@
         </thead>
         <tbody>
           <tr>
-            <td id="testest">Parallel Algorithm and Architecture</td>
+            <td>Parallel Algorithm and Architecture</td>
             <td>CS711</td>
             <td>10:00 TuTh</td>
             <td>CS Room 151</td>
@@ -201,19 +199,22 @@
 
             </div>
           </div>
+          <!-- End Days-to-include Checkboxes -->
         </div>
+
+
         <!-- Begin Start Search Button -->
         <button class="btn btn-primary btn-sm search-toggle" type="button">Start Search</button>
         <!-- End Start Search Button -->
-        <!-- End Days-to-include Checkboxes -->
+
 
 
         <!-- Start add new course -->
         <div>
           <h6 class="search-toggle">Add New Course: </h6>
           <div class="row">
-              
-              
+
+
             <!-- Begin Days to include Checkboxes -->
             <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 bg-light">
               <div class="search-container search-toggle">
@@ -244,9 +245,10 @@
                     <input type="checkbox" value=""> Friday</label>
                 </div>
                 <!-- End Actual Checkboxes -->
-  
+                
               </div>
             </div>
+             <!-- End Days-to-include Checkboxes -->
 
             <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 bg-light">
               <div class="search-container search-toggle">
@@ -260,11 +262,12 @@
           <!-- Begin Add Course Button -->
           <button class="btn btn-info btn-sm" type="button">Add Course</button>
           <!-- End Add Course Button -->
+
         </div>
         <!-- End add new course -->
       </div>
       <!-- End Search Column -->
-      
+
     </div>
     <!-- End table -->
   </div>
