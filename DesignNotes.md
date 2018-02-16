@@ -32,7 +32,13 @@ Maybe they should be added as "advanced settings", and be hidden by default?</p>
   <li>expand button (maybe in second line)</li>
 </ul>
 <ul>Line two:
+  <li>Days of the week</li>
+  <li>Meeting time</li>
   <li>"Add course" button; also indicates whether there is a conflict, and with what</li>
+  <li>Bookmark button</li>
+</ul>
+<ul>Expanded view:
+  <li>Has lab/discussion</li>
   <li>Course description</li>
   <li>Instructor</li>
   <li>Prerequisites (and whether they are met)</li>
