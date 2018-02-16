@@ -1,14 +1,12 @@
 <h1>Design Notes</h1>
 <h2>Search bar:</h2>
-<p>By default, a single line at top of search results containing:</p>
-<ul>
+<ul>By default, a single line at top of search results containing:
   <li>a keyword search bar</li>
   <li>a department selector (from dropdown list)</li>
   <li>a "search" button</li>
   <li>an "expand" button</li>
 </ul>
-<p>When expanded, further options appear:</p>
-<ul>
+<ul>When expanded, further options appear:
   <li>Show closed courses (check box)</li>
   <li>Show courses which conflict (check box - default on)</li>
   <li>Show courses with unmet requirements (check box - default on)</li>
@@ -24,4 +22,22 @@ Maybe they should be added as "advanced settings", and be hidden by default?</p>
   <li>Career - undergrad, etc</li>
   <li>Meeting time (start + end time)</li>
   <li>Academic term</li>
+</ul>
+
+<h2>Search Results:</h2>
+<p>I propose two lines per result, with subtle highlighting for every other result to distinguish them.</p>
+<ul>Line one:
+  <li>Course #</li>
+  <li>Course title</li>
+  <li>expand button (maybe)</li>
+</ul>
+<ul>Line two:
+  <li>"Add course" button; also indicates whether there is a conflict, and with what</li>
+  <li>Course description</li>
+  <li>Instructor</li>
+  <li>Prerequisites (and whether they are met)</li>
+  <li>enrolled students, cap students</li>
+  <li>waitlist enrolled/cap</li>
+  <li>gened categories (AT/U etc)</li>
+  <li># credits</li>
 </ul>
