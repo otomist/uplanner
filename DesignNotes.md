@@ -29,7 +29,7 @@ Maybe they should be added as "advanced settings", and be hidden by default?</p>
 <ul>Line one:
   <li>Course #</li>
   <li>Course title</li>
-  <li>expand button (maybe)</li>
+  <li>expand button (maybe in second line)</li>
 </ul>
 <ul>Line two:
   <li>"Add course" button; also indicates whether there is a conflict, and with what</li>
