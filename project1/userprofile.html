@@ -59,48 +59,60 @@
         <table class="table table-hover">
           <thead>
             <tr>
-              <th>Course Name</th>
+              <th colspan="2" style="font-size: 30px;  text-align: center;">Course Taken</th>
+            </tr>
+            <tr>
               <th>Course Number</th>
-              <th>Remove</th>
+              <th>Credits</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td>Introduction to Computer Science</td>
-              <td>CS121</td>
               <td>
-                <button class="btn btn-danger btn-sm">X</button>
+                <button class="btn btn-info btn-xs btn-results b1">+</button>COMPSCI 121
+                <p class="result-details r1" style="font-size: 14px">Introduction to Data Structures. More details later....</p>
+                
               </td>
+              <td>4 cr</td>
             </tr>
+
             <tr>
-              <td>Introduction to Data Structures</td>
-              <td>CS187</td>
               <td>
-                <button class="btn btn-danger btn-sm">X</button>
+                <button class="btn btn-info btn-xs btn-results b2">+</button>COMPSCI 220
+                <p class="result-details r2" style="font-size: 14px">Introduction to Programming Methodology</p>
+                
               </td>
+              <td>3 cr</td>
             </tr>
+
             <tr>
-              <td>Introduction to Programming Methodology</td>
-              <td>CS220</td>
               <td>
-                <button class="btn btn-danger btn-sm">X</button>
+                <button class="btn btn-info btn-xs btn-results b3">+</button>COMPSCI 250
+                <p class="result-details r3" style="font-size: 14px">Introduction to Computation</p>
+                
               </td>
+              <td>3 cr</td>
             </tr>
+
             <tr>
-              <td>Introduction to Computation</td>
-              <td>CS250</td>
               <td>
-                <button class="btn btn-danger btn-sm">X</button>
+                <button class="btn btn-info btn-xs btn-results b4">+</button>COMPSCI 230
+                <p class="result-details r4" style="font-size: 14px">Introduction to Computer Systems</p>
+                
               </td>
-            </tr>
-            <tr>
-              <td>Introduction to Computer Systems</td>
-              <td>CS230</td>
-              <td>
-                <button class="btn btn-danger btn-sm">X</button>
-              </td>
-            </tr>
+              <td>3 cr</td>
+
           </tbody>
+          <tfoot>
+            <tr>
+              <td>Total Credits:</td>
+              <td>12 cr</td>
+            </tr>
+            <tr>
+              <td>Credits need:</td>
+              <td>138 cr</td>
+            </tr>
+          </tfoot>
         </table>
         <label>Add Courses:</label>
         <input class="rounded" type="text" placeholder="Course Number">
@@ -111,14 +123,31 @@
       <!-- End Courses Taken Column -->
 
       <!-- Begin Profile Edit-->
-      <div class="col-lg-8 col-md-8 col-sm-6 col-xs-6 bg-light">
+      <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 bg-light">
         <div class="container">
-          <h5 class="text-center">Account Info</h5>
-          <div>
+          <h5 style="font-size: 30px; border-bottom: 40px;" class="text-center">Account Info</h5>
+          <div style="">
+            <p>&nbsp; </p>
+
+
+            <p><strong>Username: </strong>Tim Richard</p>
+            <p><strong>Email: </strong>CS326@umass.edu</p>
+            <p><strong>Major: </strong>Computer Science</p>
+            <p><strong>SID: </strong>111111111</p>
+
+
+          </div>
+          <div style="text-align: right;">
             <a href="#">Change Email</a>
           </div>
-          <div>
+          <div style="text-align: right;">
             <a href="#">Change Password</a>
+          </div>
+          <div style="text-align: right;">
+            <a href="#">Change Major</a>
+          </div>
+          <div style="text-align: right;">
+            <a href="#">Sign Out</a>
           </div>
 
         </div>
@@ -145,6 +174,8 @@
     crossorigin="anonymous"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
     crossorigin="anonymous"></script>
+  <script src="scripts.js"></script>
+
 </body>
 
 </html>
