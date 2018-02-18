@@ -14,7 +14,7 @@
   <link rel="stylesheet" href="styles.css">
 
   <!-- Title with Icon -->
-  <link rel="shortcut icon" href="favicon.ico">
+  <link rel="shortcut icon" href="res/favicon.ico">
 
   <title>Uplanner-Schedule</title>
 </head>
@@ -57,15 +57,26 @@
 
       <!-- Begin Schedule Column-->
       <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12 bg-light">
-        <img src="Schedule.png" id="schedulePlaceholder" class="img-fluid rounded">
+        <img src="res/Schedule.png" id="schedulePlaceholder" class="img-fluid rounded">
       </div>
       <!-- End Schedule Column-->
 
       <!-- Begin Search Column -->
       <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 bg-light">
-        <button type="button" class="btn btn-secondary btn-sm" id="searchToggleBTN">
-          <span>Toggle filters</span>
-        </button>
+        <!-- Begin row -->
+        <div class="row">
+          <button type="button" class="btn btn-secondary btn-sm" id="searchToggleBTN">
+            <img src="./res/expand.svg"></button>
+          </button>
+          <input type="text" placeholder="Search..">
+          <select>
+            <option value="">Choose a department...</option>
+            <option value="CSC">Computer Science</option>
+            <option value="MTH">Mathematics</option>
+            <option value="ECN">Economics</option>
+          </select>
+        </div>
+        <!-- End row -->
 
         <!-- Begin Course Number Radios -->
         <h6 class="search-toggle">Search filters: </h6>

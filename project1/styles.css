@@ -3,7 +3,7 @@ body{
     margin-bottom: 35px;
 }
 #landing{
-    background-image: url("grad_landing.jpeg");
+    background-image: url("res/grad_landing.jpeg");
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-position: center;
@@ -54,12 +54,17 @@ h4{
     padding:0.5em;
 }
 #flowchartplaceholder{
-    background-image:url("fchartPlacehold.png");
+    background-image:url("res/fchartPlacehold.png");
     position: absolute;
     background-position: center top;
     background-repeat: no-repeat;
     height: 75%;
     width:100%;
+}
+#searchToggleBTN img {
+    display: block;
+    height: 12px;  
+    width: 12px;
 }
 .result-details{
     display: none;
