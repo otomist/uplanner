@@ -63,7 +63,7 @@
 
       <!-- Begin Search Column -->
       <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 bg-light">
-        <!-- Begin row -->
+        <!-- Begin top search bar -->
         <div class="row">
           <button type="button" class="btn btn-secondary btn-sm" id="searchToggleBTN">
             <img src="./res/expand.svg"></button>
@@ -76,9 +76,8 @@
             <option value="ECN">Economics</option>
           </select>
         </div>
-        <!-- End row -->
+        <!-- End top search bar -->
 
-        <!-- Begin Course Number Radios -->
         <h6 class="search-toggle">Search filters: </h6>
         
         <!-- Begin misc options -->
@@ -108,69 +107,95 @@
         </div>
         <!-- End misc options -->
         
-        <div class="row">
-          <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 bg-light">
-            <div class="search-container search-toggle">
-              <label class="label label-default">
-                Course Number:
-              </label>
-              <div class="radio">
-                <label>
-                  <input type="radio" name="optradio"> is exactly</label>
-              </div>
-              <div class="radio">
-                <label>
-                  <input type="radio" name="optradio"> greater than or equal to</label>
-              </div>
-              <div class="radio">
-                <label>
-                  <input type="radio" name="optradio"> begins with</label>
-              </div>
-              <div class="radio">
-                <label>
-                  <input type="radio" name="optradio"> contains</label>
-              </div>
-              <input class="rounded" type="text" placeholder="Course Number">
+        <!-- Begin checkbox column options -->
+        <div class="row search-container search-toggle">
+          <!-- Begin weekdays checkboxes -->
+          <div class="col-sm-auto bg-light">
+            <label class="label label-default">
+              Weekdays to include:
+            </label>
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" value=""> Monday</label>
+            </div>
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" value=""> Tuesday</label>
+            </div>
+            <div class="checkbox disabled">
+              <label>
+                <input type="checkbox" value=""> Wednesday</label>
+            </div>
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" value=""> Thursday</label>
+            </div>
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" value=""> Friday</label>
             </div>
           </div>
-          <!-- End Course Number Radios-->
-
-          <!-- Begin Days to include Checkboxes -->
-          <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 bg-light">
-            <div class="search-container search-toggle">
-              <label class="label label-default">
-                Weekdays to include:
-              </label>
-
-              <!-- Begin actual checkboxes -->
-              <div class="checkbox">
-                <label>
-                  <input type="checkbox" value=""> Monday</label>
-              </div>
-              <div class="checkbox">
-                <label>
-                  <input type="checkbox" value=""> Tuesday</label>
-              </div>
-              <div class="checkbox disabled">
-                <label>
-                  <input type="checkbox" value=""> Wednesday</label>
-              </div>
-              <div class="checkbox">
-                <label>
-                  <input type="checkbox" value=""> Thursday</label>
-              </div>
-              <div class="checkbox">
-                <label>
-                  <input type="checkbox" value=""> Friday</label>
-              </div>
-              <!-- End Actual Checkboxes -->
-
+          <!-- End weekdays checkboxes -->
+          
+          <!-- Begin course level checkboxes -->
+          <div class="col-sm-auto bg-light">
+            <label class="label label-default">
+              Course levels to include:
+            </label>
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" value=""> 100</label>
+            </div>
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" value=""> 200</label>
+            </div>
+            <div class="checkbox disabled">
+              <label>
+                <input type="checkbox" value=""> 300</label>
+            </div>
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" value=""> 400</label>
+            </div>
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" value=""> 500+</label>
             </div>
           </div>
+          <!-- End coure level checkboxes -->
+          
+          <!-- Begin # credits checkboxes -->
+          <div class="col-sm-auto bg-light">
+            <label class="label label-default">
+              Course credits to include:
+            </label>
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" value=""> 1.0</label>
+            </div>
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" value=""> 2.0</label>
+            </div>
+            <div class="checkbox disabled">
+              <label>
+                <input type="checkbox" value=""> 3.0</label>
+            </div>
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" value=""> 4.0</label>
+            </div>
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" value=""> 5.0+</label>
+            </div>
+          </div>
+          <!-- End # credits checkboxes -->
         </div>
-        <!-- End Days-to-include Checkboxes -->
-
-        <!-- Begin Start Search Button -->
+        <!-- End checkbox column options -->
+        
+        <!-- Begin Start Search Button TODO: reconsider the positioning of this, or its necessity -->
         <button class="btn btn-primary btn-sm search-toggle" type="button">Start Search</button>
         <!-- End Start Search Button -->
 
