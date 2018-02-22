@@ -64,80 +64,82 @@
     <h4>Modify Database</h4>
     <!-- Start table -->
     <div class="row">
-      <table class="table table-hover" id="admin-table">
-        <thead>
-          <tr>
-            <th>Course Name</th>
-            <th>Course Number</th>
-            <th>Course Schedule</th>
-            <th>Location</th>
-            <th>Option</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Parallel Algorithm and Architecture</td>
-            <td>CS711</td>
-            <td>10:00 TuTh</td>
-            <td>CS Room 151</td>
-            <td>
-              <div class="checkbox">
-                <label>
-                  <input type="checkbox" value="">
-                </label>
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td>Intro to Computation</td>
-            <td>CS250</td>
-            <td>1:25 MWF</td>
-            <td>Thompson 104</td>
-            <td>
-              <div class="checkbox">
-                <label>
-                  <input type="checkbox" value="">
-                </label>
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td>Web Programming</td>
-            <td>CS326</td>
-            <td>4:00 TuThu</td>
-            <td>Lgrc 220</td>
-            <td>
-              <div class="checkbox">
-                <label>
-                  <input type="checkbox" value="">
-                </label>
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td>Data Structure</td>
-            <td>CS187</td>
-            <td>1:25 MWF</td>
-            <td>ILC211</td>
-            <td>
-              <div class="checkbox">
-                <label>
-                  <input type="checkbox" value="">
-                </label>
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td colspan="5">
-              <button type="button" class="btn-danger">Remove Course</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="col-lg-9 col-md-9 col-sm-12 col-xs-12 bg-light">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th>Course Name</th>
+              <th>Course Number</th>
+              <th>Course Schedule</th>
+              <th>Location</th>
+              <th>Option</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Parallel Algorithm and Architecture</td>
+              <td>CS711</td>
+              <td>10:00 TuTh</td>
+              <td>CS Room 151</td>
+              <td>
+                <div class="checkbox">
+                  <label>
+                    <input type="checkbox" value="">
+                  </label>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>Intro to Computation</td>
+              <td>CS250</td>
+              <td>1:25 MWF</td>
+              <td>Thompson 104</td>
+              <td>
+                <div class="checkbox">
+                  <label>
+                    <input type="checkbox" value="">
+                  </label>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>Web Programming</td>
+              <td>CS326</td>
+              <td>4:00 TuThu</td>
+              <td>Lgrc 220</td>
+              <td>
+                <div class="checkbox">
+                  <label>
+                    <input type="checkbox" value="">
+                  </label>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>Data Structure</td>
+              <td>CS187</td>
+              <td>1:25 MWF</td>
+              <td>ILC211</td>
+              <td>
+                <div class="checkbox">
+                  <label>
+                    <input type="checkbox" value="">
+                  </label>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <button type="button" class="btn-danger">Remove Course</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
       <!-- End Table -->
 
       <!-- Begin Search Column -->
-      <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 bg-light" style="padding-top:1em;height:20%;">
+      <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12 bg-light searchCol">
         <!-- Begin Course Number Radios -->
         <h6 class="search-toggle">Search filters: </h6>
         <div class="row">
@@ -207,13 +209,10 @@
         <button class="btn btn-primary btn-sm search-toggle" type="button">Start Search</button>
         <!-- End Start Search Button -->
 
-
-
         <!-- Start add new course -->
         <div>
           <h6 class="search-toggle">Add New Course: </h6>
           <div class="row">
-
 
             <!-- Begin Days to include Checkboxes -->
             <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 bg-light">
@@ -245,13 +244,13 @@
                     <input type="checkbox" value=""> Friday</label>
                 </div>
                 <!-- End Actual Checkboxes -->
-                
+
               </div>
             </div>
-             <!-- End Days-to-include Checkboxes -->
+            <!-- End Days-to-include Checkboxes -->
 
             <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 bg-light">
-              <div class="search-container search-toggle">
+              <div class="search-container">
                 <input class="rounded" type="text" placeholder="Course Location">
                 <input class="rounded" type="time" placeholder="Course Time">
               </div>

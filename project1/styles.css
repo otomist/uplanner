@@ -82,3 +82,17 @@ h4{
     max-height: 25rem;
     overflow-y: scroll;
 }
+.accInfo{
+    font-size: 30px; 
+    border-bottom: 40px;
+}
+.courseDetails{
+    font-size: 14px;
+}
+.smMargin{
+    margin: .3rem;
+}
+.searchCol{
+    padding-top:1em;
+    height:20%;
+}

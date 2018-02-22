@@ -66,10 +66,10 @@
         <!-- Begin top search bar -->
         <div class="row">
           <button type="button" class="btn btn-secondary btn-sm" id="searchToggleBTN">
-            <img src="./res/expand.svg"></button>
+            <img src="./res/expand.svg">
           </button>
-          <input type="text" placeholder="Search..">
-          <select>
+          <input class="smMargin"type="text" placeholder="Search..">
+          <select class="smMargin">
             <option value="">Choose a department...</option>
             <option value="CSC">Computer Science</option>
             <option value="MTH">Mathematics</option>
@@ -79,7 +79,7 @@
         <!-- End top search bar -->
 
         <h6 class="search-toggle">Search filters: </h6>
-        
+
         <!-- Begin misc options -->
         <div class="search-container search-toggle">
           <div class="row justify-content-sm-left">
@@ -106,7 +106,7 @@
           </div>
         </div>
         <!-- End misc options -->
-        
+
         <!-- Begin checkbox column options -->
         <div class="row search-container search-toggle">
           <!-- Begin weekdays checkboxes -->
@@ -136,7 +136,7 @@
             </div>
           </div>
           <!-- End weekdays checkboxes -->
-          
+
           <!-- Begin course level checkboxes -->
           <div class="col-lg-auto col-md-auto col-sm-auto col-xs-auto bg-light">
             <label class="label label-default">
@@ -164,7 +164,7 @@
             </div>
           </div>
           <!-- End coure level checkboxes -->
-          
+
           <!-- Begin # credits checkboxes -->
           <div class="col-lg-auto col-md-auto col-sm-auto col-xs-auto bg-light">
             <label class="label label-default">
@@ -194,7 +194,7 @@
           <!-- End # credits checkboxes -->
         </div>
         <!-- End checkbox column options -->
-        
+
         <!-- Begin Start Search Button TODO: reconsider the positioning of this, or its necessity -->
         <button class="btn btn-primary btn-sm search-toggle" type="button">Start Search</button>
         <!-- End Start Search Button -->
@@ -324,9 +324,11 @@
     </div>
   </div>
   <!-- End Row -->
+
   <div class="text-center">
     <button class="btn btn-warning btn-md" id="export-btn" type="button">Export to Spire</button>
   </div>
+
   <!-- Begin Footer -->
   <nav class="navbar fixed-bottom navbar-light bg-umass-lite">
     <span class="footer-text">Spectale</span>

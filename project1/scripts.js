@@ -13,8 +13,7 @@ $(function () {
             resPanel.style.maxHeight='25rem';
         }
     });
-
-
+    
     $('.b1').on('click', function () {
         $('.r1').toggle(1000);
     });
@@ -57,7 +56,5 @@ $(function () {
     $('.b14').on('click', function () {
         $('.r14').toggle(1000);
     });
-
-
 
 });
