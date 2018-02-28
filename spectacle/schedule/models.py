@@ -31,7 +31,6 @@ class Course(models.Model):
     title = models.CharField(max_length=200, help_text="Enter the descriptive course title")
     dept = models.ForeignKey(Department, on_delete='CASCADE', help_text="Enter the course's department")
     number = models.CharField(max_length=6, help_text="Enter the course's title number (220 in COMPSCI 220)")
-    #sections = models.ForeignKey('Section', help_text="Enter the class's specific lecture sections")
     description = models.TextField(max_length=1000, help_text="Enter the course description")
     reqs = models.TextField(max_length=1000, help_text="Enter the course requirements")
     credits = models.IntegerField(help_text="Enter # of credits")
@@ -65,7 +64,7 @@ class Section(models.Model):
     days = models.CharField(max_length=10, help_text="Days the course is taught")
     start = models.TimeField(help_text='The starting time of the class')
     ending = models.TimeField(help_text='The ending time of the class')
-    term = models.ForeignKey(Term, on_delete='CASCADE')
+    term = models.ForeignKey(Term, on_delete='CASCADE', default=1)
     link = models.CharField(max_length=100, help_text='Link to the spire page for the course')
     professor = models.CharField(max_length=200)
     room = models.CharField(max_length=200)
@@ -104,7 +103,6 @@ class User(models.Model):
     
 class Schedule(models.Model):
     title = models.CharField(max_length=100, help_text='User-set title for this schedule')
-    #courses = models.ForeignKey(ScheduleCourse, on_delete=SET_NULL, null=True)
     user = models.ForeignKey(User, on_delete='CASCADE', help_text='The user this schedule belongs to')
     
     def __str__(self):
@@ -120,4 +118,4 @@ class ScheduleCourse(models.Model):
     category = models.CharField(max_length=1, choices=CATEGORIES)
     
     def __str__(self):
-        return "{}".format(self.course)
+        return "test"
