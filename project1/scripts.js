@@ -13,48 +13,47 @@ $(function () {
             resPanel.style.maxHeight='25rem';
         }
     });
-    
-    $('.b1').on('click', function () {
+    //Button for maximize/minimize result info
+    $('#b1').on('click', function () {
         $('.r1').toggle(1000);
     });
-    $('.b2').on('click', function () {
+    //button for adding to scheduler
+    document.getElementById("add1").onclick = function () {
+        scheduler.addEvent({
+            id:1,
+            start_date: "01-01-2018 13:00",
+            end_date:   "01-01-2018 13:50",
+            text:       "CS121"
+        });
+        scheduler.addEvent({
+            id:2,
+            start_date: "03-01-2018 13:00",
+            end_date:   "03-01-2018 13:50",
+            text:       "CS121"
+        });
+        scheduler.addEvent({
+            id:3,
+            start_date: "05-01-2018 13:00",
+            end_date:   "05-01-2018 13:50",
+            text:       "CS121"
+        });
+    };
+    //button for deleting from scheduler
+    document.getElementById("del1").onclick = function () {
+        scheduler.deleteEvent(1);
+        scheduler.deleteEvent(2);
+        scheduler.deleteEvent(3);
+    };
+
+    $('#b2').on('click', function () {
         $('.r2').toggle(1000);
     });
-    $('.b3').on('click', function () {
+    $('#b3').on('click', function () {
         $('.r3').toggle(1000);
     });
-    $('.b4').on('click', function () {
+    $('#b4').on('click', function () {
         $('.r4').toggle(1000);
     });
-    $('.b5').on('click', function () {
-        $('.r5').toggle(1000);
-    });
-    $('.b6').on('click', function () {
-        $('.r6').toggle(1000);
-    });
-    $('.b7').on('click', function () {
-        $('.r7').toggle(1000);
-    });
-    $('.b8').on('click', function () {
-        $('.r8').toggle(1000);
-    });
-    $('.b9').on('click', function () {
-        $('.r9').toggle(1000);
-    });
-    $('.b10').on('click', function () {
-        $('.r10').toggle(1000);
-    });
-    $('.b11').on('click', function () {
-        $('.r11').toggle(1000);
-    });
-    $('.b12').on('click', function () {
-        $('.r12').toggle(1000);
-    });
-    $('.b13').on('click', function () {
-        $('.r13').toggle(1000);
-    });
-    $('.b14').on('click', function () {
-        $('.r14').toggle(1000);
-    });
+    
 
 });
