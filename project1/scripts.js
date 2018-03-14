@@ -26,19 +26,22 @@ $(function () {
             id:1,
             start_date: "01-01-2018 13:00",
             end_date:   "01-01-2018 13:50",
-            text:       "CS121"
+            text:       "CS121",
+            readonly:   true
         });
         scheduler.addEvent({
             id:2,
             start_date: "03-01-2018 13:00",
             end_date:   "03-01-2018 13:50",
-            text:       "CS121"
+            text:       "CS121",
+            readonly:   true
         });
         scheduler.addEvent({
             id:3,
             start_date: "05-01-2018 13:00",
             end_date:   "05-01-2018 13:50",
-            text:       "CS121"
+            text:       "CS121",
+            readonly:   true
         });
     };
     //button for deleting from scheduler
@@ -59,13 +62,15 @@ $(function () {
             id:4,
             start_date: "02-01-2018 10:00",
             end_date:   "02-01-2018 11:15",
-            text:       "CS121"
+            text:       "CS121",
+            readonly:   true
         });
         scheduler.addEvent({
             id:5,
             start_date: "04-01-2018 10:00",
             end_date:   "04-01-2018 11:15",
-            text:       "CS121"
+            text:       "CS121",
+            readonly:   true
         });
     };
     //button for deleting from scheduler
@@ -85,19 +90,22 @@ $(function () {
             id:6,
             start_date: "01-01-2018 09:00",
             end_date:   "01-01-2018 09:50",
-            text:       "CS187"
+            text:       "CS187",
+            readonly:   true
         });
         scheduler.addEvent({
             id:7,
             start_date: "03-01-2018 09:00",
             end_date:   "03-01-2018 09:50",
-            text:       "CS187"
+            text:       "CS187",
+            readonly:   true
         });
         scheduler.addEvent({
             id:8,
             start_date: "05-01-2018 09:00",
             end_date:   "05-01-2018 09:50",
-            text:       "CS187"
+            text:       "CS187",
+            readonly:   true
         });
     };
     //button for deleting from scheduler
@@ -118,13 +126,15 @@ $(function () {
             id:9,
             start_date: "02-01-2018 13:00",
             end_date:   "02-01-2018 14:15",
-            text:       "CS187"
+            text:       "CS187",
+            readonly:   true
         });
         scheduler.addEvent({
             id:10,
             start_date: "04-01-2018 13:00",
             end_date:   "04-01-2018 14:15",
-            text:       "CS187"
+            text:       "CS187",
+            readonly:   true
         });
     };
     //button for deleting from scheduler
@@ -133,5 +143,4 @@ $(function () {
         scheduler.deleteEvent(10);
     };
     
-
 });
