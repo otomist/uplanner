@@ -55,35 +55,18 @@
   <div class="container-fluid">
     <div class="row">
 
-      <!-- Begin Schedule Column-->
+      <!-- Begin dhtmlx Schedule Column-->
       <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12 bg-light">
-
-        <script src="res/dhtmlxScheduler_v4.4.0/codebase/dhtmlxscheduler.js" type="text/javascript"></script>
-        <link rel="stylesheet" href="res/dhtmlxScheduler_v4.4.0/codebase/dhtmlxscheduler.css" type="text/css">
-
-        <script type="text/javascript" charset="utf-8">
-          function init() {
-            scheduler.config.xml_date = "%Y-%m-%d %H:%i";
-            scheduler.init('scheduler_here', new Date(2018, 0, 1), "week");
-          }
-        </script>
-
-        <div id="scheduler_here" class="dhx_cal_container" style='width:100%; height:100%;'>
+        <div id="scheduler_here" class="dhx_cal_container" style='width:100%; height:95%;'>
           <div class="dhx_cal_navline">
-            <div class="dhx_cal_prev_button">&nbsp;</div>
-            <div class="dhx_cal_next_button">&nbsp;</div>
-            <div class="dhx_cal_today_button"></div>
             <div class="dhx_cal_date"></div>
-            <div class="dhx_cal_tab" name="day_tab" style="right:204px;"></div>
-            <div class="dhx_cal_tab" name="week_tab" style="right:140px;"></div>
-            <div class="dhx_cal_tab" name="month_tab" style="right:76px;"></div>
           </div>
           <div class="dhx_cal_header"></div>
           <div class="dhx_cal_data"></div>
         </div>
 
       </div>
-      <!-- End Schedule Column-->
+      <!-- End dhtmlx Schedule Column-->
 
       <!-- Begin Search Column -->
       <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 bg-light">
@@ -146,7 +129,7 @@
               <label>
                 <input type="checkbox" value=""> Tuesday</label>
             </div>
-            <div class="checkbox disabled">
+            <div class="checkbox">
               <label>
                 <input type="checkbox" value=""> Wednesday</label>
             </div>
@@ -174,7 +157,7 @@
               <label>
                 <input type="checkbox" value=""> 200</label>
             </div>
-            <div class="checkbox disabled">
+            <div class="checkbox">
               <label>
                 <input type="checkbox" value=""> 300</label>
             </div>
@@ -202,7 +185,7 @@
               <label>
                 <input type="checkbox" value=""> 2.0</label>
             </div>
-            <div class="checkbox disabled">
+            <div class="checkbox">
               <label>
                 <input type="checkbox" value=""> 3.0</label>
             </div>
@@ -228,116 +211,44 @@
           <h6>Results: </h6>
           <ul class="list-group fixed-panel">
             <li class="list-group-item">
-              <button class="btn btn-info btn-xs btn-results b1">+</button>COMPSCI 121 MWF 1:00pm-1:50pm
+              <button class="btn btn-info btn-xs btn-results" id="b1">+</button>COMPSCI 121 MWF 1:00pm-1:50pm
               <p class="result-details r1">Prof: Tim Richards</p>
               <p class="result-details r1">Lab Required: No</p>
               <p class="result-details r1">Location: ILC N151</p>
               <p class="result-details r1">Description: This course will is required to obtain a CS degree blah blah blah intro to java.</p>
               <p class="result-details r1">Required courses: None</p>
+              <button class="btn btn-primary btn-xs btn-results" id='add1'>Add</button>
+              <button class="btn btn-danger btn-xs btn-results" id='del1'>Delete</button>
             </li>
             <li class="list-group-item">
-              <button class="btn btn-info btn-xs btn-results b2">+</button>COMPSCI 121 TuTh 10:00am-11:15am
+              <button class="btn btn-info btn-xs btn-results" id="b2">+</button>COMPSCI 121 TuTh 10:00am-11:15am
               <p class="result-details r2">Prof: Tim Richards</p>
               <p class="result-details r2">Lab Required: No</p>
               <p class="result-details r2">Location: ILC N151</p>
               <p class="result-details r2">Description: This course will is required to obtain a CS degree blah blah blah intro to java.</p>
               <p class="result-details r2">Required courses: None</p>
+              <button class="btn btn-primary btn-xs btn-results" id='add2'>Add</button>
+              <button class="btn btn-danger btn-xs btn-results" id='del2'>Delete</button>
             </li>
             <li class="list-group-item">
-              <button class="btn btn-info btn-xs btn-results b3">+</button>COMPSCI 187 MWF 9:00am-9:50am
+              <button class="btn btn-info btn-xs btn-results" id="b3">+</button>COMPSCI 187 MWF 9:00am-9:50am
               <p class="result-details r3">Prof: Tim Richards</p>
               <p class="result-details r3">Lab Required: No</p>
               <p class="result-details r3">Location: ILC N151</p>
               <p class="result-details r3">Description: This course will is required to obtain a CS degree blah blah blah intro to java.</p>
               <p class="result-details r3">Required courses: None</p>
+              <button class="btn btn-primary btn-xs btn-results" id='add3'>Add</button>
+              <button class="btn btn-danger btn-xs btn-results" id='del3'>Delete</button>
             </li>
             <li class="list-group-item">
-              <button class="btn btn-info btn-xs btn-results b4">+</button>COMPSCI 187 TuTh 1:00pm-2:15pm
+              <button class="btn btn-info btn-xs btn-results" id="b4">+</button>COMPSCI 187 TuTh 1:00pm-2:15pm
               <p class="result-details r4">Prof: Tim Richards</p>
               <p class="result-details r4">Lab Required: No</p>
               <p class="result-details r4">Location: ILC N151</p>
               <p class="result-details r4">Description: This course will is required to obtain a CS degree blah blah blah intro to java.</p>
               <p class="result-details r4">Required courses: None</p>
-            </li>
-            <li class="list-group-item">
-              <button class="btn btn-info btn-xs btn-results b5">+</button>COMPSCI 220 MWF 1:00pm-1:50pm
-              <p class="result-details r5">Prof: Tim Richards</p>
-              <p class="result-details r5">Lab Required: No</p>
-              <p class="result-details r5">Location: ILC N151</p>
-              <p class="result-details r5">Description: This course will is required to obtain a CS degree blah blah blah intro to java.</p>
-              <p class="result-details r5">Required courses: None</p>
-            </li>
-            <li class="list-group-item">
-              <button class="btn btn-info btn-xs btn-results b6">+</button>COMPSCI 230 TuTh 2:30pm-3:45pm
-              <p class="result-details r6">Prof: Tim Richards</p>
-              <p class="result-details r6">Lab Required: No</p>
-              <p class="result-details r6">Location: ILC N151</p>
-              <p class="result-details r6">Description: This course will is required to obtain a CS degree blah blah blah intro to java.</p>
-              <p class="result-details r6">Required courses: None</p>
-            </li>
-            <li class="list-group-item">
-              <button class="btn btn-info btn-xs btn-results b7">+</button>COMPSCI 240 MWF 1:00pm-1:50pm
-              <p class="result-details r7">Prof: Tim Richards</p>
-              <p class="result-details r7">Lab Required: No</p>
-              <p class="result-details r7">Location: ILC N151</p>
-              <p class="result-details r7">Description: This course will is required to obtain a CS degree blah blah blah intro to java.</p>
-              <p class="result-details r7">Required courses: None</p>
-            </li>
-            <li class="list-group-item">
-              <button class="btn btn-info btn-xs btn-results b8">+</button>COMPSCI 250 TuTh 2:30pm-3:45pm
-              <p class="result-details r8">Prof: Tim Richards</p>
-              <p class="result-details r8">Lab Required: No</p>
-              <p class="result-details r8">Location: ILC N151</p>
-              <p class="result-details r8">Description: This course will is required to obtain a CS degree blah blah blah intro to java.</p>
-              <p class="result-details r8">Required courses: None</p>
-            </li>
-            <li class="list-group-item">
-              <button class="btn btn-info btn-xs btn-results b9">+</button>COMPSCI 311 MWF 1:00pm-1:50pm
-              <p class="result-details r9">Prof: Tim Richards</p>
-              <p class="result-details r9">Lab Required: No</p>
-              <p class="result-details r9">Location: ILC N151</p>
-              <p class="result-details r9">Description: This course will is required to obtain a CS degree blah blah blah intro to java.</p>
-              <p class="result-details r9">Required courses: None</p>
-            </li>
-            <li class="list-group-item">
-              <button class="btn btn-info btn-xs btn-results b10">+</button>COMPSCI 326 TuTh 4:00pm-5:15pm
-              <p class="result-details r10">Prof: Tim Richards</p>
-              <p class="result-details r10">Lab Required: No</p>
-              <p class="result-details r10">Location: ILC N151</p>
-              <p class="result-details r10">Description: This course will is required to obtain a CS degree blah blah blah intro to java.</p>
-              <p class="result-details r10">Required courses: None</p>
-            </li>
-            <li class="list-group-item">
-              <button class="btn btn-info btn-xs btn-results b11">+</button>COMPSCI 345 Mon 10:10am-12:00pm
-              <p class="result-details r11">Prof: Tim Richards</p>
-              <p class="result-details r11">Lab Required: No</p>
-              <p class="result-details r11">Location: ILC N151</p>
-              <p class="result-details r11">Description: This course will is required to obtain a CS degree blah blah blah intro to java.</p>
-              <p class="result-details r11">Required courses: None</p>
-            </li>
-            <li class="list-group-item">
-              <button class="btn btn-info btn-xs btn-results b12">+</button>COMPSCI 377 TuTh 4:00pm-5:15pm
-              <p class="result-details r12">Prof: Tim Richards</p>
-              <p class="result-details r12">Lab Required: No</p>
-              <p class="result-details r12">Location: ILC N151</p>
-              <p class="result-details r12">Description: This course will is required to obtain a CS degree blah blah blah intro to java.</p>
-              <p class="result-details r12">Required courses: None</p>
-            </li>
-            <li class="list-group-item">
-              <button class="btn btn-info btn-xs btn-results b13">+</button>COMPSCI 453 TuTh 2:30pm-3:45pm
-              <p class="result-details r13">Prof: Tim Richards</p>
-              <p class="result-details r13">Lab Required: No</p>
-              <p class="result-details r13">Location: ILC N151</p>
-              <p class="result-details r13">Description: This course will is required to obtain a CS degree blah blah blah intro to java.</p>
-              <p class="result-details r13">Required courses: None</p>
-            </li>
-            <li class="list-group-item">
-              <button class="btn btn-info btn-xs btn-results b14">+</button>COMPSCI 445 MWF 1:00pm-1:50pm
-              <p class="result-details r14">Prof: Tim Richards</p>
-              <p class="result-details r14">Lab Required: No</p>
-              <p class="result-details r14">Location: ILC N151</p>
-              <p class="result-details r14">Description: This course will is required to obtain a CS degree blah blah blah intro to java.</p>
-              <p class="result-details r14">Required courses: None</p>
+              <button class="btn btn-primary btn-xs btn-results" id='add4'>Add</button>
+              <button class="btn btn-danger btn-xs btn-results" id='del4'>Delete</button>
             </li>
           </ul>
         </div>
@@ -369,7 +280,12 @@
     crossorigin="anonymous"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
     crossorigin="anonymous"></script>
-  <!-- Our javascript -->
+  <!-- Import dhtmlx schedule builder modules -->
+  <script src="res/dhtmlxScheduler_v4.4.0/codebase/dhtmlxscheduler.js" type="text/javascript"></script>
+  <link rel="stylesheet" href="res/dhtmlxScheduler_v4.4.0/codebase/dhtmlxscheduler.css" type="text/css">
+  <!-- Import our schedule builder javascript -->
+  <script src="./scheduleBuilder.js" type="text/javascript" charset="utf-8"></script>
+  <!-- Our javascript for buttons -->
   <script src="scripts.js"></script>
 </body>
 
