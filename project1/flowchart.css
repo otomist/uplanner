@@ -10,7 +10,7 @@ table {
 
 td, th {
   /*border: 1px solid rgb(190,190,190);*/
-  padding: 40px 80px;
+  padding: 20px 40px;
 }
 
 th {
@@ -48,7 +48,7 @@ caption {
    background: -ms-linear-gradient(top, #65a9d7, #3e779d);
    background: -o-linear-gradient(top, #65a9d7, #3e779d);
    background-image: -ms-linear-gradient(top, #65a9d7 0%, #3e779d 100%);
-   padding: 20px 40px;
+   padding: 40px 80px;
    -webkit-border-radius: 8px;
    -moz-border-radius: 8px;
    border-radius: 8px;
