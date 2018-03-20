@@ -13,7 +13,6 @@ function init() {
     
     //Work week
     scheduler.attachEvent("onTemplatesReady",function(){
-        
         scheduler.date.workweek_start = scheduler.date.week_start;
         scheduler.templates.workweek_date = scheduler.templates.week_date;
         scheduler.templates.workweek_scale_date = scheduler.templates.week_scale_date;
