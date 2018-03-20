@@ -58,14 +58,14 @@ function addEvent(course){
 	curr.addEventListener("mouseenter", function(e) {   
     // highlight the mouseenter target
 	// highlight by changing the border color.
-    	e.target.style.border = "5px solid red";
+    	e.target.style.border = "5px solid #881c1c";
     	var pre_requ = examples[course][0];
 	// loop for all pre_requ for one course
 		// warn: for in loop will not work.
     	for( var i = 0; i<pre_requ.length; i++ ){
 			console.log(pre_requ[i]);
 			var pre = document.getElementById(pre_requ[i]);
-    		pre.style.border = "5px solid red";
+    		pre.style.border = "5px solid #881c1c";
 		}
 
     	
