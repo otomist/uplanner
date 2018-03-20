@@ -17,7 +17,7 @@ var examples = {
 
 // create course section for each couser by button
 function courseBtn(course){
-	btn = "<a href='#' class='button' id = 'Button'>Text</a>";
+	btn = ""<button class='button' id = 'Button'><a class='text' href='index.html'>Text</a></a>"";
 	// auto replace each button and text with .replace().
 	btn = btn.replace("Button", course);
 	btn = btn.replace("Text", course)
