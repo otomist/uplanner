@@ -17,7 +17,7 @@ var examples = {
 
 // create course section for each couser by button
 function courseBtn(course){
-	btn = "<a href='#' class='button' id = 'Button'>Text</a>";
+	btn = "<button class='button' id = 'Button'><a class='text' href='index.html'>Text</a><p>coursetitle</p></a>";
 	// auto replace each button and text with .replace().
 	btn = btn.replace("Button", course);
 	btn = btn.replace("Text", course)
@@ -58,14 +58,14 @@ function addEvent(course){
 	curr.addEventListener("mouseenter", function(e) {   
     // highlight the mouseenter target
 	// highlight by changing the border color.
-    	e.target.style.border = "6px solid red";
+    	e.target.style.border = "7px solid #881c1c";
     	var pre_requ = examples[course][0];
 	// loop for all pre_requ for one course
 		// warn: for in loop will not work.
     	for( var i = 0; i<pre_requ.length; i++ ){
 			console.log(pre_requ[i]);
 			var pre = document.getElementById(pre_requ[i]);
-    		pre.style.border = "6px solid red";
+    		pre.style.border = "7px solid #881c1c";
 		}
 
     	
