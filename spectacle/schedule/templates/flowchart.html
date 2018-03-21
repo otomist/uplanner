@@ -1,0 +1,17 @@
+{% extends "base_generic.html" %}
+
+{% block title %}<title>Uplanner-Prereqs</title>{% endblock %}
+
+{% block content %}
+  <h4>Course Prerequisites Flowchart</h4>
+  <!-- Begin flowchart -->
+
+  {% load static %}
+  <script src="{% static 'scripts/flowchart.js' %}"></script>
+
+  {% load static %}
+  <!-- stylesheet used for flowchart by Sihua Chen -->
+  <link href="{% static 'css/flowchart.css' %}" rel="stylesheet" type="text/css">
+
+  <!-- End flowchart -->
+{% endblock %}

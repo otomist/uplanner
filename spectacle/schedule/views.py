@@ -22,5 +22,19 @@ def schedule(request):
         'schedule.html',
     )
     
+def userprofile(request):
+    
+    return render(
+        request,
+        'userprofile.html'
+    )
+    
+def flowchart(request):
+    
+    return render(
+        request,
+        'flowchart.html'
+    )
+    
 class CourseDetailView(generic.DetailView):
     model = Course
