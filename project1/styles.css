@@ -3,7 +3,7 @@ body{
     margin-bottom: 35px;
 }
 #landing{
-    background-image: url("res/grad_landing.jpeg");
+    background-image: url("test");
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-position: center;
