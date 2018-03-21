@@ -15,5 +15,12 @@ def index(request):
         context={}
     )
     
+def schedule(request):
+    
+    return render(
+        request,
+        'schedule.html',
+    )
+    
 class CourseDetailView(generic.DetailView):
     model = Course

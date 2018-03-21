@@ -1,0 +1,217 @@
+{% extends "base_generic.html" %}
+
+<!--body onload="init();"--!>
+
+{% block content %}
+  <!-- Begin row -->
+  <div class="container-fluid">
+    <div class="row">
+
+      <!-- Begin dhtmlx Schedule Column-->
+      <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12 bg-light">
+        <div id="scheduler_here" class="dhx_cal_container" style='width:100%; height:95%;'>
+          <div class="dhx_cal_navline">
+            <div class="dhx_cal_date"></div>
+          </div>
+          <div class="dhx_cal_header"></div>
+          <div class="dhx_cal_data"></div>
+        </div>
+
+      </div>
+      <!-- End dhtmlx Schedule Column-->
+
+      <!-- Begin Search Column -->
+      <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 bg-light">
+        <!-- Begin top search bar -->
+        <div class="row">
+          <button type="button" class="btn btn-secondary btn-sm" id="searchToggleBTN">
+            <img src="../static/schedule/images/expand.svg">
+          </button>
+          <input class="smMargin" type="text" placeholder="Search..">
+          <select class="smMargin">
+            <option value="">Choose a department...</option>
+            <option value="CSC">Computer Science</option>
+            <option value="MTH">Mathematics</option>
+            <option value="ECN">Economics</option>
+          </select>
+        </div>
+        <!-- End top search bar -->
+
+        <h6 class="search-toggle">Search filters: </h6>
+
+        <!-- Begin misc options -->
+        <div class="search-container search-toggle">
+          <div class="row justify-content-sm-left">
+            <div class="col-lg-auto col-md-auto col-sm-auto col-xs-auto bg-light">
+              <div class="checkbox">
+                <label>
+                  <input type="checkbox" value=""> Show closed courses </label>
+              </div>
+              <div class="checkbox">
+                <label>
+                  <input type="checkbox" value=""> Show conflicting courses </label>
+              </div>
+            </div>
+            <div class="col-lg-auto col-md-auto col-sm-auto col-xs-auto bg-light">
+              <div class="checkbox">
+                <label>
+                  <input type="checkbox" value=""> Show courses with unmet requirements </label>
+              </div>
+              <div class="checkbox">
+                <label>
+                  <input type="checkbox" value=""> Show only honors courses </label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- End misc options -->
+
+        <!-- Begin checkbox column options -->
+        <div class="row search-container search-toggle">
+          <!-- Begin weekdays checkboxes -->
+          <div class="col-lg-auto col-md-auto col-sm-auto col-xs-auto bg-light">
+            <label class="label label-default">
+              Weekdays to include:
+            </label>
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" value=""> Monday</label>
+            </div>
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" value=""> Tuesday</label>
+            </div>
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" value=""> Wednesday</label>
+            </div>
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" value=""> Thursday</label>
+            </div>
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" value=""> Friday</label>
+            </div>
+          </div>
+          <!-- End weekdays checkboxes -->
+
+          <!-- Begin course level checkboxes -->
+          <div class="col-lg-auto col-md-auto col-sm-auto col-xs-auto bg-light">
+            <label class="label label-default">
+              Course levels to include:
+            </label>
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" value=""> 100</label>
+            </div>
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" value=""> 200</label>
+            </div>
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" value=""> 300</label>
+            </div>
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" value=""> 400</label>
+            </div>
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" value=""> 500+</label>
+            </div>
+          </div>
+          <!-- End coure level checkboxes -->
+
+          <!-- Begin # credits checkboxes -->
+          <div class="col-lg-auto col-md-auto col-sm-auto col-xs-auto bg-light">
+            <label class="label label-default">
+              Course credits to include:
+            </label>
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" value=""> 1.0</label>
+            </div>
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" value=""> 2.0</label>
+            </div>
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" value=""> 3.0</label>
+            </div>
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" value=""> 4.0</label>
+            </div>
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" value=""> 5.0+</label>
+            </div>
+          </div>
+          <!-- End # credits checkboxes -->
+        </div>
+        <!-- End checkbox column options -->
+
+        <!-- Begin Start Search Button TODO: reconsider the positioning of this, or its necessity -->
+        <button class="btn btn-primary btn-sm search-toggle" type="button">Start Search</button>
+        <!-- End Start Search Button -->
+
+
+        <!-- Begin Search Results -->
+         <h6>Results: </h6>
+          <ul class="list-group fixed-panel">
+            <li class="list-group-item">
+              <button class="btn btn-info btn-xs btn-results" id="b1">+</button>COMPSCI 121 MWF 1:00pm-1:50pm
+              <p class="result-details r1">Prof: Tim Richards</p>
+              <p class="result-details r1">Lab Required: No</p>
+              <p class="result-details r1">Location: ILC N151</p>
+              <p class="result-details r1">Description: This course will is required to obtain a CS degree blah blah blah intro to java.</p>
+              <p class="result-details r1">Required courses: None</p>
+              <button class="btn btn-primary btn-xs btn-results" id='add1'>Add</button>
+              <button class="btn btn-danger btn-xs btn-results" id='del1'>Delete</button>
+            </li>
+            <li class="list-group-item">
+              <button class="btn btn-info btn-xs btn-results" id="b2">+</button>COMPSCI 121 TuTh 10:00am-11:15am
+              <p class="result-details r2">Prof: Tim Richards</p>
+              <p class="result-details r2">Lab Required: No</p>
+              <p class="result-details r2">Location: ILC N151</p>
+              <p class="result-details r2">Description: This course will is required to obtain a CS degree blah blah blah intro to java.</p>
+              <p class="result-details r2">Required courses: None</p>
+              <button class="btn btn-primary btn-xs btn-results" id='add2'>Add</button>
+              <button class="btn btn-danger btn-xs btn-results" id='del2'>Delete</button>
+            </li>
+            <li class="list-group-item">
+              <button class="btn btn-info btn-xs btn-results" id="b3">+</button>COMPSCI 187 MWF 9:00am-9:50am
+              <p class="result-details r3">Prof: Tim Richards</p>
+              <p class="result-details r3">Lab Required: No</p>
+              <p class="result-details r3">Location: ILC N151</p>
+              <p class="result-details r3">Description: This course will is required to obtain a CS degree blah blah blah intro to java.</p>
+              <p class="result-details r3">Required courses: None</p>
+              <button class="btn btn-primary btn-xs btn-results" id='add3'>Add</button>
+              <button class="btn btn-danger btn-xs btn-results" id='del3'>Delete</button>
+            </li>
+            <li class="list-group-item">
+              <button class="btn btn-info btn-xs btn-results" id="b4">+</button>COMPSCI 187 TuTh 1:00pm-2:15pm
+              <p class="result-details r4">Prof: Tim Richards</p>
+              <p class="result-details r4">Lab Required: No</p>
+              <p class="result-details r4">Location: ILC N151</p>
+              <p class="result-details r4">Description: This course will is required to obtain a CS degree blah blah blah intro to java.</p>
+              <p class="result-details r4">Required courses: None</p>
+              <button class="btn btn-primary btn-xs btn-results" id='add4'>Add</button>
+              <button class="btn btn-danger btn-xs btn-results" id='del4'>Delete</button>
+            </li>
+          </ul>
+        <!-- End Search Results -->
+      </div>
+      <!-- End Search Column -->
+
+    </div>
+  </div>
+  <!-- End Row -->
+
+  <div class="text-center">
+    <button class="btn btn-warning btn-md" id="export-btn" type="button">Export to Spire</button>
+  </div>
+{% endblock %}
