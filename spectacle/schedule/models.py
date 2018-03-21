@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 
 class Gened(models.Model):
     name = models.CharField(max_length=200, help_text="Enter a gened category")
@@ -32,7 +33,7 @@ class Course(models.Model):
     dept = models.ForeignKey(Department, on_delete='CASCADE', help_text="Enter the course's department")
     number = models.CharField(max_length=6, help_text="Enter the course's title number (220 in COMPSCI 220)")
     description = models.TextField(max_length=1000, help_text="Enter the course description")
-    reqs = models.TextField(max_length=1000, help_text="Enter the course requirements")
+    reqs = models.TextField(max_length=1000, blank=True, default="", help_text="Enter the course requirements")
     credits = models.IntegerField(help_text="Enter # of credits")
     honors = models.BooleanField("Enter whether this class is an honors course")
     open = models.BooleanField("Enter whether this class is currently open")
@@ -52,9 +53,12 @@ class Course(models.Model):
         ('c3', 'CPE Summer Session 3'),
     )
     session = models.CharField(max_length=2, choices=SESSIONS, blank=True, default='u', help_text='The course career')
-    gened = models.ManyToManyField(Gened, help_text='Enter any gened categories this course satisfies')
+    gened = models.ManyToManyField(Gened, blank=True, help_text='Enter any gened categories this course satisfies')
     start_date = models.DateField(help_text='Enter the starting date of the course')
     end_date = models.DateField(help_text='Enter the ending date of the course')
+    
+    def get_absolute_url(self):
+        return reverse('course-detail', args=[str(self.id)])
     
     def __str__(self):
         return "{} {} {}".format(self.dept, self.number, self.title)
