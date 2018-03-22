@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.views import generic
-from .models import Course
+from .models import Course, Department
 
 # Create your views here.
 
@@ -17,9 +17,12 @@ def index(request):
     
 def schedule(request):
     
+    departments = Department.objects.all()
+    
     return render(
         request,
         'schedule.html',
+        context={'departments':departments}
     )
     
 def userprofile(request):

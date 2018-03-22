@@ -25,14 +25,15 @@
         <!-- Begin top search bar -->
         <div class="row">
           <button type="button" class="btn btn-secondary btn-sm" id="searchToggleBTN">
-            <img src="../static/schedule/images/expand.svg">
+            {% load static %}
+            <img src="{% static 'images/expand.svg' %}">
           </button>
           <input class="smMargin" type="text" placeholder="Search..">
           <select class="smMargin">
             <option value="">Choose a department...</option>
-            <option value="CSC">Computer Science</option>
-            <option value="MTH">Mathematics</option>
-            <option value="ECN">Economics</option>
+            {% for dept in departments %}
+              <option value={{ dept.code }}>{{ dept.name }}</option>
+            {% endfor %}
           </select>
         </div>
         <!-- End top search bar -->
