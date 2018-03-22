@@ -95,8 +95,8 @@ class Section(models.Model):
     
 class User(models.Model):
     email = models.EmailField()
-    username = models.CharField(max_length=16)
-    courses = models.ManyToManyField(Section, help_text='The previous courses taken by the user')
+    username = models.CharField(max_length=30)
+    courses = models.ManyToManyField(Section, blank=True, help_text='The previous courses taken by the user')
     sid = models.CharField(max_length=8, help_text='8 digit spire id')
     major = models.ForeignKey(Department, on_delete='SET_NULL', null=True)
     password = models.CharField(max_length=20)
@@ -122,4 +122,4 @@ class ScheduleCourse(models.Model):
     category = models.CharField(max_length=1, choices=CATEGORIES)
     
     def __str__(self):
-        return "test"
+        return "{} ({})".format(self.course, self.schedule)
