@@ -8,6 +8,6 @@ urlpatterns = [
     path('index/', RedirectView.as_view(url='/uplanner/', permanent=True)), #reconsider this
     path('courses/<int:pk>', views.CourseDetailView.as_view(), name='course-detail'),
     path('schedule/', views.schedule, name='schedule'),
-    path('userprofile/', views.userprofile, name='userprofile'),
-    path('flowchart/', views.flowchart, name='flowchart')
+    path('profile/', views.profile, name='profile'),
+    path('prereqs/', views.prereqs, name='prereqs')
 ]

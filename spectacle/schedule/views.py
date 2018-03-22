@@ -27,7 +27,7 @@ def schedule(request):
         context={'departments':departments, 'highlight_schedule':highlight_schedule}
     )
     
-def userprofile(request):
+def profile(request):
     
     highlight_profile = True
     
@@ -37,7 +37,7 @@ def userprofile(request):
         context={'highlight_profile':highlight_profile}
     )
     
-def flowchart(request):
+def prereqs(request):
 
     highlight_prereqs = True
     

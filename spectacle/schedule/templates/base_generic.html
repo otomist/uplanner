@@ -42,10 +42,10 @@
           <a class="nav-link" href="{% url 'schedule' %}">Schedule</a>
         </li>
         <li class="nav-item {% if highlight_prereqs %} active {% endif %}">
-          <a class="nav-link" href="{% url 'flowchart' %}">Prereqs</a>
+          <a class="nav-link" href="{% url 'prereqs' %}">Prereqs</a>
         </li>
         <li class="nav-item {% if highlight_profile %} active {% endif %}">
-          <a class="nav-link" href="{% url 'userprofile' %}">Profile</a>
+          <a class="nav-link" href="{% url 'profile' %}">Profile</a>
         </li>
         <li class="nav-item {% if highlight_admin %} active {% endif %}">
           <a class="nav-link disabled" href="{% url 'admin:index' %}">Admin</a>
