@@ -33,7 +33,7 @@ def profile(request):
     
     return render(
         request,
-        'userprofile.html',
+        'profile.html',
         context={'highlight_profile':highlight_profile}
     )
     
@@ -43,7 +43,7 @@ def prereqs(request):
     
     return render(
         request,
-        'flowchart.html',
+        'prereqs.html',
         context={'highlight_prereqs':highlight_prereqs}
     )
     
