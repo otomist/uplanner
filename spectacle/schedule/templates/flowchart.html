@@ -6,12 +6,14 @@
   <h4>Course Prerequisites Flowchart</h4>
   <!-- Begin flowchart -->
 
+  <!-- End flowchart -->
+{% endblock %}
+
+{% block imports %}
   {% load static %}
   <script src="{% static 'scripts/flowchart.js' %}"></script>
 
   {% load static %}
   <!-- stylesheet used for flowchart by Sihua Chen -->
   <link href="{% static 'css/flowchart.css' %}" rel="stylesheet" type="text/css">
-
-  <!-- End flowchart -->
 {% endblock %}
