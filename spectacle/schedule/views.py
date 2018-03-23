@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.views import generic
 from .models import Course, Department
+from .forms import ScheduleForm
 
 # Create your views here.
 
@@ -15,16 +16,29 @@ def index(request):
         'index.html',
         context={'highlight_index':highlight_index}
     )
-    
+
 def schedule(request):
-    
+    """
+    The view for the schedule uses a form with GET for receiving search parameters
+    Eventually it will also have POST for updating the database when the user adds
+    a course to their schedule
+    """
+    form = ScheduleForm(request.GET)
+    results = []
     departments = Department.objects.all()
     highlight_schedule = True
     
-    return render(
+    if form.is_valid():
+        if (form.cleaned_data['search_keywords'] !=  ''):
+            results = 'AAAA'
+            form.cleaned_data['search_keywords'] = ''
+        else:
+            results = ''
+    
+    return render (
         request,
         'schedule.html',
-        context={'departments':departments, 'highlight_schedule':highlight_schedule}
+        {'departments':departments, 'highlight_schedule':highlight_schedule, 'form':form, 'results':results}
     )
     
 def profile(request):

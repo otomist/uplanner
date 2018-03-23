@@ -9,5 +9,5 @@ urlpatterns = [
     path('courses/<int:pk>', views.CourseDetailView.as_view(), name='course-detail'),
     path('schedule/', views.schedule, name='schedule'),
     path('profile/', views.profile, name='profile'),
-    path('prereqs/', views.prereqs, name='prereqs')
+    path('prereqs/', views.prereqs, name='prereqs'),
 ]
