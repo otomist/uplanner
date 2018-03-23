@@ -2,7 +2,6 @@ body{
     /* Padding so that the footer doesn't block anything */
     margin-bottom: 35px;
 }
-
 #landing{
     background-image: url('../images/grad_landing.jpeg');
     background-repeat: no-repeat;
@@ -10,7 +9,6 @@ body{
     background-position: center;
     background-size: cover;
 }
-
 .jumbotron{
     background: none;
     color: white;
@@ -47,7 +45,7 @@ h6{
     color: #000000;
     padding: 0;
     margin: 0;
-    font-size: .8rem;
+    font-size: 1rem;
 }
 h4{
     padding:0.5em;
