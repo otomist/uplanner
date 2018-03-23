@@ -31,13 +31,9 @@
               {% load static %}
               <img src="{% static 'images/expand.svg' %}">
             </button>
-            {{ form.search_keywords }}
-            <select class="smMargin">
-              <option value="">Choose a department...</option>
-              {% for dept in departments %}
-                <option value={{ dept.code }}>{{ dept.name }}</option>
-              {% endfor %}
-            </select>
+            {{ form.keywords }}
+            {{ form.departments }}
+            <p>{{ debug }}</p> <!-- temporary value for debugging -->
           </div>
           <!-- End top search bar -->
 

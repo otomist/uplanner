@@ -25,20 +25,24 @@ def schedule(request):
     """
     form = ScheduleForm(request.GET)
     results = []
-    departments = Department.objects.all()
+    #departments = Department.objects.all()
     highlight_schedule = True
+    debug = ''
     
     if form.is_valid():
-        if (form.cleaned_data['search_keywords'] !=  ''):
-            results = 'AAAA'
-            form.cleaned_data['search_keywords'] = ''
+        if not (form.cleaned_data['keywords'] == '' and form.cleaned_data['departments'] == 'NULL'):
+            #form.cleaned_data['keywords'] = 'SUCCESS'
+            #form.cleaned_data['departments'] = ''
+            debug = 'success'
         else:
-            results = ''
+            #results = []
+            #form.cleaned_data['keywords'] = 'FAILURE'
+            debug = 'failure'
     
     return render (
         request,
         'schedule.html',
-        {'departments':departments, 'highlight_schedule':highlight_schedule, 'form':form, 'results':results}
+        {'debug':debug, 'highlight_schedule':highlight_schedule, 'form':form, 'results':results}
     )
     
 def profile(request):
