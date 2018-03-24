@@ -1,3 +1,5 @@
+from itertools import chain
+
 from django.shortcuts import render
 from django.views import generic
 from .models import Course, Department
@@ -27,13 +29,27 @@ def schedule(request):
     results = []
     #departments = Department.objects.all()
     highlight_schedule = True
-    debug = ''
+    num_dept = 0
+    num_key = 0
     
     if form.is_valid():
         if not (form.cleaned_data['keywords'] == '' and form.cleaned_data['departments'] == 'NULL'):
             #form.cleaned_data['keywords'] = 'SUCCESS'
             #form.cleaned_data['departments'] = ''
-            debug = 'success'
+            dept_set = []
+            if form.cleaned_data['departments'] != 'NULL':
+                dept_set = Course.objects.filter(dept__code=form.cleaned_data['departments'])
+                num_dept = dept_set.count()
+            if form.cleaned_data['keywords'] != '':
+                keys = form.cleaned_data['keywords']
+                if form.cleaned_data['departments'] != 'NULL':
+                    key_set = dept_set.filter(title__icontains=keys)
+                    key_set = set(chain(key_set, dept_set.filter(description__icontains=keys)))
+                else:
+                    key_set = Course.objects.filter(title__icontains=keys)
+                    key_set = set(chain(key_set, Course.objects.filter(description__icontains=keys)))
+                num_key = len(key_set)
+
         else:
             #results = []
             #form.cleaned_data['keywords'] = 'FAILURE'
@@ -42,7 +58,7 @@ def schedule(request):
     return render (
         request,
         'schedule.html',
-        {'debug':debug, 'highlight_schedule':highlight_schedule, 'form':form, 'results':results}
+        {'num_dept':num_dept, 'num_key':num_key, 'highlight_schedule':highlight_schedule, 'form':form, 'results':results}
     )
     
 def profile(request):
