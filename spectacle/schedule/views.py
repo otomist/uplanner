@@ -1,5 +1,3 @@
-from itertools import chain
-
 from django.shortcuts import render
 from django.views import generic
 from .models import Course, Department
@@ -27,38 +25,44 @@ def schedule(request):
     """
     form = ScheduleForm(request.GET)
     results = []
-    #departments = Department.objects.all()
     highlight_schedule = True
     num_dept = 0
     num_key = 0
     
     if form.is_valid():
+        # The user has entered some information to search for
         if not (form.cleaned_data['keywords'] == '' and form.cleaned_data['departments'] == 'NULL'):
-            #form.cleaned_data['keywords'] = 'SUCCESS'
-            #form.cleaned_data['departments'] = ''
-            dept_set = []
+            # The depatments dropdown has been used; return some subset from that dept
             if form.cleaned_data['departments'] != 'NULL':
-                dept_set = Course.objects.filter(dept__code=form.cleaned_data['departments'])
-                num_dept = dept_set.count()
+                results = Course.objects.filter(dept__code=form.cleaned_data['departments'])
             if form.cleaned_data['keywords'] != '':
                 keys = form.cleaned_data['keywords']
+                # Return a subset from the selected dept
                 if form.cleaned_data['departments'] != 'NULL':
-                    key_set = dept_set.filter(title__icontains=keys)
-                    key_set = set(chain(key_set, dept_set.filter(description__icontains=keys)))
+                    dept_set = results
+                    results = results.filter(title__icontains=keys)
+                    results.union(results, dept_set.filter(description__icontains=keys))
+                # Return a subset from all courses; no dept selected
                 else:
-                    key_set = Course.objects.filter(title__icontains=keys)
-                    key_set = set(chain(key_set, Course.objects.filter(description__icontains=keys)))
-                num_key = len(key_set)
-
+                    results = Course.objects.filter(title__icontains=keys)
+                    results.union(results, Course.objects.filter(description__icontains=keys))
+        # Display error - no search parameters given
         else:
-            #results = []
-            #form.cleaned_data['keywords'] = 'FAILURE'
-            debug = 'failure'
+            pass
+    
+    # Display error - no search results match
+    if len(results) == 0:
+        pass
+        
+    # Todo: can there be too many results? (probably)
+    
+    # Reformat results to assign each course an index (for js button)
+    results = list(zip(results, [x for x in range(1, len(results)+1)]))
     
     return render (
         request,
         'schedule.html',
-        {'num_dept':num_dept, 'num_key':num_key, 'highlight_schedule':highlight_schedule, 'form':form, 'results':results}
+        {'highlight_schedule':highlight_schedule, 'form':form, 'results':results}
     )
     
 def profile(request):
