@@ -1,3 +1,70 @@
+
+// Button for minimize/maximize using id passed from html
+function expand(id) {
+    $('.r' + id).toggle(1000);
+    document.getElementById("b" + id).textContent = 
+        (document.getElementById("b" + id).textContent === "+") ? "-" : "+";
+}
+
+function add(id) {
+    //Temporary if statement until integration with django backend:
+    if (id === 1) {
+        scheduler.addEvent({
+            id: 1,
+            start_date: "01-01-2018 13:00",
+            end_date: "01-01-2018 13:50",
+            text: "CS121",
+            color: "rgb(0, 153, 255)",
+            readonly: true
+        });
+        scheduler.addEvent({
+            id: 2,
+            start_date: "03-01-2018 13:00",
+            end_date: "03-01-2018 13:50",
+            text: "CS121",
+            color: "rgb(0, 153, 255)",
+            readonly: true
+        });
+        scheduler.addEvent({
+            id: 3,
+            start_date: "05-01-2018 13:00",
+            end_date: "05-01-2018 13:50",
+            text: "CS121",
+            color: "rgb(0, 153, 255)",
+            readonly: true
+        });
+    } else {
+        scheduler.addEvent({
+            id: 4,
+            start_date: "02-01-2018 10:00",
+            end_date: "02-01-2018 11:15",
+            text: "CS121",
+            color: "rgb(0, 153, 255)",
+            readonly: true
+        });
+        scheduler.addEvent({
+            id: 5,
+            start_date: "04-01-2018 10:00",
+            end_date: "04-01-2018 11:15",
+            text: "CS121",
+            color: "rgb(0, 153, 255)",
+            readonly: true
+        });
+    }
+}
+
+function del(id) {
+    if (id === 1) {
+        scheduler.deleteEvent(1);
+        scheduler.deleteEvent(2);
+        scheduler.deleteEvent(3);
+   } else {
+        scheduler.deleteEvent(4);
+        scheduler.deleteEvent(5);
+        scheduler.deleteEvent(6);
+   }
+}
+
 $(function () {
     //Button used to hide the search criteria and show more results
     var searchHidden = false;
@@ -13,14 +80,8 @@ $(function () {
             resPanel.style.maxHeight = '25rem';
         }
     });
-
-    //Button for Maximize/Minimize
-    $('#b1').on('click', function () {
-        $('.r1').toggle(1000);
-        document.getElementById("b1").textContent =
-            (document.getElementById("b1").textContent === "+") ? "-" : "+";
-    });
     //Button for adding to scheduler
+    /*
     document.getElementById("add1").onclick = function () {
         scheduler.addEvent({
             id: 1,
@@ -53,13 +114,6 @@ $(function () {
         scheduler.deleteEvent(2);
         scheduler.deleteEvent(3);
     };
-    
-    //Button for Maximize/Minimize
-    $('#b2').on('click', function () {
-        $('.r2').toggle(1000);
-        document.getElementById("b2").textContent =
-            (document.getElementById("b2").textContent === "+") ? "-" : "+";
-    });
     //Button for adding to scheduler
     document.getElementById("add2").onclick = function () {
         scheduler.addEvent({
@@ -85,12 +139,6 @@ $(function () {
         scheduler.deleteEvent(5);
     };
     
-    //Button for Maximize/Minimize
-    $('#b3').on('click', function () {
-        $('.r3').toggle(1000);
-        document.getElementById("b3").textContent =
-            (document.getElementById("b3").textContent === "+") ? "-" : "+";
-    });
     //Button for adding to scheduler
     document.getElementById("add3").onclick = function () {
         scheduler.addEvent({
@@ -125,12 +173,6 @@ $(function () {
         scheduler.deleteEvent(8);
     };
 
-    //Button for Maximize/Minimize
-    $('#b4').on('click', function () {
-        $('.r4').toggle(1000);
-        document.getElementById("b4").textContent =
-            (document.getElementById("b4").textContent === "+") ? "-" : "+";
-    });
     //Button for adding to scheduler
     document.getElementById("add4").onclick = function () {
         scheduler.addEvent({
@@ -155,5 +197,5 @@ $(function () {
         scheduler.deleteEvent(9);
         scheduler.deleteEvent(10);
     };
-
+    */
 });

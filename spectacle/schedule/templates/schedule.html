@@ -164,14 +164,17 @@
           <ul class="list-group fixed-panel">
             {% for course in results %}
             <li class="list-group-item">
-              <button class="btn btn-info btn-xs btn-results" id="b{{course.1}}">+</button>{{ course.0.dept.code }} {{ course.0.number }} - {{ course.0.title }}
-              <p class="result-details r{{course.1}}">Prof: Tim Richards</p>
-              <p class="result-details r{{course.1}}">Lab Required: No</p>
-              <p class="result-details r{{course.1}}">Location: ILC N151</p>
-              <p class="result-details r{{course.1}}">Description: This course will is required to obtain a CS degree blah blah blah intro to java.</p>
-              <p class="result-details r{{course.1}}">Required courses: None</p>
-              <button class="btn btn-primary btn-xs btn-results" id='add{{course.1}}'>Add</button>
-              <button class="btn btn-danger btn-xs btn-results" id='del{{course.1}}'>Delete</button>
+              <button class="btn btn-info btn-xs btn-results" id="b{{course.id}}" onClick="expand( {{course.id}} )">+</button>{{ course.dept.code }} {{ course.number }} - {{ course.title }}
+              <p class="result-details r{{course.id}}">
+              <p class="result-details r{{course.id}}">Prof: Tim Richards</p>
+              <p class="result-details r{{course.id}}">Lab Required: No</p>
+              <p class="result-details r{{course.id}}">Location: ILC N151</p>
+              <p class="result-details r{{course.id}}">Description: This course will is required to obtain a CS degree blah blah blah intro to java.</p>
+              <p class="result-details r{{course.id}}">Required courses: None</p>
+              
+              <!-- temporary buttons for debugging scheduler -->
+              <button class="btn btn-primary btn-xs btn-results" id='add{{course.id}}' onClick="add( {{course.id}} )">Add</button>
+              <button class="btn btn-danger btn-xs btn-results" id='del{{course.id}}' onClick="del( {{course.id}} )">Delete</button>
             </li>
             {% endfor %}
           </ul>
