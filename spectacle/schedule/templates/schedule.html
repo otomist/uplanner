@@ -157,47 +157,85 @@
           <!-- End checkbox column options -->
         </form>
 
-        <!-- Begin Search Results -->
-         <h6>Results: </h6>
-          {% if results %}
-          <ul class="list-group fixed-panel">
-            {% for course in results %}
-            <li class="list-group-item">
-              <button class="btn btn-info btn-xs btn-results" id="b{{course.id}}" onClick="expand( {{course.id}} )">+</button>{{ course.dept.code }} {{ course.number }} - {{ course.title }}
-              <!-- Begin column information -->
-              <div class="row">
-                <!-- Left column -->
-                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                  {% if course.open == False %}<p class="result-details r{{course.id}}">Course is closed</p>{% endif %}
-                  {% if course.lab == True %}<p class="result-details r{{course.id}}">Course has labs</p>{% endif %}
-                </div>
-                <!-- Right column -->
-                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                  {% if course.conflicts == True %}<p class="result-details r{{course.id}}">Course conflicts</p>{% endif %}
-                  <p class="result-details r{{course.id}}">Credits: {{course.credits}}</p>
-                </div>
-              </div>
-              <!-- Begin block information -->
-              <p class="result-details r{{course.id}}"><strong>Description:</strong> {{course.description}}</p>
-              <p class="result-details r{{course.id}}"><strong>Restrictions:</strong> {{course.reqs}}</p>
-              {% if course.geneds %}
-                <p class="result-details r{{course.id}}"><strong>Geneds:</strong> 
-                {% for gened in course.geneds %}
-                  {{gened}} 
-                {% endfor %} </p>
-              {% endif %}
-              
-              <!-- temporary buttons for debugging scheduler -->
-              <button class="btn btn-primary btn-xs btn-results" id='add{{course.id}}' onClick="add( {{course.id}} )">Add</button>
-              <button class="btn btn-danger btn-xs btn-results" id='del{{course.id}}' onClick="del( {{course.id}} )">Delete</button>
-              <button class="btn btn-xs btn-results" id='view{{course.id}}' )">View full info</button>
-            </li>
+        <!-- Begin Tabs -->
+        <ul class="nav nav-tabs" id="scheduleTab">
+          <!-- Begin results tab -->
+          <li class="nav-item">
+            <a class="nav-link active" id="results-tab" data-toggle="tab" href="#results">Results</a>
+          </li>
+          
+          <!-- Begin courses tab -->
+          <li class="nav-item">
+            <a class="nav-link" id="courses-tab" data-toggle="tab" href="#courses">Courses</a>
+          </li>
+          
+          <!-- Begin course detail tabs -->
+          {% if course_views %}
+            {% for course in course_views %}
+              <li class="nav-item">
+                <a class="nav-link" id="{{ course.pk }}-tab" data-toggle="tab" href="#{{course.pk}}">{{ course.dept.code }} {{ course.number }}</a>
+              </li>
             {% endfor %}
-          </ul>
           {% endif %}
-        <!-- End Search Results -->
+        </ul>
+        
+        <!-- Begin tab contents -->
+        <div class="tab-content" id="scheduleTabContent">
+          <!-- Begin search results -->
+          <div class="tab-pane show active" id="results">
+            {% if results %}
+              <ul class="list-group fixed-panel">
+              {% for course in results %}
+                <li class="list-group-item">
+                  <button class="btn btn-info btn-xs btn-results" id="b{{course.id}}" onClick="expand( {{course.id}} )">+</button>{{ course.dept.code }} {{ course.number }} - {{ course.title }}
+                  <!-- Begin column information -->
+                  <div class="row">
+                    <!-- Left column -->
+                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                      {% if course.open == False %}<p class="result-details r{{course.id}}">Course is closed</p>{% endif %}
+                      {% if course.lab == True %}<p class="result-details r{{course.id}}">Course has labs</p>{% endif %}
+                    </div>
+                    <!-- Right column -->
+                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                      {% if course.conflicts == True %}<p class="result-details r{{course.id}}">Course conflicts</p>{% endif %}
+                      <p class="result-details r{{course.id}}">Credits: {{course.credits}}</p>
+                    </div>
+                  </div>
+                  <!-- Begin block information -->
+                  <p class="result-details r{{course.id}}"><strong>Description:</strong> {{course.description}}</p>
+                  <p class="result-details r{{course.id}}"><strong>Restrictions:</strong> {{course.reqs}}</p>
+                  {% if course.geneds %}
+                    <p class="result-details r{{course.id}}"><strong>Geneds:</strong> 
+                    {% for gened in course.geneds %}
+                      {{gened}} 
+                    {% endfor %} </p>
+                  {% endif %}
+                  
+                  <!-- temporary buttons for debugging scheduler -->
+                  <button class="btn btn-primary btn-xs btn-results" id='add{{course.id}}' onClick="add( {{course.id}} )">Add</button>
+                  <button class="btn btn-danger btn-xs btn-results" id='del{{course.id}}' onClick="del( {{course.id}} )">Delete</button>
+                  <button class="btn btn-xs btn-results" id='view{{course.id}}'>View full info</button>
+                </li>
+              {% endfor %}
+              </ul>
+            {% endif %}
+          </div>
+          
+          <!-- Begin current courses -->
+          <div class="tab-pane" id="courses">
+            testing...
+          </div>
+          
+          <!-- Begin course tabs -->
+          {% if course_views %}
+            {% for course in course_views %}
+              <div class="tab-pane" id="{{ course.pk }}">testing3...</div>
+            {% endfor %}
+          {% endif %}
+        </div>
+        
       </div>
-      <!-- End Search Column -->
+      <!-- End Columns -->
 
     </div>
   </div>
