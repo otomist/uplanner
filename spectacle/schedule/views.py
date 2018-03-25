@@ -66,6 +66,7 @@ def schedule(request):
                              'reqs':r[0].reqs,
                              'lab': r[0].section_set.exclude(component='lec').exists(),
                              'open': r[0].section_set.filter(open=True).exists(),
+                             'geneds': list(map(lambda g: "{}({})".format(g.code, g.name), r[0].gened.all())),
                              'conflicts': False, #TODO: implement this
                              'credits': r[0].credits,
                              }, results)

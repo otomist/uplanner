@@ -33,6 +33,9 @@
             </button>
             {{ form.keywords }}
             {{ form.departments }}
+            <!-- Begin Start Search Button TODO: reconsider the positioning of this, or its necessity -->
+            <input type="submit" value="Search" class="btn btn-primary btn-sm"/>
+            <!-- End Start Search Button -->
           </div>
           <!-- End top search bar -->
 
@@ -152,10 +155,6 @@
             <!-- End # credits checkboxes -->
           </div>
           <!-- End checkbox column options -->
-
-          <!-- Begin Start Search Button TODO: reconsider the positioning of this, or its necessity -->
-          <input type="submit" value="Search" class="btn btn-primary btn-sm search-toggle"/>
-          <!-- End Start Search Button -->
         </form>
 
         <!-- Begin Search Results -->
@@ -165,16 +164,33 @@
             {% for course in results %}
             <li class="list-group-item">
               <button class="btn btn-info btn-xs btn-results" id="b{{course.id}}" onClick="expand( {{course.id}} )">+</button>{{ course.dept.code }} {{ course.number }} - {{ course.title }}
-              <p class="result-details r{{course.id}}">
-              <p class="result-details r{{course.id}}">Prof: Tim Richards</p>
-              <p class="result-details r{{course.id}}">Lab Required: No</p>
-              <p class="result-details r{{course.id}}">Location: ILC N151</p>
-              <p class="result-details r{{course.id}}">Description: This course will is required to obtain a CS degree blah blah blah intro to java.</p>
-              <p class="result-details r{{course.id}}">Required courses: None</p>
+              <!-- Begin column information -->
+              <div class="row">
+                <!-- Left column -->
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                  {% if course.open == False %}<p class="result-details r{{course.id}}">Course is closed</p>{% endif %}
+                  {% if course.lab == True %}<p class="result-details r{{course.id}}">Course has labs</p>{% endif %}
+                </div>
+                <!-- Right column -->
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                  {% if course.conflicts == True %}<p class="result-details r{{course.id}}">Course conflicts</p>{% endif %}
+                  <p class="result-details r{{course.id}}">Credits: {{course.credits}}</p>
+                </div>
+              </div>
+              <!-- Begin block information -->
+              <p class="result-details r{{course.id}}"><strong>Description:</strong> {{course.description}}</p>
+              <p class="result-details r{{course.id}}"><strong>Restrictions:</strong> {{course.reqs}}</p>
+              {% if course.geneds %}
+                <p class="result-details r{{course.id}}"><strong>Geneds:</strong> 
+                {% for gened in course.geneds %}
+                  {{gened}} 
+                {% endfor %} </p>
+              {% endif %}
               
               <!-- temporary buttons for debugging scheduler -->
               <button class="btn btn-primary btn-xs btn-results" id='add{{course.id}}' onClick="add( {{course.id}} )">Add</button>
               <button class="btn btn-danger btn-xs btn-results" id='del{{course.id}}' onClick="del( {{course.id}} )">Delete</button>
+              <button class="btn btn-xs btn-results" id='view{{course.id}}' )">View full info</button>
             </li>
             {% endfor %}
           </ul>
