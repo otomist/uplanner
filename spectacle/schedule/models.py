@@ -9,7 +9,7 @@ class Gened(models.Model):
         return "{} ({})".format(self.name, self.code)
         
 class Department(models.Model):
-    name = models.CharField(max_length=200, help_text="Enter a department name")
+    name = models.CharField(max_length=200, blank=True, unique=True, help_text="Enter a department name")
     code = models.CharField(max_length=12, help_text="Enter the department abbreviation")
     
     def __str__(self):
