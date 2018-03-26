@@ -36,7 +36,6 @@ class Course(models.Model):
     reqs = models.TextField(max_length=1000, blank=True, default="", help_text="Enter the course requirements")
     credits = models.IntegerField(help_text="Enter # of credits")
     honors = models.BooleanField("Enter whether this class is an honors course")
-    open = models.BooleanField("Enter whether this class is currently open")
     CAREERS = (
         ('u', 'Undergrad'),
         ('g', 'Graduate'),
@@ -72,6 +71,7 @@ class Section(models.Model):
     link = models.CharField(max_length=100, help_text='Link to the spire page for the course')
     professor = models.CharField(max_length=200)
     room = models.CharField(max_length=200)
+    open = models.BooleanField("Enter whether this class is currently open", default=True)
     cap = models.IntegerField(help_text='The class maximum capacity')
     enrolled = models.IntegerField(help_text='The current number of students enrolled')
     wcap = models.IntegerField(help_text='The maximum size of the waitlist')

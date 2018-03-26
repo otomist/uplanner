@@ -58,6 +58,18 @@ def schedule(request):
     
     # Reformat results to assign each course an index (for js button)
     results = list(zip(results, [x for x in range(1, len(results)+1)]))
+    results = map(lambda r: {'id':r[1], 
+                             'title':r[0].title, 
+                             'dept':r[0].dept,
+                             'number':r[0].number,
+                             'description':r[0].description,
+                             'reqs':r[0].reqs,
+                             'lab': r[0].section_set.exclude(component='lec').exists(),
+                             'open': r[0].section_set.filter(open=True).exists(),
+                             'geneds': list(map(lambda g: "{}({})".format(g.code, g.name), r[0].gened.all())),
+                             'conflicts': False, #TODO: implement this
+                             'credits': r[0].credits,
+                             }, results)
     
     return render (
         request,
