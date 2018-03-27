@@ -59,9 +59,14 @@ h4{
     width:100%;
 }
 #searchToggleBTN img {
-    display: block;
     height: 12px;  
     width: 12px;
+}
+#expandBtn{
+    display: none;
+}
+#hideBtn{
+    display: block;
 }
 .result-details{
     display: none;

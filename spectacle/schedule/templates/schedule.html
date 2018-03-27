@@ -29,7 +29,9 @@
           <form action="" method="get">
             <button type="button" class="btn btn-secondary btn-sm" id="searchToggleBTN">
               {% load static %}
-              <img src="{% static 'images/expand.svg' %}">
+              <img id="expandBtn" src="{% static 'images/expand.svg' %}" style="display: none">
+              {% load static %}
+              <img id="hideBtn" src="{% static 'images/hide.svg' %}">
             </button>
             {{ form.keywords }}
             {{ form.departments }}
@@ -216,7 +218,11 @@
           
           <!-- Begin current courses -->
           <div class="tab-pane" id="courses">
-            testing...
+            <ul class="list-group fixed-panel">
+              <li class="list-group-item">
+                Testing
+              </li>
+            </ul>
           </div>
                   
         </div>
