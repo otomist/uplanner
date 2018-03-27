@@ -218,11 +218,15 @@
           
           <!-- Begin current courses -->
           <div class="tab-pane" id="courses">
-            <ul class="list-group fixed-panel">
-              <li class="list-group-item">
-                Testing
-              </li>
-            </ul>
+            {% if user_courses %}
+              <ul class="list-group fixed-panel">
+              {% for course in user_courses %}
+                <li class="list-group-item">
+                  <p>{{course.course}}</p>
+                </li>
+              {% endfor %}
+              </ul>
+            {% endif %}
           </div>
                   
         </div>

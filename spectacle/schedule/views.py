@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.views import generic
 from django.http import JsonResponse
-from .models import Course, Department
+from .models import Course, Department, User
 from .forms import ScheduleForm
 
 # Create your views here.
@@ -41,6 +41,13 @@ def schedule(request):
     num_dept = 0
     num_key = 0
     course_views = []
+    user_courses = []
+    
+    #replace with actual user later
+    user = User.objects.all()[0]
+    for schedule in user.schedule_set.all():
+        for course in schedule.schedulecourse_set.all():
+            user_courses.append(course)
     
     if form.is_valid():
         # The user has entered some information to search for
@@ -95,7 +102,7 @@ def schedule(request):
     return render (
         request,
         'schedule.html',
-        {'highlight_schedule':highlight_schedule, 'form':form, 'results':results, 'course_views':course_views}
+        {'highlight_schedule':highlight_schedule, 'form':form, 'results':results, 'course_views':course_views, 'user_courses':user_courses}
     )
     
 def profile(request):
