@@ -15,16 +15,20 @@ function view_tab(id, url_content, dept, num) {
        -render the new tab from javascript
        -render the new tab contents through javascript + django html
     */
+            
+    if ( !$("#nav-"+id).length ) {
+        $('<li class="nav-item" id="nav-'+id+'"><a class="nav-link" id="'+id+'-tab" data-toggle="tab" href="#'+id+'">'+dept+' '+num+'</a>').appendTo('#scheduleTab');
     
-    $('<li class="nav-item"><a class="nav-link" id="'+id+'-tab" data-toggle="tab" href="#'+id+'">'+dept+' '+num+'</a>').appendTo('#scheduleTab');
+        // Add a new tab content pane including the schedule_tabs_content.html file
+        $('<div class="tab-pane" id='+id+'></div>').appendTo('#scheduleTabContent');
+        
+        // Populate the schedule_tabs_content.html file through django
+        $('#'+id).html('').load(
+            url_content + "?course_pk=" + id
+        );
+    }
     
-    // Add a new tab content pane including the schedule_tabs_content.html file
-    $('<div class="tab-pane" id='+id+'></div>').appendTo('#scheduleTabContent');
-    
-    // Populate the schedule_tabs_content.html file through django
-    $('#'+id).html('').load(
-        url_content + "?course_pk=" + id
-    );
+    $('#'+id+'-tab').tab('show');
     
 }
 
