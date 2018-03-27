@@ -17,7 +17,7 @@ def index(request):
         'index.html',
         context={'highlight_index':highlight_index}
     )
-        
+    
 # renders a single tab's contents.
 def make_tab_content(request):
     course_pk = request.GET.get('course_pk', None)
@@ -48,7 +48,12 @@ def schedule(request):
     for schedule in user.schedule_set.all():
         for course in schedule.schedulecourse_set.all():
             user_courses.append(course)
-    
+            
+    # these are the course tabs previously opened and stored in a session
+    # note that each element of a course_tab must also agree with the format served by
+    # make_tab_content()
+    course_tabs = []
+        
     if form.is_valid():
         # The user has entered some information to search for
         if not (form.cleaned_data['keywords'] == '' and form.cleaned_data['departments'] == 'NULL'):
@@ -102,7 +107,7 @@ def schedule(request):
     return render (
         request,
         'schedule.html',
-        {'highlight_schedule':highlight_schedule, 'form':form, 'results':results, 'course_views':course_views, 'user_courses':user_courses}
+        {'highlight_schedule':highlight_schedule, 'form':form, 'results':results, 'course_tabs':course_tabs, 'user_courses':user_courses}
     )
     
 def profile(request):

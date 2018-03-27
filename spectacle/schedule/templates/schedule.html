@@ -170,6 +170,14 @@
           <li class="nav-item">
             <a class="nav-link" id="courses-tab" data-toggle="tab" href="#courses">Courses</a>
           </li>
+          
+          <!-- Begin course detail tabs -->
+          {% for course in course_tabs %}
+            <li class="nav-item">
+              <a class="nav-link" id="{{course.pk}}-tab" data-toggle="tab" href="#{{course.pk}}">Courses</a>
+            </li>
+          {% endfor %}
+          
         </ul>
         
         <!-- Begin tab contents -->
@@ -228,6 +236,14 @@
               </ul>
             {% endif %}
           </div>
+          
+          {% if course_tabs %}
+            {% for course in course_tabs %}
+              <div class="tab-pane" id="{{course.pk}}">
+                {% include 'schedule_tabs_content.html' %}
+              </div>
+            {% endfor %}
+          {% endif %}
                   
         </div>
       </div>
