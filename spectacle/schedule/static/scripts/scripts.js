@@ -70,14 +70,26 @@ $(function () {
     var searchHidden = false;
     $('#searchToggleBTN').on('click', function () {
         searchHidden ? searchHidden = false : searchHidden = true;
+        
+        //Show/hide items with .search-toggle classes
         $('.search-toggle').toggle(1000);
+
+        //Change block size for everything with .fixed-panel class
         var resPanel = document.querySelector('.fixed-panel');
         if (searchHidden) {
             resPanel.style.minHeight = '40rem';
             resPanel.style.maxHeight = '40rem';
+
+            //switch between max/minimize arrows
+            expandBtn.style.display = 'block';
+            hideBtn.style.display = 'none'; 
         } else {
             resPanel.style.minHeight = '25rem';
             resPanel.style.maxHeight = '25rem';
+
+            //switch between max/minimize arrows
+            expandBtn.style.display = 'none';
+            hideBtn.style.display = 'block'; 
         }
     });
     //Button for adding to scheduler
