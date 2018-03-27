@@ -96,14 +96,7 @@ def schedule(request):
                              'credits': r[0].credits,
                              'pk': r[0].pk,
                              }, results)
-    
-    """
-    if request.method=='POST':
-        for course in results:
-            if "btn"+str(course['pk']) in request.POST:
-                course_views.append(course)
-    """
-        
+            
     return render (
         request,
         'schedule.html',
