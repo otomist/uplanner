@@ -114,10 +114,20 @@ def profile(request):
     
     highlight_profile = True
     
+    # temporarily just grab the first user
+    user = User.objects.all()[0]
+    user_courses = map(lambda c: {
+                                  'dept':c.clss.dept,
+                                  'number':c.clss.number,
+                                  'description':c.clss.description,
+                                  'credits':c.clss.credits,
+                                  }
+                                  , user.courses.all())
+    
     return render(
         request,
         'profile.html',
-        context={'highlight_profile':highlight_profile}
+        context={'highlight_profile':highlight_profile, 'user':user, 'user_courses':user_courses}
     )
     
 def prereqs(request):

@@ -18,41 +18,24 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>
-                <button class="btn btn-info btn-xs btn-results" id="b1">+</button>COMPSCI 121
-                <p class="result-details r1 courseDetails">Introduction to Data Structures. More details later....</p>
-              </td>
-              <td>4 cr</td>
-            </tr>
-            <tr>
-              <td>
-                <button class="btn btn-info btn-xs btn-results" id="b2">+</button>COMPSCI 220
-                <p class="result-details r2 courseDetails">Introduction to Programming Methodology</p>
-              </td>
-              <td>3 cr</td>
-            </tr>
-            <tr>
-              <td>
-                <button class="btn btn-info btn-xs btn-results" id="b3">+</button>COMPSCI 250
-                <p class="result-details r3 courseDetails">Introduction to Computation</p>
-              </td>
-              <td>3 cr</td>
-            </tr>
-            <tr>
-              <td>
-                <button class="btn btn-info btn-xs btn-results" id="b4">+</button>COMPSCI 230
-                <p class="result-details r4 courseDetails">Introduction to Computer Systems</p>
-              </td>
-              <td>3 cr</td>
+            {% for course in user_courses %}
+              <tr>
+                <td>
+                  <!--button class="btn btn-info btn-xs btn-results" id="b1">+</button-->
+                  {{course.dept.code}} {{course.number}}
+                  <p>{{course.description}}</p>
+                </td>
+                <td>{{course.credits}} cr</td>
+              </tr>
+            {% endfor %}
           </tbody>
           <tfoot>
             <tr>
               <td>Total Credits:</td>
-              <td>13 cr</td>
+              <td>{{user.credits}} cr</td>
             </tr>
             <tr>
-              <td>Credits need:</td>
+              <td>Credits needed:</td>
               <td>107 cr</td>
             </tr>
           </tfoot>
@@ -71,13 +54,13 @@
           <h5 class="text-center accInfo">Account Info</h5>
           <p>&nbsp; </p>
           <p>
-            <strong>Username: </strong>Tim Richard</p>
+            <strong>Username: </strong>{{user.username}}</p>
           <p>
-            <strong>Email: </strong>CS326@umass.edu</p>
+            <strong>Email: </strong>{{user.email}}</p>
           <p>
-            <strong>Major: </strong>Computer Science</p>
+            <strong>Major: </strong>{{user.major}}</p>
           <p>
-            <strong>SID: </strong>11111111</p>
+            <strong>SID: </strong>{{user.sid}}</p>
 
           <!-- Begin Acount Change links -->
           <div class="text-right">
