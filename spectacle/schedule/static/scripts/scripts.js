@@ -6,6 +6,28 @@ function expand(id) {
         (document.getElementById("b" + id).textContent === "+") ? "-" : "+";
 }
 
+function view_tab(id, url_content, dept, num) {
+    
+    /*
+      Data flow upon click:
+       -do ajax call or other method to update the session context variable
+       -have the pre-existing tabs + contents render in normal view
+       -render the new tab from javascript
+       -render the new tab contents through javascript + django html
+    */
+    
+    $('<li class="nav-item"><a class="nav-link" id="'+id+'-tab" data-toggle="tab" href="#'+id+'">'+dept+' '+num+'</a>').appendTo('#scheduleTab');
+    
+    // Add a new tab content pane including the schedule_tabs_content.html file
+    $('<div class="tab-pane" id='+id+'></div>').appendTo('#scheduleTabContent');
+    
+    // Populate the schedule_tabs_content.html file through django
+    $('#'+id).html('').load(
+        url_content + "?course_pk=" + id
+    );
+    
+}
+
 function add(id) {
     //Temporary if statement until integration with django backend:
     if (id === 1) {
@@ -58,11 +80,11 @@ function del(id) {
         scheduler.deleteEvent(1);
         scheduler.deleteEvent(2);
         scheduler.deleteEvent(3);
-   } else {
+    } else {
         scheduler.deleteEvent(4);
         scheduler.deleteEvent(5);
         scheduler.deleteEvent(6);
-   }
+    }
 }
 
 $(function () {

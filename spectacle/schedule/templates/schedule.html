@@ -168,15 +168,6 @@
           <li class="nav-item">
             <a class="nav-link" id="courses-tab" data-toggle="tab" href="#courses">Courses</a>
           </li>
-          
-          <!-- Begin course detail tabs -->
-          {% if course_views %}
-            {% for course in course_views %}
-              <li class="nav-item">
-                <a class="nav-link" id="{{ course.pk }}-tab" data-toggle="tab" href="#{{course.pk}}">{{ course.dept.code }} {{ course.number }}</a>
-              </li>
-            {% endfor %}
-          {% endif %}
         </ul>
         
         <!-- Begin tab contents -->
@@ -214,7 +205,9 @@
                   <!-- temporary buttons for debugging scheduler -->
                   <button class="btn btn-primary btn-xs btn-results" id='add{{course.id}}' onClick="add( {{course.id}} )">Add</button>
                   <button class="btn btn-danger btn-xs btn-results" id='del{{course.id}}' onClick="del( {{course.id}} )">Delete</button>
-                  <button class="btn btn-xs btn-results" id='view{{course.id}}'>View full info</button>
+                  
+                  <button class="btn btn-info btn-xs btn-results" id="view_tab{{course.pk}}" name="test_name" onClick="view_tab( {{course.pk}}, '{% url 'make_tab_content' %}', '{{ course.dept.code }}', '{{ course.number }}' )">View full course info</button>
+                  
                 </li>
               {% endfor %}
               </ul>
@@ -225,15 +218,8 @@
           <div class="tab-pane" id="courses">
             testing...
           </div>
-          
-          <!-- Begin course tabs -->
-          {% if course_views %}
-            {% for course in course_views %}
-              <div class="tab-pane" id="{{ course.pk }}">testing3...</div>
-            {% endfor %}
-          {% endif %}
+                  
         </div>
-        
       </div>
       <!-- End Columns -->
 

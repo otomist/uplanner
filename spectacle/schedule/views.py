@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.views import generic
+from django.http import JsonResponse
 from .models import Course, Department
 from .forms import ScheduleForm
 
@@ -16,7 +17,18 @@ def index(request):
         'index.html',
         context={'highlight_index':highlight_index}
     )
-
+        
+# renders a single tab's contents.
+def make_tab_content(request):
+    course_pk = request.GET.get('course_pk', None)
+    course = Course.objects.filter(pk=course_pk)[0]
+    
+    return render (
+        request,
+        'schedule_tabs_content.html',
+        {'course': course}
+    )
+    
 def schedule(request):
     """
     The view for the schedule uses a form with GET for receiving search parameters
@@ -28,6 +40,7 @@ def schedule(request):
     highlight_schedule = True
     num_dept = 0
     num_key = 0
+    course_views = []
     
     if form.is_valid():
         # The user has entered some information to search for
@@ -69,12 +82,20 @@ def schedule(request):
                              'geneds': list(map(lambda g: "{}({})".format(g.code, g.name), r[0].gened.all())),
                              'conflicts': False, #TODO: implement this
                              'credits': r[0].credits,
+                             'pk': r[0].pk,
                              }, results)
     
+    """
+    if request.method=='POST':
+        for course in results:
+            if "btn"+str(course['pk']) in request.POST:
+                course_views.append(course)
+    """
+        
     return render (
         request,
         'schedule.html',
-        {'highlight_schedule':highlight_schedule, 'form':form, 'results':results}
+        {'highlight_schedule':highlight_schedule, 'form':form, 'results':results, 'course_views':course_views}
     )
     
 def profile(request):
