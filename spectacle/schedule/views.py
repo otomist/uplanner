@@ -18,15 +18,21 @@ def index(request):
         context={'highlight_index':highlight_index}
     )
     
+def get_tab_data(course):
+    return {
+            'course':course,
+            }
+    
 # renders a single tab's contents.
 def make_tab_content(request):
     course_pk = request.GET.get('course_pk', None)
+    
     course = Course.objects.filter(pk=course_pk)[0]
     
     return render (
         request,
         'schedule_tabs_content.html',
-        {'course': course}
+        get_tab_data(course)
     )
     
 def schedule(request):
@@ -42,6 +48,7 @@ def schedule(request):
     num_key = 0
     course_views = []
     user_courses = []
+    context = {}
     
     #replace with actual user later
     user = User.objects.all()[0]
@@ -53,6 +60,8 @@ def schedule(request):
     # note that each element of a course_tab must also agree with the format served by
     # make_tab_content()
     course_tabs = []
+    for course in course_tabs:
+        course_tabs.append(get_tab_data(course))
         
     if form.is_valid():
         # The user has entered some information to search for

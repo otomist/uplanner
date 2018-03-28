@@ -1,1 +1,11 @@
-<p id="{{course.pk}}">Course: {{course.pk}}</p>
+<h6><p>{{course.dept.code}} {{course.number}}</p></h6>
+<!--TODO: incorporate more generic fields -->
+<p>Description: {{course.description}}</p>
+<p>Requirements: {{course.reqs}}</p>
+{% for component in sections %}
+  {% if component %}
+    {% for section in component %}
+      
+    {% endfor %}
+  {% endif %}
+{% endfor %}
