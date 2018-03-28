@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.views import generic
 from django.http import JsonResponse
-from .models import Course, Department, User
+from .models import Course, Department, User, Section
 from .forms import ScheduleForm
 
 # Create your views here.
@@ -19,8 +19,33 @@ def index(request):
     )
     
 def get_tab_data(course):
+    
+    
+    components = map(
+                 lambda comp: 
+                        {'name': comp[1],
+                         'sections':course.section_set.filter(component=comp[0])},
+                        Section.COMPONENTS)
+    """
+    components = 0
+    
+    print("Printing components: ")
+    for course in course.section_set.all():
+        print("course component:")
+        print(course.component)
+    
+    
+    #print(course.section_set.filter(component='lec'))
+    
+    
+    for comp in Section.COMPONENTS:
+        print(course.section_set.filter(component=comp[0]))
+    """
+    #components = Section.COMPONENTS
+    #print(components)
     return {
             'course':course,
+            'sections':components,
             }
     
 # renders a single tab's contents.

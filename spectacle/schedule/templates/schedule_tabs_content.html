@@ -3,9 +3,14 @@
 <p>Description: {{course.description}}</p>
 <p>Requirements: {{course.reqs}}</p>
 {% for component in sections %}
-  {% if component %}
-    {% for section in component %}
-      
+  {% if component.sections %}
+    <strong>{{component.name}}:</strong>
+    <ul>
+    {% for section in component.sections %}
+      <li>
+        <p>{{section}}</p>
+      </li>
     {% endfor %}
+    </ul>
   {% endif %}
 {% endfor %}
