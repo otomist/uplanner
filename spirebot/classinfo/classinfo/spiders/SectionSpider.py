@@ -70,11 +70,6 @@ class TestSpider(scrapy.Spider):
             self.driver.find_element_by_css_selector("[id^='CLASS_SRCH_WRK2_SSR_PB_BACK']").click() #clicks on view search results to go back
             wait.until(EC.presence_of_element_located((By.XPATH,'//*[@id="DERIVED_CLSRCH_SSR_CLASSNAME_LONG$1"]')))#wait for page to load
             index = index + 1 
-        else:
-            file = open('C:/compsci326/uplanner/project1/scrapespire/test.txt','w')
-            file.write(str(self.driver.find_elements_by_css_selector("[id^='DERIVED_CLSRCH_SSR_CLASSNAME_LONG$" + str(index) + "']")))
-            file.write("\n"+"does not exist at " + str(index))
-            file.close()
         
 
         #creates an item for each section and passes it into a pipeline
