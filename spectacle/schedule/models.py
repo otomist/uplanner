@@ -14,7 +14,7 @@ class Department(models.Model):
     
     def __str__(self):
         return "{} ({})".format(self.name, self.code)
-                
+    
 class Term(models.Model):
     SEASONS = ( 
         ('w', 'Winter'),
@@ -78,12 +78,12 @@ class Section(models.Model):
     wenrolled = models.IntegerField(help_text='The current size of the waitlist')
     clss = models.ForeignKey(Course, on_delete='CASCADE', help_text='The corresponding generic class for this section')
     COMPONENTS = (
-        ('col', 'Colloquium'),
+        ('lec', 'Lecture'),
         ('dis', 'Discussion'),
+        ('lab', 'Laboratory'),
+        ('col', 'Colloquium'),
         ('the', 'Dissertation / Thesis'),
         ('stu', 'Individualized Study'),
-        ('lab', 'Laboratory'),
-        ('lec', 'Lecture'),
         ('pra', 'Practicum'),
         ('sem', 'Seminar'),
         ('ski', 'Studio / Skills'),
@@ -99,7 +99,6 @@ class User(models.Model):
     courses = models.ManyToManyField(Section, blank=True, help_text='The previous courses taken by the user')
     sid = models.CharField(max_length=8, help_text='8 digit spire id')
     major = models.ForeignKey(Department, on_delete='SET_NULL', null=True)
-    password = models.CharField(max_length=20)
     credits = models.IntegerField(help_text='The current cumulative number of credits taken')
     
     def __str__(self):
@@ -115,11 +114,6 @@ class Schedule(models.Model):
 class ScheduleCourse(models.Model):
     course = models.ForeignKey(Section, on_delete='CASCADE')
     schedule = models.ForeignKey(Schedule, on_delete='CASCADE')
-    CATEGORIES = (
-        ('w', 'Wishlist'),
-        ('a', 'Active'),
-    )
-    category = models.CharField(max_length=1, choices=CATEGORIES)
     
     def __str__(self):
         return "{} ({})".format(self.course, self.schedule)
