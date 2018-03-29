@@ -3,6 +3,9 @@ from django.views import generic
 from django.http import JsonResponse
 from .models import Course, Department, User, Section
 from .forms import ScheduleForm
+from .forms import flowchartForm
+import json
+import re
 
 # Create your views here.
 
@@ -159,12 +162,34 @@ def profile(request):
     
 def prereqs(request):
 
+    form = flowchartForm(request.GET)
+    course_list = []
+
     highlight_prereqs = True
     
+    #Populate the flowchart
+    if form.is_valid(): 
+        if(form.cleaned_data['departments'] != 'NULL'):
+            course_list = Course.objects.filter(dept__code=form.cleaned_data['departments'])
+
+    #this is a very silly way to tranfser the data but it works for now until I start using ajax.
+    course_list = json.dumps(list(map(lambda c: {str(c.number):[
+                                 c.reqs.split(" "),
+                                 len(c.reqs.split(" ")),
+                                 c.title,
+                                 c.description]
+        }, list(course_list))))
+    
+    #DEBUG:
+    #print("\nlist: ", course_list,"\n")
+    # print(type(course_list))
+    # for x in course_list:
+    #     print("\nDEBUG:: ", x['title'], '\n')
+
     return render(
         request,
         'prereqs.html',
-        context={'highlight_prereqs':highlight_prereqs}
+        context={'highlight_prereqs':highlight_prereqs, 'form':form, 'course_list':course_list}
     )
     
 class CourseDetailView(generic.DetailView):

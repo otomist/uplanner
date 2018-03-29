@@ -14,3 +14,8 @@ class ScheduleForm(forms.Form):
         
     def clean_departments(self):
         return self.cleaned_data['departments']
+
+class flowchartForm(forms.Form):
+	depts = map(lambda obj: (obj.code, obj.name), Department.objects.all())
+	
+	departments = forms.TypedChoiceField(choices=depts, coerce=str, empty_value='', help_text="Enter Department")

@@ -3,13 +3,28 @@
 {% block title %}<title>Uplanner-Prereqs</title>{% endblock %}
 
 {% block content %}
-  <h4>Course Prerequisites Flowchart</h4>
+
+<p style="display:none;" id="course_list_json">
+	{{ course_list }}
+</p>
+
+<div class="row">
+<h4>Course Prerequisites Flowchart</h4>
+	<form action="" method="get">
+		{{ form.departments }}
+		<input type="submit" value="Reload" class="btn btn-primary btn-sm"/>
+	</form>
+</div>
   <!-- Begin flowchart -->
 
   <!-- End flowchart -->
 {% endblock %}
 
 {% block imports %}
+<!-- This is a temp solution until I start using ajax-->
+  <script type="text/javascript">
+  	var v = document.getElementById('course_list_json'); 
+  </script>
   {% load static %}
   <script src="{% static 'scripts/flowchart.js' %}"></script>
 
