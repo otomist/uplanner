@@ -25,9 +25,9 @@
       <!-- Begin Search Column -->
       <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 bg-light">
         <!-- Begin top search bar -->
-        <div class="row">
-          <form action="" method="get">
-            <button type="button" class="btn btn-secondary btn-sm" id="searchToggleBTN">
+        <form action="" method="get" class="js-expand-block">
+          <div class="row">
+            <button type="button" class="btn js-expand-btn btn-secondary btn-sm" id="searchToggleBTN">
               {% load static %}
               <img id="expandBtn" src="{% static 'images/expand.svg' %}" style="display: none">
               {% load static %}
@@ -40,121 +40,122 @@
             <!-- End Start Search Button -->
           </div>
           <!-- End top search bar -->
+          <div class="js-expand-info"
+            <h6 class="search-toggle">Search filters: </h6>
 
-          <h6 class="search-toggle">Search filters: </h6>
+            <!-- Begin misc options -->
+            <div class="search-container search-toggle">
+              <div class="row justify-content-sm-left">
+                <div class="col-lg-auto col-md-auto col-sm-auto col-xs-auto bg-light">
+                  <div class="checkbox">
+                    <label>
+                      <input type="checkbox" value=""> Show closed courses </label>
+                  </div>
+                  <div class="checkbox">
+                    <label>
+                      <input type="checkbox" value=""> Show conflicting courses </label>
+                  </div>
+                </div>
+                <div class="col-lg-auto col-md-auto col-sm-auto col-xs-auto bg-light">
+                  <div class="checkbox">
+                    <label>
+                      <input type="checkbox" value=""> Show courses with unmet requirements </label>
+                  </div>
+                  <div class="checkbox">
+                    <label>
+                      <input type="checkbox" value=""> Show only honors courses </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- End misc options -->
 
-          <!-- Begin misc options -->
-          <div class="search-container search-toggle">
-            <div class="row justify-content-sm-left">
+            <!-- Begin checkbox column options -->
+            <div class="row search-container search-toggle">
+              <!-- Begin weekdays checkboxes -->
               <div class="col-lg-auto col-md-auto col-sm-auto col-xs-auto bg-light">
+                <label class="label label-default">
+                  Weekdays to include:
+                </label>
                 <div class="checkbox">
                   <label>
-                    <input type="checkbox" value=""> Show closed courses </label>
+                    <input type="checkbox" value=""> Monday</label>
                 </div>
                 <div class="checkbox">
                   <label>
-                    <input type="checkbox" value=""> Show conflicting courses </label>
+                    <input type="checkbox" value=""> Tuesday</label>
+                </div>
+                <div class="checkbox">
+                  <label>
+                    <input type="checkbox" value=""> Wednesday</label>
+                </div>
+                <div class="checkbox">
+                  <label>
+                    <input type="checkbox" value=""> Thursday</label>
+                </div>
+                <div class="checkbox">
+                  <label>
+                    <input type="checkbox" value=""> Friday</label>
                 </div>
               </div>
+              <!-- End weekdays checkboxes -->
+
+              <!-- Begin course level checkboxes -->
               <div class="col-lg-auto col-md-auto col-sm-auto col-xs-auto bg-light">
+                <label class="label label-default">
+                  Course levels to include:
+                </label>
                 <div class="checkbox">
                   <label>
-                    <input type="checkbox" value=""> Show courses with unmet requirements </label>
+                    <input type="checkbox" value=""> 100</label>
                 </div>
                 <div class="checkbox">
                   <label>
-                    <input type="checkbox" value=""> Show only honors courses </label>
+                    <input type="checkbox" value=""> 200</label>
+                </div>
+                <div class="checkbox">
+                  <label>
+                    <input type="checkbox" value=""> 300</label>
+                </div>
+                <div class="checkbox">
+                  <label>
+                    <input type="checkbox" value=""> 400</label>
+                </div>
+                <div class="checkbox">
+                  <label>
+                    <input type="checkbox" value=""> 500+</label>
                 </div>
               </div>
-            </div>
-          </div>
-          <!-- End misc options -->
+              <!-- End coure level checkboxes -->
 
-          <!-- Begin checkbox column options -->
-          <div class="row search-container search-toggle">
-            <!-- Begin weekdays checkboxes -->
-            <div class="col-lg-auto col-md-auto col-sm-auto col-xs-auto bg-light">
-              <label class="label label-default">
-                Weekdays to include:
-              </label>
-              <div class="checkbox">
-                <label>
-                  <input type="checkbox" value=""> Monday</label>
+              <!-- Begin # credits checkboxes -->
+              <div class="col-lg-auto col-md-auto col-sm-auto col-xs-auto bg-light">
+                <label class="label label-default">
+                  Course credits to include:
+                </label>
+                <div class="checkbox">
+                  <label>
+                    <input type="checkbox" value=""> 1.0</label>
+                </div>
+                <div class="checkbox">
+                  <label>
+                    <input type="checkbox" value=""> 2.0</label>
+                </div>
+                <div class="checkbox">
+                  <label>
+                    <input type="checkbox" value=""> 3.0</label>
+                </div>
+                <div class="checkbox">
+                  <label>
+                    <input type="checkbox" value=""> 4.0</label>
+                </div>
+                <div class="checkbox">
+                  <label>
+                    <input type="checkbox" value=""> 5.0+</label>
+                </div>
               </div>
-              <div class="checkbox">
-                <label>
-                  <input type="checkbox" value=""> Tuesday</label>
-              </div>
-              <div class="checkbox">
-                <label>
-                  <input type="checkbox" value=""> Wednesday</label>
-              </div>
-              <div class="checkbox">
-                <label>
-                  <input type="checkbox" value=""> Thursday</label>
-              </div>
-              <div class="checkbox">
-                <label>
-                  <input type="checkbox" value=""> Friday</label>
-              </div>
+              <!-- End # credits checkboxes -->
             </div>
-            <!-- End weekdays checkboxes -->
-
-            <!-- Begin course level checkboxes -->
-            <div class="col-lg-auto col-md-auto col-sm-auto col-xs-auto bg-light">
-              <label class="label label-default">
-                Course levels to include:
-              </label>
-              <div class="checkbox">
-                <label>
-                  <input type="checkbox" value=""> 100</label>
-              </div>
-              <div class="checkbox">
-                <label>
-                  <input type="checkbox" value=""> 200</label>
-              </div>
-              <div class="checkbox">
-                <label>
-                  <input type="checkbox" value=""> 300</label>
-              </div>
-              <div class="checkbox">
-                <label>
-                  <input type="checkbox" value=""> 400</label>
-              </div>
-              <div class="checkbox">
-                <label>
-                  <input type="checkbox" value=""> 500+</label>
-              </div>
-            </div>
-            <!-- End coure level checkboxes -->
-
-            <!-- Begin # credits checkboxes -->
-            <div class="col-lg-auto col-md-auto col-sm-auto col-xs-auto bg-light">
-              <label class="label label-default">
-                Course credits to include:
-              </label>
-              <div class="checkbox">
-                <label>
-                  <input type="checkbox" value=""> 1.0</label>
-              </div>
-              <div class="checkbox">
-                <label>
-                  <input type="checkbox" value=""> 2.0</label>
-              </div>
-              <div class="checkbox">
-                <label>
-                  <input type="checkbox" value=""> 3.0</label>
-              </div>
-              <div class="checkbox">
-                <label>
-                  <input type="checkbox" value=""> 4.0</label>
-              </div>
-              <div class="checkbox">
-                <label>
-                  <input type="checkbox" value=""> 5.0+</label>
-              </div>
-            </div>
-            <!-- End # credits checkboxes -->
           </div>
           <!-- End checkbox column options -->
         </form>
@@ -187,37 +188,38 @@
             {% if results %}
               <ul class="list-group fixed-panel">
               {% for course in results %}
-                <li class="list-group-item">
-                  <button class="btn btn-info btn-xs btn-results" id="b{{course.id}}" onClick="expand( {{course.id}} )">+</button>{{ course.dept.code }} {{ course.number }} - {{ course.title }}
-                  <!-- Begin column information -->
-                  <div class="row">
-                    <!-- Left column -->
-                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                      {% if course.open == False %}<p class="result-details r{{course.id}}">Course is closed</p>{% endif %}
-                      {% if course.lab == True %}<p class="result-details r{{course.id}}">Course has labs</p>{% endif %}
+                <li class="list-group-item js-expand-block">
+                  <button class="btn js-expand-btn btn-info btn-xs btn-results">+</button>{{ course.dept.code }} {{ course.number }} - {{ course.title }}
+                  <div class="js-expand-info">
+                    <!-- Begin column information -->
+                    <div class="row">
+                      <!-- Left column -->
+                      <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                        {% if course.open == False %}<p>Course is closed</p>{% endif %}
+                        {% if course.lab == True %}<p>Course has labs</p>{% endif %}
+                      </div>
+                      <!-- Right column -->
+                      <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                        {% if course.conflicts == True %}<p>Course conflicts</p>{% endif %}
+                        <p>Credits: {{course.credits}}</p>
+                      </div>
                     </div>
-                    <!-- Right column -->
-                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                      {% if course.conflicts == True %}<p class="result-details r{{course.id}}">Course conflicts</p>{% endif %}
-                      <p class="result-details r{{course.id}}">Credits: {{course.credits}}</p>
-                    </div>
-                  </div>
-                  <!-- Begin block information -->
-                  <p class="result-details r{{course.id}}"><strong>Description:</strong> {{course.description}}</p>
-                  <p class="result-details r{{course.id}}"><strong>Restrictions:</strong> {{course.reqs}}</p>
-                  {% if course.geneds %}
-                    <p class="result-details r{{course.id}}"><strong>Geneds:</strong> 
-                    {% for gened in course.geneds %}
-                      {{gened}} 
-                    {% endfor %} </p>
-                  {% endif %}
+                    <!-- Begin block information -->
+                    <p><strong>Description:</strong> {{course.description}}</p>
+                    <p><strong>Restrictions:</strong> {{course.reqs}}</p>
+                    {% if course.geneds %}
+                      <p><strong>Geneds:</strong> 
+                      {% for gened in course.geneds %}
+                        {{gened}} 
+                      {% endfor %} </p>
+                    {% endif %}
                   
+                  </div>
                   <!-- temporary buttons for debugging scheduler -->
                   <button class="btn btn-primary btn-xs btn-results" id='add{{course.id}}' onClick="add( {{course.id}} )">Add</button>
                   <button class="btn btn-danger btn-xs btn-results" id='del{{course.id}}' onClick="del( {{course.id}} )">Delete</button>
                   
-                  <button class="btn btn-info btn-xs btn-results" id="view_tab{{course.pk}}" name="test_name" onClick="view_tab( {{course.pk}}, '{% url 'make_tab_content' %}', '{{ course.dept.code }}', '{{ course.number }}' )">View full course info</button>
-                  
+                  <button class="btn btn-info btn-xs btn-results js-make-tab" id="view_tab{{course.pk}}" name="test_name" onClick="view_tab( {{course.pk}}, '{% url 'make_tab_content' %}', '{{ course.dept.code }}', '{{ course.number }}' )">View full course info</button>
                 </li>
               {% endfor %}
               </ul>

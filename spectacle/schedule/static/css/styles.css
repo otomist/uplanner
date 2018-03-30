@@ -68,7 +68,7 @@ h4{
 #hideBtn{
     display: block;
 }
-.result-details{
+.js-expand-info{
     display: none;
 }
 .btn-results{

@@ -1,11 +1,4 @@
 
-// Button for minimize/maximize using id passed from html
-function expand(id) {
-    $('.r' + id).toggle(1000);
-    document.getElementById("b" + id).textContent = 
-        (document.getElementById("b" + id).textContent === "+") ? "-" : "+";
-}
-
 function view_tab(id, url_content, dept, num) {
     
     /*
@@ -94,12 +87,23 @@ function del(id) {
 $(function () {
     //Button used to hide the search criteria and show more results
     var searchHidden = false;
+    
+    
+    $('.js-expand-btn').on('click', function() {
+        console.log($(event.target).attr('id'));
+        info = $(event.target).closest('.js-expand-block').find('.js-expand-info');
+        console.log(info.attr('id'));
+        info.toggle(100);
+        if ($(event.target).text() === "+") {
+            $(event.target).text("-");
+        } else if ($(event.target).text() === "-") {
+            $(event.target).text("+");
+        }
+    });
+    
     $('#searchToggleBTN').on('click', function () {
         searchHidden ? searchHidden = false : searchHidden = true;
         
-        //Show/hide items with .search-toggle classes
-        $('.search-toggle').toggle(1000);
-
         //Change block size for everything with .fixed-panel class
         var resPanel = document.querySelector('.fixed-panel');
         if (searchHidden) {
