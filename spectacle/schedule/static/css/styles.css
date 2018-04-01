@@ -80,8 +80,8 @@ h4{
     font-size: .9rem;
 }
 .fixed-panel {
-    min-height: 25rem;
-    max-height: 25rem;
+    min-height: 35rem;
+    max-height: 35rem;
     overflow-y: scroll;
 }
 .accInfo{
@@ -97,4 +97,7 @@ h4{
 .searchCol{
     padding-top:1em;
     height:20%;
+}
+#filters_wrapper{
+    text-align: center;
 }
