@@ -4,7 +4,9 @@ from django.http import JsonResponse
 from .models import Course, Department, User, Section, Schedule, ScheduleCourse
 from .forms import ScheduleForm
 from .forms import flowchartForm
+from django.contrib.auth.decorators import login_required
 import json
+import re
 
 # Create your views here.
 
@@ -186,7 +188,9 @@ def schedule(request):
         'schedule.html',
         {'highlight_schedule':highlight_schedule, 'form':form, 'results':results, 'course_tabs':course_tabs, 'user_schedules':user_schedules, 'user_courses':user_courses}
     )
-    
+
+
+@login_required(login_url='/profile/login/')
 def profile(request):
     
     highlight_profile = True

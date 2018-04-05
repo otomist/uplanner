@@ -1,6 +1,8 @@
 {% extends "base_generic.html" %}
-
 {% block title %}<title>Uplanner-Profile</title> {% endblock %}
+
+<ul>
+{% if user.is_authenticated %}
 
 {% block content %}
   <div class="container-fluid">
@@ -73,7 +75,7 @@
             <a href="#">Change Major</a>
           </div>
           <div class="text-right">
-            <a href="#">Sign Out</a>
+            <a href="{% url 'logout'%}?next={{request.path}}">Sign Out</a>
           </div>
           <!-- End Account Change links -->
         </div>
@@ -81,4 +83,9 @@
       <!-- End Profile Edit -->
     </div>
   </div>
+
 {% endblock %}
+{% else %}
+<li><a href="{% url 'login'%}?next={{request.path}}">Login</a></li>
+{% endif %}
+</ul>
