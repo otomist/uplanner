@@ -7,7 +7,7 @@ function add(id) {
             start_date: "01-01-2018 13:00",
             end_date: "01-01-2018 13:50",
             text: "CS121",
-            color: "rgb(0, 153, 255)",
+            color: "#157ddf9f",
             readonly: true
         });
         scheduler.addEvent({
@@ -15,7 +15,7 @@ function add(id) {
             start_date: "03-01-2018 13:00",
             end_date: "03-01-2018 13:50",
             text: "CS121",
-            color: "rgb(0, 153, 255)",
+            color: "#157ddf9f",
             readonly: true
         });
         scheduler.addEvent({
@@ -23,7 +23,7 @@ function add(id) {
             start_date: "05-01-2018 13:00",
             end_date: "05-01-2018 13:50",
             text: "CS121",
-            color: "rgb(0, 153, 255)",
+            color: "#157ddf9f",
             readonly: true
         });
     } else {
@@ -32,7 +32,7 @@ function add(id) {
             start_date: "02-01-2018 10:00",
             end_date: "02-01-2018 11:15",
             text: "CS121",
-            color: "rgb(0, 153, 255)",
+            color: "#157ddf9f",
             readonly: true
         });
         scheduler.addEvent({
@@ -40,7 +40,7 @@ function add(id) {
             start_date: "04-01-2018 10:00",
             end_date: "04-01-2018 11:15",
             text: "CS121",
-            color: "rgb(0, 153, 255)",
+            color: "#157ddf9f",
             readonly: true
         });
     }
