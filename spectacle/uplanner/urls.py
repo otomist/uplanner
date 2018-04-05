@@ -25,7 +25,9 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('uplanner/', include('schedule.urls')),
+    path('profile/', include('django.contrib.auth.urls')),
     path('', RedirectView.as_view(url='/uplanner/', permanent=True)),
 ]
+#Add Django site authentication urls (for login, logout, password management)
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
