@@ -80,8 +80,8 @@ h4{
     font-size: .9rem;
 }
 .fixed-panel {
-    min-height: 25rem;
-    max-height: 25rem;
+    min-height: 35rem;
+    max-height: 35rem;
     overflow-y: scroll;
 }
 .accInfo{
@@ -97,4 +97,19 @@ h4{
 .searchCol{
     padding-top:1em;
     height:20%;
+}
+#filters_wrapper{
+    text-align: center;
+}
+.highlighted_timespan {
+    transition: background-color 400ms;
+    -moz-transition: background-color 400ms;
+    -webkit-transition: background-color 400ms;
+    -o-transition: background-color 400ms;
+    opacity:0.4;
+    filter:alpha(opacity=40);
+}
+.highlighted_timespan:hover {
+    /* This color is good for classes!*/
+    background-color: #94b0ca9f;
 }

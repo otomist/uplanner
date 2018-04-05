@@ -1,7 +1,9 @@
 function init() {
     scheduler.config.xml_date = "%Y-%m-%d %H:%i";
     scheduler.config.first_hour = 6;
+    scheduler.config.last_hour = 20;
     scheduler.config.limit_time_select = true;
+    scheduler.config.time_step = 60;
 
     //used to make events read_only if they have that attribute.
     function block_readonly(id) {
@@ -34,5 +36,74 @@ function init() {
         return day;
     };
 
+    // Start Calendar swapping code
+    scheduler.locale.labels.section_type = "Type";
+
+    // default values for filters
+    var filters = {
+        calendar1: true,
+        calendar2: false,
+        calendar3: false
+    };
+
+    var filter_inputs = document.getElementById("filters_wrapper").getElementsByTagName("input");
+    for (var i=0; i<filter_inputs.length; i++) {
+        var filter_input = filter_inputs[i];
+
+        // set initial input value based on filters settings
+        filter_input.checked = filters[filter_input.name];
+
+        // attach event handler to update filters object and refresh view (so filters will be applied)
+        filter_input.onchange = function() {
+            var filter_inputs_radio = document.getElementById("filters_wrapper").getElementsByTagName("input");
+            for(var j=0; j<filter_inputs_radio.length; j++) {
+                if(filter_inputs_radio[j] !== this){
+                    filter_inputs_radio[j].checked = false;
+                }
+                filters[filter_inputs_radio[j].name] = !!filter_inputs_radio[j].checked;
+                console.log(filter_inputs_radio[j].name+" is shown?: "+ filters[filter_inputs_radio[j].name]);
+            }
+            scheduler.updateView();
+        }
+    }
+
+    // logic for workweek view
+    scheduler.filter_workweek = function(id, event) {
+        // display event only if its type is set to true in filters obj
+        // or it was not defined yet - for newly created event
+        if (filters[event.type] || event.type==scheduler.undefined) {
+            console.log(event.type)
+            return true;
+        }
+        // default, do not display event
+        return false;
+    };
+    // End Calendar swapping code
+
+    //Mouse highlighting code
+	scheduler.attachEvent("onTemplatesReady", function() {
+		var highlight_step = 60; // we are going to highlight 30 minutes timespan
+
+		var highlight_html = "";
+		var hours = scheduler.config.last_hour - scheduler.config.first_hour; // e.g. 24-8=16
+		var times = hours*60/highlight_step; // number of highlighted section we should add
+		var height = scheduler.config.hour_size_px*(highlight_step/60);
+		for (var i=0; i<times; i++) {
+			highlight_html += "<div class='highlighted_timespan' style='height: "+height+"px;'></div>"
+		}
+		scheduler.addMarkedTimespan({
+			days: "fullweek",
+			zones: "fullday",
+			html: highlight_html
+		});
+	});
+
     scheduler.init('scheduler_here', new Date(2018, 0, 1), "workweek");
+
+    scheduler.parse([
+        { start_date: "2018-01-01 12:00", end_date: "2018-01-01 19:00", text:"Calendar1 Some course", type: "calendar1", color: "#157ddf9f", readonly: true },
+        { start_date: "2018-01-05 14:00", end_date: "2018-01-05 16:00", text:"Calendar1 some course 2", type: "calendar1", color: "#157ddf9f",readonly: true },
+        { start_date: "2018-01-02 16:30", end_date: "2018-01-02 18:00", text:"Calendar2 some other course", type: "calendar1", color: "#157ddf9f", readonly: true  },
+        { start_date: "2018-01-03 18:30", end_date: "2018-01-03 20:00", text:"Calendar3 a different course", type: "calendar1", color: "#157ddf9f", readonly: true }
+    ],"json");
 }
