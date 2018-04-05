@@ -1,51 +1,4 @@
-
-function add(id) {
-    //Temporary if statement until integration with django backend:
-    if (id === 1) {
-        scheduler.addEvent({
-            id: 1,
-            start_date: "01-01-2018 13:00",
-            end_date: "01-01-2018 13:50",
-            text: "CS121",
-            color: "#157ddf9f",
-            readonly: true
-        });
-        scheduler.addEvent({
-            id: 2,
-            start_date: "03-01-2018 13:00",
-            end_date: "03-01-2018 13:50",
-            text: "CS121",
-            color: "#157ddf9f",
-            readonly: true
-        });
-        scheduler.addEvent({
-            id: 3,
-            start_date: "05-01-2018 13:00",
-            end_date: "05-01-2018 13:50",
-            text: "CS121",
-            color: "#157ddf9f",
-            readonly: true
-        });
-    } else {
-        scheduler.addEvent({
-            id: 4,
-            start_date: "02-01-2018 10:00",
-            end_date: "02-01-2018 11:15",
-            text: "CS121",
-            color: "#157ddf9f",
-            readonly: true
-        });
-        scheduler.addEvent({
-            id: 5,
-            start_date: "04-01-2018 10:00",
-            end_date: "04-01-2018 11:15",
-            text: "CS121",
-            color: "#157ddf9f",
-            readonly: true
-        });
-    }
-}
-
+/*
 function del(id) {
     if (id === 1) {
         scheduler.deleteEvent(1);
@@ -57,10 +10,102 @@ function del(id) {
         scheduler.deleteEvent(6);
     }
 }
+*/
 
 $(function () {
     //Button used to hide the search criteria and show more results
     var searchHidden = false;
+        
+    /*
+    This button adds a course to the schedule
+    It uses an ajax request to retrieve the section information, then
+    uses the retrieved information to populate the schedule.
+    When the server recieves the ajax request, it updates the database
+    It also programmatically updates the current courses list
+    */
+    $('.js-add').on('click', function() {
+        id = $(event.target).attr('section-id');
+        url = $(event.target).attr('ajax-url');
+                
+        schedules = $('.js-schedule');
+        schedule = ""
+        for (i = 0; i < schedules.length; i++) {
+            if (schedules[i].checked === true) {
+                schedule = schedules[i].name;
+            }
+        }
+        
+        $.ajax({
+            url: url,
+            data: {
+                'id': id,
+                'schedule': schedule,
+            },
+            dataType: 'json',
+            success: function (data) {
+                
+                var days = []
+                
+                for (i = 0; i < data.days.length; i+=2) {
+                    day = data.days.charAt(i) + data.days.charAt(i+1);
+                    switch(day) {
+                        case 'Mo':
+                            days.push('01-01-2018 ');
+                            break;
+                        case 'Tu':
+                            days.push('02-01-2018 ');
+                            break;
+                        case 'We':
+                            days.push('03-01-2018 ');
+                            break;
+                        case 'Th':
+                            days.push('04-01-2018 ');
+                            break;
+                        case 'Fr':
+                            days.push('05-01-2018 ');
+                            break;
+                    }
+                }
+                
+                for (i = 0; i < days.length; i++) {
+                    scheduler.addEvent({
+                        id: id + "" + i,
+                        start_date: days[i] + data.start_time,
+                        end_date: days[i] + data.end_time,
+                        text: data.title,
+                        color: "#157ddf9f",
+                        type: schedule,
+                        readonly: true
+                    });
+                }
+                
+            }
+        });
+
+    });
+    
+    $('.js-del').on('click', function() {
+        id = $(event.target).attr('section-id');
+        url = $(event.target).attr('ajax-url');
+        
+        //Attempt to delete every possible occurrence of the section
+        scheduler.deleteEvent(id + "0");
+        scheduler.deleteEvent(id + "1");
+        scheduler.deleteEvent(id + "2");
+        scheduler.deleteEvent(id + "3");
+        scheduler.deleteEvent(id + "4");
+        
+        $.ajax({
+            url: url,
+            data: {
+                'id': id,
+            },
+            dataType: 'json',
+            success: function (data) {
+                
+            }
+        });
+    });
         
     // Makes a new tab in schedule.html, and populates it with course details.
     $('.js-make-tab').on('click', function() {

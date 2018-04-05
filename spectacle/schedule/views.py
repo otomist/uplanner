@@ -1,11 +1,10 @@
 from django.shortcuts import render
 from django.views import generic
 from django.http import JsonResponse
-from .models import Course, Department, User, Section
+from .models import Course, Department, User, Section, Schedule, ScheduleCourse
 from .forms import ScheduleForm
 from .forms import flowchartForm
 import json
-import re
 
 # Create your views here.
 
@@ -63,6 +62,51 @@ def make_tab_content(request):
         get_tab_data(course)
     )
     
+def del_section(request):
+    id = request.GET.get('id', None)
+    section = Section.objects.filter(id=id)[0]
+    schedulecourse = ScheduleCourse.objects.filter(course=section)
+    if schedulecourse.exists():
+      schedulecourse[0].delete()
+    
+    data = {
+        'success': True,
+    }
+    
+    return JsonResponse(data)
+    
+def add_section(request):
+    """
+    The non-rendering "view" that handles ajax requests for adding a section to the
+    js schedule
+    """
+    id = request.GET.get('id', None)
+    schedule = request.GET.get('schedule', None)
+    
+    section = Section.objects.filter(id=id)[0]
+    title = section.clss.dept.code + ' ' + section.clss.number
+    start_time = section.start
+    end_time = section.ending
+    days = section.days
+    
+    if not schedule == None:
+      schedule = Schedule.objects.filter(title=schedule)[0]
+      if not ScheduleCourse.objects.filter(course=section).exists():
+          ScheduleCourse.objects.create_schedulecourse(section, schedule)
+      else:
+          schedulecourse = ScheduleCourse.objects.filter(course=section)[0]
+          schedulecourse.schedule = schedule
+          schedulecourse.save()
+    data = {
+        'id': id,
+        'start_time': start_time,
+        'end_time': end_time,
+        'title': title,
+        'days': days,
+    }
+    
+    return JsonResponse(data)
+    
 def schedule(request):
     """
     The view for the schedule uses a form with GET for receiving search parameters
@@ -76,11 +120,13 @@ def schedule(request):
     num_key = 0
     course_views = []
     user_courses = []
+    user_schedules = []
     context = {}
     
     #replace with actual user later
     user = User.objects.all()[0]
     for schedule in user.schedule_set.all():
+        user_schedules.append(schedule)
         for course in schedule.schedulecourse_set.all():
             user_courses.append(course)
             
@@ -138,7 +184,7 @@ def schedule(request):
     return render (
         request,
         'schedule.html',
-        {'highlight_schedule':highlight_schedule, 'form':form, 'results':results, 'course_tabs':course_tabs, 'user_courses':user_courses}
+        {'highlight_schedule':highlight_schedule, 'form':form, 'results':results, 'course_tabs':course_tabs, 'user_schedules':user_schedules, 'user_courses':user_courses}
     )
     
 def profile(request):

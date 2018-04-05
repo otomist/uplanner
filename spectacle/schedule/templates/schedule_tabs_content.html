@@ -8,12 +8,26 @@
     <ul>
     {% for section in component.sections %}
       <li>
-        <p>{{section}}</p>
+        <p>{{section.id}}</p>
+        <p>{{section.days}}, {{section.start}} - {{section.ending}}<p>
+        <p>Professor: {{section.professor}}</p>
+        <p>Room: {{section.room}}</p>
+        <p>Cap: {{section.cap}} || Enrolled: {{section.enrolled}}</p>
+        <p>Waitlist capacity: {{section.wcap}} || Waitlist Enrolled: {{section.wenrolled}}</p>
+        <p>Spire link: {{section.link}}</p>
+        
+        <!-- buttons for adding / deleting classes -->
+        <button class="btn btn-primary btn-xs btn-results js-add" ajax-url="{% url 'add_section' %}" section-id='{{section.id}}'>Add</button>
+        <button class="btn btn-danger btn-xs btn-results js-del" ajax-url="{% url 'del_section' %}" section-id='{{section.id}}'>Delete</button>
       </li>
     {% endfor %}
     </ul>
   {% endif %}
 {% endfor %}
+
+<!-- Our javascript for buttons -->
+{% load static %}
+<script src="{% static 'scripts/scripts.js' %}"></script>
 
 <!-
 sections:

@@ -12,18 +12,12 @@
       <!-- Begin dhtmlx Schedule Column-->
       <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12 bg-light">
         <div class="filters_wrapper" id="filters_wrapper">
-            <label>
-              <input type="radio" name="calendar1" />
-              Calendar1
-            </label>
-            <label>
-              <input type="radio" name="calendar2" />
-              Calendar2
-            </label>
-            <label>
-              <input type="radio" name="calendar3" />
-              Calendar3
-            </label>
+            {% for schedule in user_schedules %}
+              <label>
+                <input type="radio" class="js-schedule" name="{{schedule.title}}" />
+                {{ schedule.title }}
+              </label>
+            {% endfor %}
           </div>
         <div id="scheduler_here" class="dhx_cal_container" style='width:100%; height:46rem;'>
           <div class="dhx_cal_navline">
@@ -221,16 +215,16 @@
                     <p><strong>Description:</strong> {{course.description}}</p>
                     <p><strong>Restrictions:</strong> {{course.reqs}}</p>
                     {% if course.geneds %}
-                      <p><strong>Geneds:</strong> 
+                      <p><strong>Geneds:</strong>
                       {% for gened in course.geneds %}
-                        {{gened}} 
+                        {{gened}}
                       {% endfor %} </p>
                     {% endif %}
                   
                   </div>
                   <!-- temporary buttons for debugging scheduler -->
-                  <button class="btn btn-primary btn-xs btn-results" id='add{{course.id}}' onClick="add( {{course.id}} )">Add</button>
-                  <button class="btn btn-danger btn-xs btn-results" id='del{{course.id}}' onClick="del( {{course.id}} )">Delete</button>
+                  <!--button class="btn btn-primary btn-xs btn-results" id='add{{course.id}}' onClick="add( {{course.id}} )">Add</button>
+                  <button class="btn btn-danger btn-xs btn-results" id='del{{course.id}}' onClick="del( {{course.id}} )">Delete</button-->
                   
                   <button class="btn btn-info btn-xs btn-results js-make-tab" course-id="{{course.pk}}" href="{% url 'make_tab_content' %}" course-dept="{{ course.dept.code }}" course-num="{{ course.number }}">View full course info</button>
                 </li>

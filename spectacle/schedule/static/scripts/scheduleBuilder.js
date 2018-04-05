@@ -40,18 +40,20 @@ function init() {
     scheduler.locale.labels.section_type = "Type";
 
     // default values for filters
-    var filters = {
-        calendar1: true,
-        calendar2: false,
-        calendar3: false
-    };
-
+    var filters = {};
+    
     var filter_inputs = document.getElementById("filters_wrapper").getElementsByTagName("input");
+        
     for (var i=0; i<filter_inputs.length; i++) {
         var filter_input = filter_inputs[i];
-
+        
         // set initial input value based on filters settings
+        filters[filter_input.name] = false;
+        if (i == 0) {
+            filters[filter_input.name] = true;
+        }
         filter_input.checked = filters[filter_input.name];
+        
 
         // attach event handler to update filters object and refresh view (so filters will be applied)
         filter_input.onchange = function() {

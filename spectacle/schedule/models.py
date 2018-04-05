@@ -107,13 +107,19 @@ class User(models.Model):
 class Schedule(models.Model):
     title = models.CharField(max_length=100, help_text='User-set title for this schedule')
     user = models.ForeignKey(User, on_delete='CASCADE', help_text='The user this schedule belongs to')
-    
+        
     def __str__(self):
         return "{} -- {}".format(self.user, self.title)
+    
+class ScheduleCourseManager(models.Manager):
+    def create_schedulecourse(self, course, schedule):
+        section = self.create(course=course, schedule=schedule)
+        return section
     
 class ScheduleCourse(models.Model):
     course = models.ForeignKey(Section, on_delete='CASCADE')
     schedule = models.ForeignKey(Schedule, on_delete='CASCADE')
+    objects = ScheduleCourseManager()
     
     def __str__(self):
         return "{} ({})".format(self.course, self.schedule)
