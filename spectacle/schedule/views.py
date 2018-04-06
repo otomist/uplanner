@@ -22,49 +22,12 @@ def index(request):
         context={'highlight_index':highlight_index}
     )
     
-def get_tab_data(course):
-    
-    
-    components = map(
-                 lambda comp: 
-                        {'name': comp[1],
-                         'sections':course.section_set.filter(component=comp[0])},
-                        Section.COMPONENTS)
-    """
-    components = 0
-    
-    print("Printing components: ")
-    for course in course.section_set.all():
-        print("course component:")
-        print(course.component)
-    
-    
-    #print(course.section_set.filter(component='lec'))
-    
-    
-    for comp in Section.COMPONENTS:
-        print(course.section_set.filter(component=comp[0]))
-    """
-    #components = Section.COMPONENTS
-    #print(components)
-    return {
-            'course':course,
-            'sections':components,
-            }
-    
-# renders a single tab's contents.
-def make_tab_content(request):
-    course_pk = request.GET.get('course_pk', None)
-    
-    course = Course.objects.filter(pk=course_pk)[0]
-    
-    return render (
-        request,
-        'schedule_tabs_content.html',
-        get_tab_data(course)
-    )
-    
+# ajax view
 def del_section(request):
+    """
+    A non-rendering view that handles ajax requests for deleting
+    a course from a js schedule. simply updates the database
+    """
     id = request.GET.get('id', None)
     section = Section.objects.filter(id=id)[0]
     schedulecourse = ScheduleCourse.objects.filter(course=section)
@@ -77,6 +40,7 @@ def del_section(request):
     
     return JsonResponse(data)
     
+# ajax view
 def add_section(request):
     """
     The non-rendering "view" that handles ajax requests for adding a section to the
@@ -109,6 +73,56 @@ def add_section(request):
     
     return JsonResponse(data)
     
+# returns data needed to fill in a course tab
+def get_tab_data(course):
+    
+    components = map(
+                 lambda comp: 
+                        {'name': comp[1],
+                         'sections':course.section_set.filter(component=comp[0])},
+                        Section.COMPONENTS)
+
+    return {
+            'course':course,
+            'sections':components,
+            }
+    
+# renders a single tab's contents.
+def make_tab_content(request):
+    course_pk = request.GET.get('course_pk', None)
+    
+    course = Course.objects.filter(pk=course_pk)[0]
+    
+    return render (
+        request,
+        'schedule_tabs_content.html',
+        get_tab_data(course)
+    )
+
+# returns data needed to render a single current course listing
+def get_current_data(schedulecourse):
+    section = schedulecourse.course
+    course = section.clss
+    return {
+        'title': course.title,
+        'number': course.number,
+        'id': section.id,
+    }
+    
+
+def make_current_courses(request):
+    course_id = request.GET.get('course_id', None)
+    section = Section.objects.filter(id=course_id)[0]
+    schedulecourse = section.schedulecourse_set.all()[0]
+    
+    print(schedulecourse)
+    
+    return render (
+        request,
+        'schedule_current_courses.html',
+        {'course':get_current_data(schedulecourse)}
+    )
+
 def schedule(request):
     """
     The view for the schedule uses a form with GET for receiving search parameters
@@ -129,8 +143,8 @@ def schedule(request):
     user = User.objects.all()[0]
     for schedule in user.schedule_set.all():
         user_schedules.append(schedule)
-        for course in schedule.schedulecourse_set.all():
-            user_courses.append(course)
+        for section in schedule.schedulecourse_set.all():
+            user_courses.append(get_current_data(section))
             
     # these are the course tabs previously opened and stored in a session
     # note that each element of a course_tab must also agree with the format served by

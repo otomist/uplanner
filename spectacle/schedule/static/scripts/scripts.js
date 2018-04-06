@@ -1,17 +1,3 @@
-/*
-function del(id) {
-    if (id === 1) {
-        scheduler.deleteEvent(1);
-        scheduler.deleteEvent(2);
-        scheduler.deleteEvent(3);
-    } else {
-        scheduler.deleteEvent(4);
-        scheduler.deleteEvent(5);
-        scheduler.deleteEvent(6);
-    }
-}
-*/
-
 $(function () {
     //Button used to hide the search criteria and show more results
     var searchHidden = false;
@@ -25,8 +11,9 @@ $(function () {
     */
     $('.js-add').on('click', function() {
         id = $(event.target).attr('section-id');
-        url = $(event.target).attr('ajax-url');
-                
+        url_ajax = $(event.target).attr('ajax-url');
+        url_html = $(event.target).attr('html-url');
+                        
         schedules = $('.js-schedule');
         schedule = ""
         for (i = 0; i < schedules.length; i++) {
@@ -35,8 +22,9 @@ $(function () {
             }
         }
         
+        // Execute the ajax to get course data from server, and update database
         $.ajax({
-            url: url,
+            url: url_ajax,
             data: {
                 'id': id,
                 'schedule': schedule,
@@ -79,6 +67,18 @@ $(function () {
                     });
                 }
                 
+                // Add the course to the current course list
+                // If the course listing does not already exist, add a list element for it
+                if ( !$("#curr-"+id).length ) {
+                    // Create the new list element
+                    $('<li class="list-group-item" id="curr-' + id + '"></li>').appendTo('#current-courses');
+                    
+                    // Populate it with the schedule_current_courses.html file through django
+                    $('#curr-'+id).html('').load(
+                        url_html + "?course_id=" + id
+                    );
+                }
+                
             }
         });
 
@@ -103,6 +103,10 @@ $(function () {
             dataType: 'json',
             success: function (data) {
                 
+                // Remove the listing from the current courses
+                if ( $("#curr-"+id).length ) {
+                    $('#curr-'+id).remove();
+                }
             }
         });
     });

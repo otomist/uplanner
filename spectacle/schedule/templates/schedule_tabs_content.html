@@ -16,8 +16,8 @@
         <p>Waitlist capacity: {{section.wcap}} || Waitlist Enrolled: {{section.wenrolled}}</p>
         <p>Spire link: {{section.link}}</p>
         
-        <!-- buttons for adding / deleting classes -->
-        <button class="btn btn-primary btn-xs btn-results js-add" ajax-url="{% url 'add_section' %}" section-id='{{section.id}}'>Add</button>
+        <!-- buttons for adding / deleting classes -->        
+        <button class="btn btn-primary btn-xs btn-results js-add" html-url="{% url 'make_current_courses' %}" ajax-url="{% url 'add_section' %}" section-id='{{section.id}}'>Add</button>
         <button class="btn btn-danger btn-xs btn-results js-del" ajax-url="{% url 'del_section' %}" section-id='{{section.id}}'>Delete</button>
       </li>
     {% endfor %}

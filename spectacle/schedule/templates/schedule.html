@@ -235,15 +235,15 @@
           
           <!-- Begin current courses -->
           <div class="tab-pane" id="courses">
+            <ul class="list-group fixed-panel" id="current-courses">
             {% if user_courses %}
-              <ul class="list-group fixed-panel">
               {% for course in user_courses %}
-                <li class="list-group-item">
-                  <p>{{course.course}}</p>
+                <li class="list-group-item" id="curr-{{ course.id }}">
+                  {% include 'schedule_current_courses.html' %}
                 </li>
               {% endfor %}
-              </ul>
             {% endif %}
+            </ul>
           </div>
           
           {% if course_tabs %}
