@@ -47,9 +47,13 @@ function init() {
     for (var i=0; i<filter_inputs.length; i++) {
         var filter_input = filter_inputs[i];
         
+        if (filter_input.checked === true) {
+            console.log(i + " is already checked");
+        }
+        
         // set initial input value based on filters settings
         filters[filter_input.name] = false;
-        if (i == 0) {
+        if (i === 0) {
             filters[filter_input.name] = true;
         }
         filter_input.checked = filters[filter_input.name];
@@ -59,7 +63,7 @@ function init() {
         filter_input.onchange = function() {
             var filter_inputs_radio = document.getElementById("filters_wrapper").getElementsByTagName("input");
             for(var j=0; j<filter_inputs_radio.length; j++) {
-                if(filter_inputs_radio[j] !== this){
+                if(filter_inputs_radio[j] !== this) {
                     filter_inputs_radio[j].checked = false;
                 }
                 filters[filter_inputs_radio[j].name] = !!filter_inputs_radio[j].checked;

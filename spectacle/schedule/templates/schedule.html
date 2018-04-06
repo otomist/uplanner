@@ -181,8 +181,11 @@
           
           <!-- Begin course detail tabs -->
           {% for course in course_tabs %}
-            <li class="nav-item">
-              <a class="nav-link" id="{{course.pk}}-tab" data-toggle="tab" href="#{{course.pk}}">Courses</a>
+            <li class="nav-item" id="nav-{{course.pk}}">
+              <a class="nav-link" id="{{course.pk}}-tab" data-toggle="tab" href="#{{course.pk}}">
+                Courses
+                <button class="btn btn-danger btn-xs js-del-tab" list-class='js-tab-{{course.pk}}'>x</button>
+              </a>
             </li>
           {% endfor %}
           
