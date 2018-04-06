@@ -23,20 +23,11 @@ $(function () {
             $('<li class="nav-item" id="nav-'+id+'">\
             <a class="nav-link" id="'+id+'-tab" data-toggle="tab" href="#'+id+'">'+
             dept+' '+num+
-            '  <button class="btn btn-danger btn-xs js-del-tab btn-results" list-class="js-tab-'+id+'">x</button>\
+            '  <button class="btn btn-danger btn-xs js-del-tab btn-results" course-id="'+id+'">X</button>\
             </a>').appendTo('#scheduleTab');
-            
-            
-            /*
-            $('<li class="nav-item" id="nav-'+id+'">\
-            <a class="nav-link" id="'+id+'-tab" data-toggle="tab" href="#'+id+'">'+
-            dept+' '+num+
-            '</a>').appendTo('#scheduleTab');
-            */
             
             // Add a new tab content pane including the schedule_tabs_content.html file
             $('<div class="tab-pane" id='+id+'></div>').appendTo('#scheduleTabContent');
-            
             
             // Populate it with the schedule_tabs_content.html file through django
             $('#'+id).html('').load(
@@ -50,6 +41,17 @@ $(function () {
     
     });
     
+    /*
+    Adds the delete function to any element currently in the page or
+    added dynamically later. deletes the tab and its contents
+    */
+    $(document).on('click', '.js-del-tab', function () {
+        id = $(event.target).attr('course-id');
+        if ( $('#nav-'+id).length ) {
+            $('#nav-'+id).remove();
+            $('#'+id).remove();
+        }
+    });
     
     /*
       Button for expanding information
