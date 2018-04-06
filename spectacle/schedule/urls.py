@@ -10,6 +10,7 @@ urlpatterns = [
     path('schedule/', views.schedule, name='schedule'),
     path('schedule/ajax/add', views.add_section, name='add_section'),
     path('schedule/ajax/del', views.del_section, name='del_section'),
+    path('schedule/ajax/schedule', views.schedule_courses, name='schedule_courses'),
     path('schedule/make_tab_content/', views.make_tab_content, name='make_tab_content'),
     path('schedule/make_current_courses/', views.make_current_courses, name='make_current_courses'),
     path('profile/', views.profile, name='profile'),

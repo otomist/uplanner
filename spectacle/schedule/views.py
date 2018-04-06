@@ -8,8 +8,6 @@ from django.contrib.auth.decorators import login_required
 import json
 import re
 
-# Create your views here.
-
 def index(request):
     """
     View function for home page of site.
@@ -21,6 +19,54 @@ def index(request):
         'index.html',
         context={'highlight_index':highlight_index}
     )
+    
+# ajax view
+def schedule_courses(request):
+    """
+    An ajax view ran every time the schedule page is loaded.
+    it passes json with the current courses on the schedule to scheduleBuilder.js
+    for rendering
+    """
+    temp_courses = ScheduleCourse.objects.all()
+    courses = []
+    
+    def parse_dates(dates):
+        days = []
+        for i in range(0, len(dates), 2):
+            day = dates[i:i+2]
+            if day == "Mo":
+                days.append('2018-01-01')
+            if day == "Tu":
+                days.append('2018-01-02')
+            if day == "We":
+                days.append('2018-01-03')
+            if day == "Th":
+                days.append('2018-01-04')
+            if day == "Fr":
+                days.append('2018-01-05')
+        return days
+    
+    for scourse in temp_courses:
+        course = scourse.course
+        i = 0
+        for date in parse_dates(course.days):
+            courses.append({
+                'id': "{}{}".format(course.id, i),
+                'start_date': date + " " + str(course.start),
+                'end_date': date + " " + str(course.ending),
+                'text': "{} {}".format(course.clss.dept.code, course.clss.number),
+                'type': scourse.schedule.title,
+                'color': '#157ddf9f',
+                'readonly': True,
+            })
+            i += 1
+            
+    data = {
+        'count': len(courses),
+        'courses': courses,
+    }
+    
+    return JsonResponse(data)
     
 # ajax view
 def del_section(request):

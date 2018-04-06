@@ -102,10 +102,21 @@ function init() {
 
     scheduler.init('scheduler_here', new Date(2018, 0, 1), "workweek");
 
-    scheduler.parse([
-        { start_date: "2018-01-01 12:00", end_date: "2018-01-01 19:00", text:"Calendar1 Some course", type: "calendar1", color: "#157ddf9f", readonly: true },
-        { start_date: "2018-01-05 14:00", end_date: "2018-01-05 16:00", text:"Calendar1 some course 2", type: "calendar1", color: "#157ddf9f",readonly: true },
-        { start_date: "2018-01-02 16:30", end_date: "2018-01-02 18:00", text:"Calendar2 some other course", type: "calendar1", color: "#157ddf9f", readonly: true  },
-        { start_date: "2018-01-03 18:30", end_date: "2018-01-03 20:00", text:"Calendar3 a different course", type: "calendar1", color: "#157ddf9f", readonly: true }
-    ],"json");
+    /*
+    Add all previously stored classes to the schedule
+    Processed as an ajax json request for convenience.
+    */
+    $.ajax({
+        url: 'ajax/schedule',
+        data: {},
+        dataType: 'json',
+        success: function (data) {            
+            count = data['count'];
+            courses = data['courses'];
+            
+            for (i = 0; i < count; i++) {
+                scheduler.parse([courses[i]], 'json');
+            }
+        }
+    });
 }
