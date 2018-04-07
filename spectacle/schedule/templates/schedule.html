@@ -13,7 +13,7 @@
       <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12 bg-light">
         <div class="filters_wrapper" id="filters_wrapper">
           {% for schedule in user_schedules %}
-            <label>
+            <label class="js-schedule-container">
               <input type="radio" class="js-schedule" name="{{schedule.title}}" courses-url="{% url 'make_current_courses' %}" schedule-id="{{ schedule.id }}"/>
               {{ schedule.title }}
             </label>
@@ -21,7 +21,7 @@
         </div>
         <!-- Button that displays "add a schedule" modal-->
         <button class="btn btn-info btn-xs" data-toggle="modal" data-target="#schedule-modal">Add new schedule</button>
-        
+        <button class="btn btn-danger btn-xs js-del-schedule" url="{% url 'del_schedule' %}">Remove active schedule</button>
         <!-- "add a schedule" modal with form -->
         <form action="{% url 'make_schedule' %}" method="post" id="js-submit-schedule-btn" form-url="{% url 'make_schedule' %}">
         {% csrf_token %}

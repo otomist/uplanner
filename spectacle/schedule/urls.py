@@ -15,6 +15,7 @@ urlpatterns = [
     path('schedule/make_current_course/', views.make_current_course, name='make_current_course'),
     path('schedule/make_current_courses/', views.make_current_courses, name='make_current_courses'),
     path('schedule/ajax/make_schedule/', views.make_schedule, name='make_schedule'),
+    path('schedule/ajax/del_schedule/', views.del_schedule, name='del_schedule'),
     path('profile/', views.profile, name='profile'),
     path('prereqs/', views.prereqs, name='prereqs'),
 ]

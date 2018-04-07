@@ -196,24 +196,28 @@ def make_current_courses(request):
         {'user_courses':user_courses,}
     )
 
+def del_schedule(request):
+    schedule_title = request.GET.get('schedule', None)
+    schedule = Schedule.objects.filter(title=schedule_title)
+    if schedule.exists():
+        schedule[0].delete()
+    return JsonResponse({})
+    
 # ajax view for making a new schedule
 # TODO: currently, form.is_valid() does not get triggered without
 # page reload. Consider bypassing forms altogether
 def make_schedule(request):
-    #title = request.GET.get('title', None)
-    
     if request.is_ajax():
         form = NewScheduleForm(request.POST)
         data = {'status':'failure'}
         if form.is_valid():
-            print("Test!!!!!!")
-            print(form.cleaned_data['title'])
             title = form.cleaned_data['title']
+            
             data['title'] = title
             data['url'] = reverse(make_current_courses)
             if not Schedule.objects.filter(title=title):
                 Schedule.objects.create_schedule(title, User.objects.all()[0])
-            data['id'] = Schedule.objects.filger(title=title)[0].id
+            data['id'] = Schedule.objects.filter(title=title)[0].id
             
         else:
             # check why title is invalid??
@@ -224,6 +228,7 @@ def make_schedule(request):
         # THIS SHOULD NEVER HAPPEN - this is an ajax view, and shouldn't render anything
         print("=============Error! new schedule form received non-ajax request!============")
         return schedule(request) # attempt to salvage situation
+    
     
 def schedule(request):
     """
