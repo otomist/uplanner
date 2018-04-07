@@ -43,7 +43,7 @@ function init() {
     var filters = {};
     
     var filter_inputs = document.getElementById("filters_wrapper").getElementsByTagName("input");
-        
+    
     for (var i=0; i<filter_inputs.length; i++) {
         var filter_input = filter_inputs[i];
         
@@ -53,20 +53,20 @@ function init() {
             filters[filter_input.name] = true;
         }
         filter_input.checked = filters[filter_input.name];
-        
-
-        // attach event handler to update filters object and refresh view (so filters will be applied)
-        filter_input.onchange = function() {
-            var filter_inputs_radio = document.getElementById("filters_wrapper").getElementsByTagName("input");
-            for(var j=0; j<filter_inputs_radio.length; j++) {
-                if(filter_inputs_radio[j] !== this) {
-                    filter_inputs_radio[j].checked = false;
-                }
-                filters[filter_inputs_radio[j].name] = !!filter_inputs_radio[j].checked;
-            }
-            scheduler.updateView();
-        }
     }
+    
+    $(document).on('change', '.js-schedule', function () {
+        var filter_inputs_radio = document.getElementById("filters_wrapper").getElementsByTagName("input");
+        
+        for(var j=0; j<filter_inputs_radio.length; j++) {
+                        
+            if(filter_inputs_radio[j] !== this) {
+                filter_inputs_radio[j].checked = false;
+            }
+            filters[filter_inputs_radio[j].name] = !!filter_inputs_radio[j].checked;
+        }
+        scheduler.updateView();
+    });
 
     // logic for workweek view
     scheduler.filter_workweek = function(id, event) {

@@ -2,8 +2,7 @@ from django.shortcuts import render
 from django.views import generic
 from django.http import JsonResponse
 from .models import Course, Department, User, Section, Schedule, ScheduleCourse
-from .forms import ScheduleForm
-from .forms import flowchartForm
+from .forms import ScheduleForm, NewScheduleForm, flowchartForm
 from django.contrib.auth.decorators import login_required
 import json
 import re
@@ -20,6 +19,10 @@ def index(request):
         context={'highlight_index':highlight_index}
     )
     
+#==================================================================#    
+#       v-------------Start schedule views------------v
+#==================================================================#
+
 # ajax view
 def schedule_courses(request):
     """
@@ -168,6 +171,34 @@ def make_current_courses(request):
         {'course':get_current_data(schedulecourse)}
     )
 
+# ajax view for making a new schedule
+# TODO: currently, form.is_valid() does not get triggered without
+# page reload. Consider bypassing forms altogether
+def make_schedule(request):
+    #title = request.GET.get('title', None)
+    
+    if request.is_ajax():
+        form = NewScheduleForm(request.POST)
+        data = {'status':'failure'}
+        if form.is_valid():
+            print("Test!!!!!!")
+            print(form.cleaned_data['title'])
+            title = form.cleaned_data['title']
+            data['title'] = title
+            
+            if not Schedule.objects.filter(title=title):
+                Schedule.objects.create_schedule(title, User.objects.all()[0])
+            
+        else:
+            # check why title is invalid??
+            pass
+            
+        return JsonResponse(data)
+    else:
+        # THIS SHOULD NEVER HAPPEN - this is an ajax view, and shouldn't render anything
+        print("=============Error! new schedule form received non-ajax request!============")
+        return schedule(request) # attempt to salvage situation
+    
 def schedule(request):
     """
     The view for the schedule uses a form with GET for receiving search parameters
@@ -175,6 +206,7 @@ def schedule(request):
     a course to their schedule
     """
     form = ScheduleForm(request.GET)
+    schedule_form = NewScheduleForm(request.GET)
     results = []
     highlight_schedule = True
     num_dept = 0
@@ -245,10 +277,13 @@ def schedule(request):
     return render (
         request,
         'schedule.html',
-        {'highlight_schedule':highlight_schedule, 'form':form, 'results':results, 'course_tabs':course_tabs, 'user_schedules':user_schedules, 'user_courses':user_courses}
+        {'highlight_schedule':highlight_schedule, 'form':form, 'schedule_form':schedule_form, 'results':results, 'course_tabs':course_tabs, 'user_schedules':user_schedules, 'user_courses':user_courses}
     )
 
-
+#==================================================================#    
+#       ^-------------End schedule views------------^
+#==================================================================#
+    
 @login_required(login_url='/profile/login/')
 def profile(request):
     

@@ -12,13 +12,43 @@
       <!-- Begin dhtmlx Schedule Column-->
       <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12 bg-light">
         <div class="filters_wrapper" id="filters_wrapper">
-            {% for schedule in user_schedules %}
-              <label>
-                <input type="radio" class="js-schedule" name="{{schedule.title}}" />
-                {{ schedule.title }}
-              </label>
-            {% endfor %}
+          {% for schedule in user_schedules %}
+            <label>
+              <input type="radio" class="js-schedule" name="{{schedule.title}}" />
+              {{ schedule.title }}
+            </label>
+          {% endfor %}
+        </div>
+        <!-- Button that displays "add a schedule" modal-->
+        <button class="btn btn-info btn-xs" data-toggle="modal" data-target="#schedule-modal">Add new schedule</button>
+        
+        <!-- "add a schedule" modal with form -->
+        <form action="{% url 'make_schedule' %}" method="post" id="js-submit-schedule-btn" form-url="{% url 'make_schedule' %}">
+        {% csrf_token %}
+          <div class="modal fade" id="schedule-modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="schedule-modalLabel">New Schedule</h5>
+                  <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <label>Enter a title for your schedule:
+                  </label>
+                  {{ schedule_form.title }}
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  <input class="btn btn-info btn-xs" type="submit" value="Submit schedule"/>
+                </div>
+              </div>
+            </div>
           </div>
+        </form>
+        <!-- End modal -->
+        
         <div id="scheduler_here" class="dhx_cal_container" style='width:100%; height:46rem;'>
           <div class="dhx_cal_navline">
             <div class="dhx_cal_date"></div>

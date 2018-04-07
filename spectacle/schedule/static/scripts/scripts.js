@@ -140,6 +140,9 @@ $(function () {
         url = $(event.target).attr('ajax-url');
                 
         //Attempt to delete every possible occurrence of the section
+        // there are many, because each ScheduleCourse can meet on many
+        // different days, and each day needs its own id
+        // so the ids are just the section id[0-4]
         scheduler.deleteEvent(id + "0");
         scheduler.deleteEvent(id + "1");
         scheduler.deleteEvent(id + "2");
@@ -158,6 +161,53 @@ $(function () {
                 if ( $("#curr-"+id).length ) {
                     $('#curr-'+id).remove();
                 }
+            }
+        });
+    });
+    
+    // function for when the "new schedule" button is clicked
+    // This function only displays the form
+    $('.js-add-schedule-btn').on('click', function() {
+        // display title form + submit/cancel button
+        console.log("Test add!!!!");
+    });
+    
+    // function submitting a new schedule form
+    // this function is a little complicated. It overrides the
+    //  standard django form behavior to prevent page reloading
+    //  on form submission; instead, ajax handles communication
+    //  with server
+    $('#js-submit-schedule-btn').on('submit', function(event) {
+        // make an ajax call to django's make_schedule view
+        // django gets data from form and validates it
+        // returns success or failure:
+        // success:
+        //  django adds it to database
+        //  hide schedule form
+        //  display new radiobutton for schedule
+        //  update scheduleBuilder.js???
+        // failure:
+        //  display error
+        //  (when does error message go away?)
+        
+        event.preventDefault(); //Prevents auto-submission of form through server
+        
+        url = $(event.target).attr('form-url');
+        
+        console.log("Test submit!!!");
+        
+        $.ajax({
+            url: url,
+            data: $(this).serialize(),
+            dataType: 'json',
+            method: 'POST',
+            success: function (data) {
+                console.log("Success!!!");
+                $('<label>\
+                   <input type="radio" class="js-schedule" name="'+data['title']+'"/>'+
+                   data['title']+
+                   '</label>'
+                   ).appendTo('#filters_wrapper');
             }
         });
     });

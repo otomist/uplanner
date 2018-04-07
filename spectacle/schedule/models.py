@@ -111,10 +111,16 @@ class User(models.Model):
     def __str__(self):
         return "{}".format(self.username)
     
+class ScheduleManager(models.Manager):
+    def create_schedule(self, title, user):
+        schedule = self.create(title=title, user=user)
+        return schedule
+    
 class Schedule(models.Model):
     title = models.CharField(max_length=100, help_text='User-set title for this schedule')
     user = models.ForeignKey(User, on_delete='CASCADE', help_text='The user this schedule belongs to')
-        
+    objects = ScheduleManager()
+    
     def __str__(self):
         return "{} -- {}".format(self.user, self.title)
     

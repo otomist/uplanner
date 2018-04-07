@@ -15,6 +15,12 @@ class ScheduleForm(forms.Form):
     def clean_departments(self):
         return self.cleaned_data['departments']
 
+class NewScheduleForm(forms.Form):
+    title = forms.CharField(required=True, max_length=200)
+    
+    def clean_title(self):
+        return self.cleaned_data['title']
+        
 class flowchartForm(forms.Form):
 	depts = map(lambda obj: (obj.code, obj.name), Department.objects.all())
 	
