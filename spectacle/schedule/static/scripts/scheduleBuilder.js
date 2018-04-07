@@ -47,10 +47,6 @@ function init() {
     for (var i=0; i<filter_inputs.length; i++) {
         var filter_input = filter_inputs[i];
         
-        if (filter_input.checked === true) {
-            console.log(i + " is already checked");
-        }
-        
         // set initial input value based on filters settings
         filters[filter_input.name] = false;
         if (i === 0) {
@@ -67,7 +63,6 @@ function init() {
                     filter_inputs_radio[j].checked = false;
                 }
                 filters[filter_inputs_radio[j].name] = !!filter_inputs_radio[j].checked;
-                console.log(filter_inputs_radio[j].name+" is shown?: "+ filters[filter_inputs_radio[j].name]);
             }
             scheduler.updateView();
         }
