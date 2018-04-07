@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.views import generic
 from django.http import JsonResponse
 from django.urls import reverse
-from .models import Course, Department, User, Section, Schedule, ScheduleCourse
+from .models import Course, Department, Student, Section, Schedule, ScheduleCourse
 from .forms import ScheduleForm, NewScheduleForm, flowchartForm
 from django.contrib.auth.decorators import login_required
 import json
@@ -216,7 +216,7 @@ def make_schedule(request):
             data['title'] = title
             data['url'] = reverse(make_current_courses)
             if not Schedule.objects.filter(title=title):
-                Schedule.objects.create_schedule(title, User.objects.all()[0])
+                Schedule.objects.create_schedule(title, Student.objects.all()[0])
             data['id'] = Schedule.objects.filter(title=title)[0].id
             
         else:
@@ -247,12 +247,12 @@ def schedule(request):
     user_schedules = []
     context = {}
     
-    #replace with actual user later
-    user = User.objects.all()[0]
-    for schedule in user.schedule_set.all():
+    #replace with actual student later
+    student = Student.objects.all()[0]
+    for schedule in student.schedule_set.all():
         user_schedules.append(schedule)
     #as default, always displays the first schedule
-    for section in user.schedule_set.all()[0].schedulecourse_set.all():
+    for section in student.schedule_set.all()[0].schedulecourse_set.all():
         user_courses.append(get_current_data(section))
         
     # these are the course tabs previously opened and stored in a session
@@ -322,19 +322,19 @@ def profile(request):
     highlight_profile = True
     
     # temporarily just grab the first user
-    user = User.objects.all()[0]
+    student = Student.objects.all()[0]
     user_courses = map(lambda c: {
                                   'dept':c.clss.dept,
                                   'number':c.clss.number,
                                   'description':c.clss.description,
                                   'credits':c.clss.credits,
                                   }
-                                  , user.courses.all())
+                                  , student.courses.all())
     
     return render(
         request,
         'profile.html',
-        context={'highlight_profile':highlight_profile, 'user':user, 'user_courses':user_courses}
+        context={'highlight_profile':highlight_profile, 'user':student, 'user_courses':user_courses}
     )
     
 def prereqs(request):

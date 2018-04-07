@@ -100,7 +100,7 @@ class Section(models.Model):
     def __str__(self):
         return "{} {}".format(self.clss, self.id)
     
-class User(models.Model):
+class Student(models.Model):
     email = models.EmailField()
     username = models.CharField(max_length=30)
     courses = models.ManyToManyField(Section, blank=True, help_text='The previous courses taken by the user')
@@ -112,17 +112,17 @@ class User(models.Model):
         return "{}".format(self.username)
     
 class ScheduleManager(models.Manager):
-    def create_schedule(self, title, user):
-        schedule = self.create(title=title, user=user)
+    def create_schedule(self, title, student):
+        schedule = self.create(title=title, student=student)
         return schedule
     
 class Schedule(models.Model):
     title = models.CharField(max_length=100, help_text='User-set title for this schedule')
-    user = models.ForeignKey(User, on_delete=models.CASCADE, help_text='The user this schedule belongs to')
+    student = models.ForeignKey(Student, on_delete=models.CASCADE, help_text='The user this schedule belongs to')
     objects = ScheduleManager()
     
     def __str__(self):
-        return "{} -- {}".format(self.user, self.title)
+        return "{} -- {}".format(self.student, self.title)
     
 class ScheduleCourseManager(models.Manager):
     def create_schedulecourse(self, course, schedule):
