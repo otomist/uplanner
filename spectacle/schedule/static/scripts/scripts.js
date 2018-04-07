@@ -65,13 +65,7 @@ $(function () {
         url_ajax = $(event.target).attr('ajax-url');
         url_html = $(event.target).attr('html-url');        
         
-        schedules = $('.js-schedule');
-        schedule = ""
-        for (i = 0; i < schedules.length; i++) {
-            if (schedules[i].checked === true) {
-                schedule = schedules[i].name;
-            }
-        }
+        var schedule = $(".js-schedule:checked").attr('name');
         
         // Execute the ajax to get course data from server, and update database
         $.ajax({
@@ -108,7 +102,7 @@ $(function () {
                 
                 for (i = 0; i < days.length; i++) {
                     scheduler.addEvent({
-                        id: id + "" + i,
+                        id: id + "" + i + schedule,
                         start_date: days[i] + data.start_time,
                         end_date: days[i] + data.end_time,
                         text: data.title,
@@ -136,23 +130,26 @@ $(function () {
     });
     
     $(document).on('click', '.js-del', function() {
-        id = $(event.target).attr('section-id');
-        url = $(event.target).attr('ajax-url');
+        var id = $(event.target).attr('section-id');
+        var url = $(event.target).attr('ajax-url');
+                
+        var schedule = $(".js-schedule:checked").attr('name');
                 
         //Attempt to delete every possible occurrence of the section
         // there are many, because each ScheduleCourse can meet on many
         // different days, and each day needs its own id
         // so the ids are just the section id[0-4]
-        scheduler.deleteEvent(id + "0");
-        scheduler.deleteEvent(id + "1");
-        scheduler.deleteEvent(id + "2");
-        scheduler.deleteEvent(id + "3");
-        scheduler.deleteEvent(id + "4");
+        scheduler.deleteEvent(id + "0" + schedule);
+        scheduler.deleteEvent(id + "1" + schedule);
+        scheduler.deleteEvent(id + "2" + schedule);
+        scheduler.deleteEvent(id + "3" + schedule);
+        scheduler.deleteEvent(id + "4" + schedule);
         
         $.ajax({
             url: url,
             data: {
                 'id': id,
+                'schedule':schedule,
             },
             dataType: 'json',
             success: function (data) {

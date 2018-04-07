@@ -78,8 +78,13 @@ def del_section(request):
     a course from a js schedule. simply updates the database
     """
     id = request.GET.get('id', None)
+    schedule_title = request.GET.get('schedule', None)
+    
+    # TODO: this will break if the section/schedule are not found
     section = Section.objects.filter(id=id)[0]
-    schedulecourse = ScheduleCourse.objects.filter(course=section)
+    schedule = Schedule.objects.filter(title=schedule_title)[0]
+    
+    schedulecourse = ScheduleCourse.objects.filter(course=section).filter(schedule=schedule)
     if schedulecourse.exists():
       schedulecourse[0].delete()
     
@@ -105,13 +110,11 @@ def add_section(request):
     days = section.days
     
     if not schedule == None:
-      schedule = Schedule.objects.filter(title=schedule)[0]
-      if not ScheduleCourse.objects.filter(course=section).exists():
-          ScheduleCourse.objects.create_schedulecourse(section, schedule)
-      else:
-          schedulecourse = ScheduleCourse.objects.filter(course=section)[0]
-          schedulecourse.schedule = schedule
-          schedulecourse.save()
+        # TODO: this will break if the schedule doesn't exist
+        schedule = Schedule.objects.filter(title=schedule)[0]
+        if not ScheduleCourse.objects.filter(course=section).filter(schedule=schedule).exists():
+            ScheduleCourse.objects.create_schedulecourse(section, schedule)
+
     data = {
         'id': id,
         'start_time': start_time,
