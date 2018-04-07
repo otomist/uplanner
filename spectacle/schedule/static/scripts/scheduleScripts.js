@@ -13,11 +13,11 @@ $(function () {
     When the server recieves the ajax request, it updates the database
     It also programmatically updates the current courses list
     */
-    $('.js-add').on('click', function() {
+    $(document).on('click', '.js-add', function() {
         id = $(event.target).attr('section-id');
         url_ajax = $(event.target).attr('ajax-url');
-        url_html = $(event.target).attr('html-url');
-                        
+        url_html = $(event.target).attr('html-url');        
+        
         schedules = $('.js-schedule');
         schedule = ""
         for (i = 0; i < schedules.length; i++) {
@@ -88,10 +88,10 @@ $(function () {
 
     });
     
-    $('.js-del').on('click', function() {
+    $(document).on('click', '.js-del', function() {
         id = $(event.target).attr('section-id');
         url = $(event.target).attr('ajax-url');
-        
+                
         //Attempt to delete every possible occurrence of the section
         scheduler.deleteEvent(id + "0");
         scheduler.deleteEvent(id + "1");

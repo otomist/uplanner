@@ -154,7 +154,6 @@ def get_current_data(schedulecourse):
         'number': course.number,
         'id': section.id,
     }
-    
 
 def make_current_courses(request):
     course_id = request.GET.get('course_id', None)
@@ -242,7 +241,7 @@ def schedule(request):
                              'credits': r[0].credits,
                              'pk': r[0].pk,
                              }, results)
-            
+    
     return render (
         request,
         'schedule.html',
