@@ -37,7 +37,7 @@ class Term(models.Model):
     
 class Course(models.Model):
     title = models.CharField(max_length=200, help_text="Enter the descriptive course title")
-    dept = models.ForeignKey(Department, on_delete='CASCADE', help_text="Enter the course's department")
+    dept = models.ForeignKey(Department, on_delete=models.CASCADE, help_text="Enter the course's department")
     number = models.CharField(max_length=6, help_text="Enter the course's title number (220 in COMPSCI 220)")
     description = models.TextField(max_length=1000, help_text="Enter the course description")
     reqs = models.TextField(max_length=1000, blank=True, default="", help_text="Enter the course requirements")
@@ -74,7 +74,7 @@ class Section(models.Model):
     days = models.CharField(max_length=10, help_text="Days the course is taught")
     start = models.TimeField(help_text='The starting time of the class')
     ending = models.TimeField(help_text='The ending time of the class')
-    term = models.ForeignKey(Term, on_delete='CASCADE', default=1)
+    term = models.ForeignKey(Term, on_delete=models.CASCADE, default=1)
     link = models.CharField(max_length=100, help_text='Link to the spire page for the course')
     professor = models.CharField(max_length=200)
     room = models.CharField(max_length=200)
@@ -83,7 +83,7 @@ class Section(models.Model):
     enrolled = models.IntegerField(help_text='The current number of students enrolled')
     wcap = models.IntegerField(help_text='The maximum size of the waitlist')
     wenrolled = models.IntegerField(help_text='The current size of the waitlist')
-    clss = models.ForeignKey(Course, on_delete='CASCADE', help_text='The corresponding generic class for this section')
+    clss = models.ForeignKey(Course, on_delete=models.CASCADE, help_text='The corresponding generic class for this section')
     COMPONENTS = (
         ('lec', 'Lecture'),
         ('dis', 'Discussion'),
@@ -118,7 +118,7 @@ class ScheduleManager(models.Manager):
     
 class Schedule(models.Model):
     title = models.CharField(max_length=100, help_text='User-set title for this schedule')
-    user = models.ForeignKey(User, on_delete='CASCADE', help_text='The user this schedule belongs to')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, help_text='The user this schedule belongs to')
     objects = ScheduleManager()
     
     def __str__(self):
@@ -130,8 +130,8 @@ class ScheduleCourseManager(models.Manager):
         return section
     
 class ScheduleCourse(models.Model):
-    course = models.ForeignKey(Section, on_delete='CASCADE')
-    schedule = models.ForeignKey(Schedule, on_delete='CASCADE')
+    course = models.ForeignKey(Section, on_delete=models.CASCADE)
+    schedule = models.ForeignKey(Schedule, on_delete=models.CASCADE)
     objects = ScheduleCourseManager()
     
     def __str__(self):

@@ -14,7 +14,7 @@
         <div class="filters_wrapper" id="filters_wrapper">
           {% for schedule in user_schedules %}
             <label>
-              <input type="radio" class="js-schedule" name="{{schedule.title}}" />
+              <input type="radio" class="js-schedule" name="{{schedule.title}}" courses-url="{% url 'make_current_courses' %}" schedule-id="{{ schedule.id }}"/>
               {{ schedule.title }}
             </label>
           {% endfor %}
@@ -269,13 +269,7 @@
           <!-- Begin current courses -->
           <div class="tab-pane" id="courses">
             <ul class="list-group fixed-panel" id="current-courses">
-            {% if user_courses %}
-              {% for course in user_courses %}
-                <li class="list-group-item" id="curr-{{ course.id }}">
-                  {% include 'schedule_current_courses.html' %}
-                </li>
-              {% endfor %}
-            {% endif %}
+              {% include 'schedule_current_courses.html' %}
             </ul>
           </div>
           

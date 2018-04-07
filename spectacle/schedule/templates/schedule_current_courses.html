@@ -1,4 +1,7 @@
-<p>
-  {{course.title}} 
-  <button class="btn btn-danger btn-xs btn-results js-del" ajax-url="{% url 'del_section' %}" section-id='{{course.id}}'>Delete</button>
-</p>
+{% if user_courses %}
+  {% for course in user_courses %}
+    <li class="list-group-item" id="curr-{{ course.id }}">
+      {% include 'schedule_current_course.html' %}
+    </li>
+  {% endfor %}
+{% endif %}

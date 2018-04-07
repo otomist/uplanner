@@ -100,7 +100,9 @@ $(function () {
                     }
                 }
                 
+                console.log("Add events:");
                 for (i = 0; i < days.length; i++) {
+                    console.log(id + "" + i + schedule);
                     scheduler.addEvent({
                         id: id + "" + i + schedule,
                         start_date: days[i] + data.start_time,
@@ -120,7 +122,7 @@ $(function () {
                     
                     // Populate it with the schedule_current_courses.html file through django
                     $('#curr-'+id).html('').load(
-                        url_html + "?course_id=" + id
+                        url_html + "?course_id=" + id + '&schedule=' + data['schedule_id']
                     );
                 }
                 
@@ -134,6 +136,9 @@ $(function () {
         var url = $(event.target).attr('ajax-url');
                 
         var schedule = $(".js-schedule:checked").attr('name');
+        
+        console.log("delete events:");
+        console.log(id + "0" + schedule);
                 
         //Attempt to delete every possible occurrence of the section
         // there are many, because each ScheduleCourse can meet on many
@@ -144,6 +149,8 @@ $(function () {
         scheduler.deleteEvent(id + "2" + schedule);
         scheduler.deleteEvent(id + "3" + schedule);
         scheduler.deleteEvent(id + "4" + schedule);
+        
+        scheduler.updateView();
         
         $.ajax({
             url: url,
@@ -160,13 +167,6 @@ $(function () {
                 }
             }
         });
-    });
-    
-    // function for when the "new schedule" button is clicked
-    // This function only displays the form
-    $('.js-add-schedule-btn').on('click', function() {
-        // display title form + submit/cancel button
-        console.log("Test add!!!!");
     });
     
     // function submitting a new schedule form
@@ -190,9 +190,7 @@ $(function () {
         event.preventDefault(); //Prevents auto-submission of form through server
         
         url = $(event.target).attr('form-url');
-        
-        console.log("Test submit!!!");
-        
+                
         $.ajax({
             url: url,
             data: $(this).serialize(),
@@ -200,8 +198,9 @@ $(function () {
             method: 'POST',
             success: function (data) {
                 console.log("Success!!!");
+                console.log(data['url']);
                 $('<label>\
-                   <input type="radio" class="js-schedule" name="'+data['title']+'"/>'+
+                   <input type="radio" class="js-schedule" name="'+data['title']+'" courses-url="'+ data['url'] + 'schedule-id="' + data['id'] +'"/>'+
                    data['title']+
                    '</label>'
                    ).appendTo('#filters_wrapper');

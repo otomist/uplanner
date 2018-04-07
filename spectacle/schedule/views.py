@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.views import generic
 from django.http import JsonResponse
+from django.urls import reverse
 from .models import Course, Department, User, Section, Schedule, ScheduleCourse
 from .forms import ScheduleForm, NewScheduleForm, flowchartForm
 from django.contrib.auth.decorators import login_required
@@ -54,7 +55,7 @@ def schedule_courses(request):
         i = 0
         for date in parse_dates(course.days):
             courses.append({
-                'id': "{}{}".format(course.id, i),
+                'id': "{}{}{}".format(course.id, i, scourse.schedule.title),
                 'start_date': date + " " + str(course.start),
                 'end_date': date + " " + str(course.ending),
                 'text': "{} {}".format(course.clss.dept.code, course.clss.number),
@@ -108,10 +109,11 @@ def add_section(request):
     start_time = section.start
     end_time = section.ending
     days = section.days
+    schedule_id = Schedule.objects.filter(title=schedule)[0].id
     
     if not schedule == None:
         # TODO: this will break if the schedule doesn't exist
-        schedule = Schedule.objects.filter(title=schedule)[0]
+        schedule = Schedule.objects.filter(id=schedule_id)[0]
         if not ScheduleCourse.objects.filter(course=section).filter(schedule=schedule).exists():
             ScheduleCourse.objects.create_schedulecourse(section, schedule)
 
@@ -121,6 +123,7 @@ def add_section(request):
         'end_time': end_time,
         'title': title,
         'days': days,
+        'schedule_id':schedule_id,
     }
     
     return JsonResponse(data)
@@ -161,17 +164,36 @@ def get_current_data(schedulecourse):
         'id': section.id,
     }
 
-def make_current_courses(request):
+def make_current_course(request):
     course_id = request.GET.get('course_id', None)
-    section = Section.objects.filter(id=course_id)[0]
-    schedulecourse = section.schedulecourse_set.all()[0]
+    schedule_id = request.GET.get('schedule', None)
     
-    print(schedulecourse)
+    # TODO: this will break if any of these do not exist
+    section = Section.objects.filter(id=course_id)[0]
+    #schedulecourse = section.schedulecourse_set.all()[0]
+    schedule = Schedule.objects.filter(id=schedule_id)[0]
+    schedulecourse = section.schedulecourse_set.filter(schedule=schedule)[0]
     
     return render (
         request,
-        'schedule_current_courses.html',
+        'schedule_current_course.html',
         {'course':get_current_data(schedulecourse)}
+    )
+    
+def make_current_courses(request):
+    schedule_id = request.GET.get('schedule', None)
+        
+    schedule = Schedule.objects.filter(id=schedule_id)[0]
+    
+    user_courses = []
+    
+    for course in schedule.schedulecourse_set.all():
+        user_courses.append(get_current_data(course))
+        
+    return render (
+        request,
+        'schedule_current_courses.html',
+        {'user_courses':user_courses,}
     )
 
 # ajax view for making a new schedule
@@ -188,9 +210,10 @@ def make_schedule(request):
             print(form.cleaned_data['title'])
             title = form.cleaned_data['title']
             data['title'] = title
-            
+            data['url'] = reverse(make_current_courses)
             if not Schedule.objects.filter(title=title):
                 Schedule.objects.create_schedule(title, User.objects.all()[0])
+            data['id'] = Schedule.objects.filger(title=title)[0].id
             
         else:
             # check why title is invalid??
@@ -223,9 +246,10 @@ def schedule(request):
     user = User.objects.all()[0]
     for schedule in user.schedule_set.all():
         user_schedules.append(schedule)
-        for section in schedule.schedulecourse_set.all():
-            user_courses.append(get_current_data(section))
-            
+    #as default, always displays the first schedule
+    for section in user.schedule_set.all()[0].schedulecourse_set.all():
+        user_courses.append(get_current_data(section))
+        
     # these are the course tabs previously opened and stored in a session
     # note that each element of a course_tab must also agree with the format served by
     # make_tab_content()

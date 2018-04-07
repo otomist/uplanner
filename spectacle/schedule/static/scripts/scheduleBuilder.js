@@ -55,7 +55,10 @@ function init() {
         filter_input.checked = filters[filter_input.name];
     }
     
+    // function for toggling radio buttons and updating display
+    // to change between user schedules
     $(document).on('change', '.js-schedule', function () {
+        var url = $(event.target).attr('courses-url');
         var filter_inputs_radio = document.getElementById("filters_wrapper").getElementsByTagName("input");
         
         for(var j=0; j<filter_inputs_radio.length; j++) {
@@ -66,6 +69,13 @@ function init() {
             filters[filter_inputs_radio[j].name] = !!filter_inputs_radio[j].checked;
         }
         scheduler.updateView();
+        
+        var schedule = $(".js-schedule:checked").attr('schedule-id');
+                
+        $('#current-courses').html('').load(
+            url + '?schedule=' + schedule
+        );
+        
     });
 
     // logic for workweek view
