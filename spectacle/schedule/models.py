@@ -132,6 +132,7 @@ class ScheduleCourseManager(models.Manager):
 class ScheduleCourse(models.Model):
     course = models.ForeignKey(Section, on_delete=models.CASCADE)
     schedule = models.ForeignKey(Schedule, on_delete=models.CASCADE)
+    color = models.CharField(max_length=15, help_text="Enter the color for this course", default="#157ddf9f")
     objects = ScheduleCourseManager()
     
     def __str__(self):
