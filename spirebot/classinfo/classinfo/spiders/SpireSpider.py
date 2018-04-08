@@ -1,5 +1,5 @@
-from ..items import CourseInfo
-from ..items import CourseLoader
+from ..items import CourseItem, GenedItem, DepartmentItem, TermItem, SectionItem, ScheduleItem, ScheduleCourseItem
+from ..items import ItemLoader
 import logging
 import copy
 import selenium
@@ -13,6 +13,9 @@ from scrapy.http import HtmlResponse
 from scrapy.http import Request
 from scrapy.shell import inspect_response
 
+from schedule.models import Term, Department, Course
+
+
 
 class SpireSpider(scrapy.Spider):
     name = 'spire'
@@ -21,6 +24,28 @@ class SpireSpider(scrapy.Spider):
 
     def __init__(self):
         self.driver = webdriver.Chrome('C:/Users/Kerry Ngan\Miniconda3/chromedriver.exe')
+
+    #creates an item for each section and passes it into a pipeline
+    def load_courseitem(self, page1_selector, page2_selector, index):  
+        course_loader = ItemLoader(item = CourseItem(), selector = page1_selector)
+
+        course_loader.add_css('title', "[id^='DERIVED_CLSRCH_DESCR200$" + str(index) + "']")
+        course_loader.add_css('dept', "[id^='DERIVED_CLSRCH_DESCR200$" + str(index) + "']")
+        course_loader.add_css('number', "[id^='DERIVED_CLSRCH_DESCR200$" + str(index) + "']")
+        course_loader.add_css('honors', "[id^='DERIVED_CLSRCH_DESCR200$" + str(index) + "']")
+
+        course_loader.selector = page2_selector
+        course_loader.add_css('description', "[id^='win0divDERIVED_CLSRCH_DESCRLONG']") 
+        course_loader.add_css('reqs', "[id^='win0divSSR_CLS_DTL_WRK_SSR_REQUISITE_LONG']")
+        course_loader.add_css('credits', "[id^='SSR_CLS_DTL_WRK_UNITS_RANGE']")
+        course_loader.add_css('career', "[id^='PSXLATITEM_XLATLONGNAME$33$']")
+        
+        course_loader.add_value('session', 'un')
+        #course_loader.add_value('gened', 'social behavior')
+        course_loader.add_value('start_date', '2018-03-27')
+        course_loader.add_value('end_date', '2018-03-27')  
+
+        return course_loader.load_item()
 
     def parse(self, response):
         wait = WebDriverWait(self.driver,10)
@@ -35,7 +60,6 @@ class SpireSpider(scrapy.Spider):
         login_info = line.split()
         username.send_keys(login_info[0])
         password.send_keys(login_info[1])
-
         self.driver.find_element_by_name('Submit').submit()
 
         #move to student center
@@ -58,41 +82,29 @@ class SpireSpider(scrapy.Spider):
         wait.until(EC.presence_of_element_located((By.XPATH,'//*[@id="CLASS_SRCH_WRK2_SSR_PB_NEW_SEARCH"]')))
         
 
-        #scrape spire for courses
-        driver_selector = Selector(text = self.driver.page_source)
+        #start scraping spire for course information
+        page1_selector = Selector(text = self.driver.page_source)
+        course_index = 0
+        selector_index = 0 #count of the links on the page
 
-        file = open('C:/Compsci326/scrapespire/test.txt', 'w')
+        while self.driver.find_elements_by_css_selector("[id^='win0divDERIVED_CLSRCH_GROUPBOX1$133$$" + str(course_index) + "']") and course_index < 2:
+            exists_course = False
+            while  self.driver.find_element_by_css_selector("[id^='win0divDERIVED_CLSRCH_GROUPBOX1$133$$" + str(course_index) + "']").find_elements_by_css_selector("[id^='DERIVED_CLSRCH_SSR_CLASSNAME_LONG$" + str(selector_index) + "']") : 
+                search_result = self.driver.find_element_by_css_selector("[id^='DERIVED_CLSRCH_SSR_CLASSNAME_LONG$" + str(selector_index) + "']") #finds the first section for a course
+                search_result.click() #clicks on the section
+                wait.until(EC.presence_of_element_located((By.XPATH,'//*[@id="CLASS_SRCH_WRK2_SSR_PB_BACK"]'))) #wait for page to load
+                page2_selector = Selector(text = self.driver.page_source)#update the driver selector2 with the current page source
+                
+                if(not exists_course):
+                    yield self.load_courseitem(page1_selector, page2_selector, course_index)
+                    first_section = True
 
-        
-        #for selector in driver_selector.css("[id^='DERIVED_CLSRCH_DESCR200'],[id*='win0divDERIVED_CLSRCH_GROUPBOX']"):
-        cloader = None
-        c = 0
-        for selector in driver_selector.xpath("//table[@id = 'ACE_$ICField102$0']/tbody/tr"):
-            c=c+1
-            file.write(str(c)+"\n")
-            if(cloader is None):
-                cloader = CourseLoader(item = CourseInfo(), selector = selector)
-            else:
-                cloader.selector = selector
-            file.write("Does cloader exist: "+ str(cloader is not None)+"\n")
-            file.write("name element: " +str(selector.css("[id^='DERIVED_CLSRCH_DESCR200']"))+"\n")
-            file.write("date element: " +str(selector.css("[id^='MTG_DAYTIME']"))+"\n")
-            if selector.css("[id^='DERIVED_CLSRCH_DESCR200']"):
-                cloader.add_css('name', "[id^='DERIVED_CLSRCH_DESCR200']")
-            if selector.css("[id^='MTG_DAYTIME']"):     
-                cloader.add_css('date', "[id^='MTG_DAYTIME']")
-            else:
-                continue
-            if selector.css("[id^='MTG_ROOM']"): 
-                cloader.add_css('room', "[id^='MTG_ROOM']")
-            if selector.css("[id^='MTG_INSTR']"): 
-                cloader.add_css('instructor', "[id^='MTG_INSTR']")
+
+                #webelement2_list.append(driver_selector.xpath("//div[@id = 'win0divPSPAGECONTAINER']/table/tbody/tr")) #splits the page source into elements for each row 
+                #yield self.create_item(page1_selector,page2_selector,course_index)
+                self.driver.find_element_by_css_selector("[id^='CLASS_SRCH_WRK2_SSR_PB_BACK']").click() #clicks on view search results to go back
+                wait.until(EC.presence_of_element_located((By.XPATH,'//*[@id="DERIVED_CLSRCH_SSR_CLASSNAME_LONG$1"]')))#wait for page to load
+                selector_index = selector_index + 1
+            course_index = course_index + 1
             
-            file.write("name value: " +str(cloader.get_output_value('name'))+"\n")
-            file.write("date value: " +str(cloader.get_output_value('date'))+"\n")
-            
-            
-            loaded = copy.deepcopy(cloader)
-            cloader = None
-            yield loaded.load_item()
-        file.close
+

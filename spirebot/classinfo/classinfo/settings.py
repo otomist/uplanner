@@ -92,3 +92,16 @@ ROBOTSTXT_OBEY = True
 ITEM_PIPELINES = {
     'classinfo.pipelines.ClassinfoPipeline': 300
 }
+
+# Setting up django's project full path.
+import sys
+sys.path.append('../../spectacle/')
+
+# Setting up django's settings module name.
+# This module is located at /home/rolando/projects/myweb/myweb/settings.py.
+import os
+os.environ['DJANGO_SETTINGS_MODULE'] = 'uplanner.settings'
+
+# Since Django 1.7, setup() call is required to populate the apps registry.
+import django; 
+django.setup()
