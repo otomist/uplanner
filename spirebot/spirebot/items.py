@@ -91,8 +91,16 @@ class ItemLoader(ItemLoader):
         return '1' if words[1][0] == 'H' else '0'
 
     def proc_career(input_str):
-        words = input_str.split()
-        return words[1]
+        career_dict = {
+            'Undergraduate' : 'u',
+            'Graduate' : 'g',
+            'Non-Credit' : 'c',
+            'Non_Degree' : 'd',
+        }
+        with open('c:/compsci326/test/test.txt', 'w') as f:
+            f.write(input_str +'\n' + input_str[1:])
+        f.close()
+        return career_dict[input_str]
     
     default_item_class = CourseInfo
     
