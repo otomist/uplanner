@@ -4,8 +4,7 @@
 #
 # See documentation in:
 # https://doc.scrapy.org/en/latest/topics/items.html
-import sys
-sys.path.append('../../spectacle/')
+
 import re
 import scrapy
 from scrapy.loader import ItemLoader
@@ -18,7 +17,6 @@ from schedule.models import Department
 from schedule.models import Term
 from schedule.models import Course
 from schedule.models import Section
-from schedule.models import User
 from schedule.models import Schedule
 from schedule.models import ScheduleCourse
 
@@ -59,9 +57,6 @@ class TermItem(DjangoItem):
     
 class SectionItem(DjangoItem):
     django_model = Section
-
-class UserItem(DjangoItem):
-    django_model = User
 
 class ScheduleItem(DjangoItem):
     django_model = Schedule

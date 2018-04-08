@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Scrapy settings for classinfo project
+# Scrapy settings for spirebot project
 #
 # For simplicity, this file contains only settings considered important or
 # commonly used. You can find more settings consulting the documentation:
@@ -9,14 +9,14 @@
 #     https://doc.scrapy.org/en/latest/topics/downloader-middleware.html
 #     https://doc.scrapy.org/en/latest/topics/spider-middleware.html
 
-BOT_NAME = 'classinfo'
+BOT_NAME = 'spirebot'
 
-SPIDER_MODULES = ['classinfo.spiders']
-NEWSPIDER_MODULE = 'classinfo.spiders'
+SPIDER_MODULES = ['spirebot.spiders']
+NEWSPIDER_MODULE = 'spirebot.spiders'
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-#USER_AGENT = 'classinfo (+http://www.yourdomain.com)'
+#USER_AGENT = 'spirebot (+http://www.yourdomain.com)'
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = True
@@ -47,13 +47,13 @@ ROBOTSTXT_OBEY = True
 # Enable or disable spider middlewares
 # See https://doc.scrapy.org/en/latest/topics/spider-middleware.html
 #SPIDER_MIDDLEWARES = {
-#    'classinfo.middlewares.ClassinfoSpiderMiddleware': 543,
+#    'spirebot.middlewares.spirebotSpiderMiddleware': 543,
 #}
 
 # Enable or disable downloader middlewares
 # See https://doc.scrapy.org/en/latest/topics/downloader-middleware.html
 #DOWNLOADER_MIDDLEWARES = {
-#    'classinfo.middlewares.ClassinfoDownloaderMiddleware': 543,
+#    'spirebot.middlewares.spirebotDownloaderMiddleware': 543,
 #}
 
 # Enable or disable extensions
@@ -65,7 +65,7 @@ ROBOTSTXT_OBEY = True
 # Configure item pipelines
 # See https://doc.scrapy.org/en/latest/topics/item-pipeline.html
 #ITEM_PIPELINES = {
-#    'classinfo.pipelines.ClassinfoPipeline': 300,
+#    'spirebot.pipelines.spirebotPipeline': 300,
 #}
 
 # Enable and configure the AutoThrottle extension (disabled by default)
@@ -90,12 +90,12 @@ ROBOTSTXT_OBEY = True
 #HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
 
 ITEM_PIPELINES = {
-    'classinfo.pipelines.ClassinfoPipeline': 300
+    'spirebot.pipelines.spirebotPipeline': 300
 }
 
 # Setting up django's project full path.
 import sys
-sys.path.append('../../spectacle/')
+sys.path.append('../spectacle')
 
 # Setting up django's settings module name.
 # This module is located at /home/rolando/projects/myweb/myweb/settings.py.
@@ -103,5 +103,5 @@ import os
 os.environ['DJANGO_SETTINGS_MODULE'] = 'uplanner.settings'
 
 # Since Django 1.7, setup() call is required to populate the apps registry.
-import django; 
+import django
 django.setup()

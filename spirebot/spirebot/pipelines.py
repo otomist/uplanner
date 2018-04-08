@@ -7,7 +7,7 @@
 
 from scrapy.exporters import XmlItemExporter
 from scrapy import signals
-class ClassinfoPipeline(object):
+class spirebotPipeline(object):
 
     def process_item(self, item, spider):
         item.save()

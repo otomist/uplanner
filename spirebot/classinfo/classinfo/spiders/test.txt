@@ -1,1 +1,0 @@
-['COMPSCI', '198J', 'P-', 'High', 'School', 'Teaching', 'Practicum']
