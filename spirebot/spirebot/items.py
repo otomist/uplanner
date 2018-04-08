@@ -97,11 +97,32 @@ class ItemLoader(ItemLoader):
             'Non-Credit' : 'c',
             'Non_Degree' : 'd',
         }
-        with open('c:/compsci326/test/test.txt', 'w') as f:
-            f.write(input_str +'\n' + input_str[1:])
-        f.close()
         return career_dict[input_str]
     
+    def proc_session(input_str):
+        session_dict = {
+            'University' : 'un',
+            'University Eligible/CPE' : 'uc',
+            'University Non-standard Dates' : 'ud',
+            'CPE Summer Session 1' : 'c1',
+            'CPE Summer Session 2' : 'c2',
+            'CPE Summer Session 3' : 'c3',
+        }
+
+        return session_dict[input_str[1:]]
+    
+    def proc_start_date(input_str):
+        date_list = re.split(r'[\s-]+', input_str)
+        start_date = date_list[0]
+        date_split = start_date.split('/')
+        return date_split[2] + '-' + date_split[0] + '-' + date_split[1]
+    
+    def proc_end_date(input_str):
+        date_list = re.split(r'[\s-]+', input_str)
+        end_date = date_list[1]
+        date_split = end_date.split('/')
+        return date_split[2] + '-' + date_split[0] + '-' + date_split[1]
+
     default_item_class = CourseInfo
     
     default_input_processor = MapCompose(default_proc)
@@ -112,5 +133,7 @@ class ItemLoader(ItemLoader):
     number_in = MapCompose(default_proc, proc_number)
     honors_in = MapCompose(default_proc, proc_honor)
     career_in = MapCompose(default_proc, proc_career)
+    session_in = MapCompose(default_proc, proc_session)
+    start_date_in = MapCompose(default_proc, proc_start_date)
+    end_date_in = MapCompose(default_proc, proc_ end_date)
 
-    date_out = Join()
