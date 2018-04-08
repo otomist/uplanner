@@ -40,10 +40,10 @@ class SpireSpider(scrapy.Spider):
         course_loader.add_css('credits', "[id^='SSR_CLS_DTL_WRK_UNITS_RANGE']")
         course_loader.add_css('career', "[id^='PSXLATITEM_XLATLONGNAME$33$']")
         
-        course_loader.add_value('session', 'un')
-        #course_loader.add_value('gened', 'social behavior')
-        course_loader.add_value('start_date', '2018-03-27')
-        course_loader.add_value('end_date', '2018-03-27')  
+        course_loader.add_css('session', "[id='PSXLATITEM_XLATLONGNAME']")
+        #course_loader.add_value('gened', 'social behavior')MTG_DATE$0
+        course_loader.add_css('start_date', "[id^='MTG_DATE']")
+        course_loader.add_css('end_date', "[id^='MTG_DATE']")  
 
         return course_loader.load_item()
 
@@ -87,7 +87,7 @@ class SpireSpider(scrapy.Spider):
         course_index = 0
         selector_index = 0 #count of the links on the page
 
-        while self.driver.find_elements_by_css_selector("[id^='win0divDERIVED_CLSRCH_GROUPBOX1$133$$" + str(course_index) + "']") and course_index < 2:
+        while self.driver.find_elements_by_css_selector("[id^='win0divDERIVED_CLSRCH_GROUPBOX1$133$$" + str(course_index) + "']"):
             exists_course = False
             while  self.driver.find_element_by_css_selector("[id^='win0divDERIVED_CLSRCH_GROUPBOX1$133$$" + str(course_index) + "']").find_elements_by_css_selector("[id^='DERIVED_CLSRCH_SSR_CLASSNAME_LONG$" + str(selector_index) + "']") : 
                 search_result = self.driver.find_element_by_css_selector("[id^='DERIVED_CLSRCH_SSR_CLASSNAME_LONG$" + str(selector_index) + "']") #finds the first section for a course
@@ -98,7 +98,6 @@ class SpireSpider(scrapy.Spider):
                 if(not exists_course):
                     yield self.load_courseitem(page1_selector, page2_selector, course_index)
                     first_section = True
-
 
                 #webelement2_list.append(driver_selector.xpath("//div[@id = 'win0divPSPAGECONTAINER']/table/tbody/tr")) #splits the page source into elements for each row 
                 #yield self.create_item(page1_selector,page2_selector,course_index)
