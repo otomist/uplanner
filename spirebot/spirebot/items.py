@@ -135,5 +135,5 @@ class ItemLoader(ItemLoader):
     career_in = MapCompose(default_proc, proc_career)
     session_in = MapCompose(default_proc, proc_session)
     start_date_in = MapCompose(default_proc, proc_start_date)
-    end_date_in = MapCompose(default_proc, proc_ end_date)
+    end_date_in = MapCompose(default_proc, proc_end_date)
 
