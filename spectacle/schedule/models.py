@@ -44,7 +44,7 @@ class Course(models.Model):
     credits = models.IntegerField(help_text="Enter # of credits")
     honors = models.BooleanField("Enter whether this class is an honors course")
     CAREERS = (
-        ('u', 'Undergrad'),
+        ('u', 'Undergraduate'),
         ('g', 'Graduate'),
         ('c', 'Non-Credit'),
         ('d', 'Non-Degree'),
