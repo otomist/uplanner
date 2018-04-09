@@ -1,12 +1,6 @@
 from django.db import models
 from django.urls import reverse
 
-"""
-To change:
- -User -> Student
- -add 'color' to ScheduleCourse
-"""
-
 
 class Gened(models.Model):
     name = models.CharField(max_length=200, help_text="Enter a gened category")

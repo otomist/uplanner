@@ -323,7 +323,7 @@ def profile(request):
     
     # temporarily just grab the first user
     student = Student.objects.all()[0]
-        
+    
     user_courses = map(lambda c: {
                                   'dept':c.clss.dept,
                                   'number':c.clss.number,
