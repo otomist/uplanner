@@ -94,7 +94,6 @@ function makeTable(){
 	}
 	document.write("<table>" + table + "</table>");
 }
-makeTable();
 function highlight(e){
 	e.style.border = "7px solid #881c1c";
 }
@@ -229,6 +228,15 @@ function totalCredits(){
 	}
 	var element = document.getElementById("credits");
 	element.innerHTML = "Total Credits: " + credits;
+}
+function drawTable(){
+	makeTable();
+	for(var key in examples){
+		addMoveOverEvent(key);
+		addOnClikerEvent(key);
+		addDoubleClickerEvent(key);
+	}
+	
 }
 
 
