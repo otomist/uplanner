@@ -8,6 +8,27 @@ class ScheduleForm(forms.Form):
     depts = [('NULL','')] + depts
     departments = forms.TypedChoiceField(choices=depts, coerce=str, initial='NULL', empty_value='NULL', help_text="Enter department to search within")
     
+    #Sihua's Edit start 
+    # need checkbox for every day and will return True or False
+    Mon = forms.BooleanField()
+    Tus = forms.BooleanField()
+    Wed = forms.BooleanField()
+    Thu = forms.BooleanField()
+    Fri = forms.BooleanField()
+
+    days = get_daykeys()
+    # a function to change a list of True or False to keys for searching
+    def get_daykeys(self):
+        days = [Mon, Tus, Wed, Thu, Fri]
+        dayKeys = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
+        finalKeys = []
+        for x in range(5):
+            if days[x]:
+                finalKeys.append(dayKeys[x])
+        return finalKeys
+
+    #Sihua's Edit End
+	
     # cleaning functions -- currently they do nothing
     def clean_keywords(self):
         return self.cleaned_data['keywords']
