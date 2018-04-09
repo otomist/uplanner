@@ -1,5 +1,5 @@
 from ..items import CourseInfo
-from ..items import CourseLoader
+from ..items import ItemLoader
 import logging
 import copy
 import selenium
@@ -15,7 +15,7 @@ from scrapy.shell import inspect_response
 
 
 class TestSpider(scrapy.Spider):
-    name = 'Section'
+    name = 'test'
     login_url = 'https://www.spire.umass.edu/psp/heproda/?cmd=login&languageCd=ENG#'
     start_urls = [login_url]
 
@@ -58,15 +58,16 @@ class TestSpider(scrapy.Spider):
         
 
         #start scraping spire for course information
-
-        webelement_list = [] #creates a webelement list container
+        webelement1_list = []
+        webelement2_list = [] #creates a list that contains webelements from each course inf
         index = 0 #count of the links on the page
+
         while  self.driver.find_elements_by_css_selector("[id^='DERIVED_CLSRCH_SSR_CLASSNAME_LONG$" + str(index) + "']"): 
             search_result = self.driver.find_element_by_css_selector("[id^='DERIVED_CLSRCH_SSR_CLASSNAME_LONG$" + str(index) + "']") #finds the first section for a course
             search_result.click() #clicks on the section
             wait.until(EC.presence_of_element_located((By.XPATH,'//*[@id="CLASS_SRCH_WRK2_SSR_PB_BACK"]'))) #wait for page to load
-            driver_selector = Selector(text = self.driver.page_source)#update the driver selector with the current page source
-            webelement_list.append(driver_selector.xpath("//div[@id = 'win0divPSPAGECONTAINER']/table/tbody/tr")) #adds webelements from course section
+            driver_selector = Selector(text = self.driver.page_source)#update the driver selector2 with the current page source
+            webelement2_list.append(driver_selector.xpath("//div[@id = 'win0divPSPAGECONTAINER']/table/tbody/tr")) #adds webelements from course section
             self.driver.find_element_by_css_selector("[id^='CLASS_SRCH_WRK2_SSR_PB_BACK']").click() #clicks on view search results to go back
             wait.until(EC.presence_of_element_located((By.XPATH,'//*[@id="DERIVED_CLSRCH_SSR_CLASSNAME_LONG$1"]')))#wait for page to load
             index = index + 1 
@@ -74,17 +75,17 @@ class TestSpider(scrapy.Spider):
 
         #creates an item for each section and passes it into a pipeline
         cloader = None
-        for webelement in webelement_list:
-            for selector in webelement:
+        for webelement1, webelement2 in zip(webelement1_list, webelement2_list):
+            for selector1, selector2 in zip(webelement1, webelement2):
                 if(cloader is None):
-                    cloader = CourseLoader(item = CourseInfo(), selector = selector)
+                    cloader = CourseLoader(item = CourseInfo(), selector = selector2)
                 else:
-                    cloader.selector = selector
+                    cloader.selector = selector2
 
-                if selector.css("[id^='DERIVED_CLSRCH_DESCR200']"):
+                if selector2.css("[id^='DERIVED_CLSRCH_DESCR200']"):
                     cloader.add_css('name', "[id^='DERIVED_CLSRCH_DESCR200']")
 
-                if selector.css("[id^='win0divSSR_CLS_DTL_WRK_GROUP1']"):
+                if selector2.css("[id^='win0divSSR_CLS_DTL_WRK_GROUP1']"):
                     cloader.add_css('class_number', "[id^='SSR_CLS_DTL_WRK_CLASS_NBR']")
                     cloader.add_css('units', "[id^='SSR_CLS_DTL_WRK_UNITS_RANGE']")
                     cloader.add_css('career', "[id^='PSXLATITEM_XLATLONGNAME']")
@@ -93,17 +94,17 @@ class TestSpider(scrapy.Spider):
                     cloader.add_css('rap_tap_hlc', "[id^='UM_RAPTAP_CLSDT_UM_RAP_TAP']")
                     cloader.add_css('topic', "[id^='CRSE_TOPICS_DESCR']")
 
-                if selector.css("[id^='win0divSSR_CLSRCH_MTGGP']"):          
+                if selector2.css("[id^='win0divSSR_CLSRCH_MTGGP']"):          
                     cloader.add_css('date', "[id^='MTG_SCHED']")
                     cloader.add_css('room', "[id^='MTG_LOC']")
                     cloader.add_css('instructor', "[id^='MTG_INSTR']")
                     cloader.add_css('meet_dates', "[id^='MTG_DATE']")
                 
-                if selector.css("[id^='win0divSSR_CLS_DTL_WRK_GROUP2']"):          
+                if selector2.css("[id^='win0divSSR_CLS_DTL_WRK_GROUP2']"):          
                     cloader.add_css('add_consent', "[id^='PSXLATITEM_XLATLONGNAME']")
                     cloader.add_css('enrollement_req', "[id^='SSR_CLS_DTL_WRK_SSR_REQUISITE_LONG']")
 
-                if selector.css("[id^='ACE_SSR_CLS_DTL_WRK_GROUP6']"):          
+                if selector2.css("[id^='ACE_SSR_CLS_DTL_WRK_GROUP6']"):          
                     cloader.add_css('description', "[id^='DERIVED_CLSRCH_DESCRLONG']")
                 else:
                     continue
