@@ -15,17 +15,19 @@ class ScheduleForm(forms.Form):
     Wed = forms.BooleanField()
     Thu = forms.BooleanField()
     Fri = forms.BooleanField()
-
-    days = get_daykeys()
+    # a list of False or True from checkbox
+    days = [Mon, Tus, Wed, Thu, Fri]
+    
     # a function to change a list of True or False to keys for searching
-    def get_daykeys(self):
-        days = [Mon, Tus, Wed, Thu, Fri]
+    def get_daykeys(days):
         dayKeys = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
         finalKeys = []
         for x in range(5):
             if days[x]:
                 finalKeys.append(dayKeys[x])
         return finalKeys
+
+    days = get_daykeys(days)
 
     #Sihua's Edit End
 	
