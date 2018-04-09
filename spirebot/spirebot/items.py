@@ -119,9 +119,9 @@ class ItemLoader(ItemLoader):
     
     def proc_end_date(input_str):
         date_list = re.split(r'[\s-]+', input_str)
-        end_date = date_list[1]
-        date_split = end_date.split('/')
-        return date_split[2] + '-' + date_split[0] + '-' + date_split[1]
+        end_date = date_list[1]  #"month/day/year"
+        date_split = end_date.split('/')  #["month", "day", "year"]
+        return date_split[2] + '-' + date_split[0] + '-' + date_split[1]  #"year-month-day"
 
     default_item_class = CourseInfo
     
