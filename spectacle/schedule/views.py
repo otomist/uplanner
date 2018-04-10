@@ -5,6 +5,8 @@ from django.urls import reverse
 from .models import Course, Department, Student, Section, Schedule, ScheduleCourse
 from .forms import ScheduleForm, NewScheduleForm, flowchartForm
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import UserCreationForm
+from schedule.forms import userRegistration
 import json
 import re
 
@@ -316,7 +318,9 @@ def schedule(request):
 #==================================================================#    
 #       ^-------------End schedule views------------^
 #==================================================================#
-    
+
+from django.shortcuts import render, HttpResponse, redirect
+
 @login_required(login_url='/profile/login/')
 def profile(request):
     
@@ -370,6 +374,27 @@ def prereqs(request):
         'prereqs.html',
         context={'highlight_prereqs':highlight_prereqs, 'form':form, 'course_list':course_list}
     )
-    
+
+def register(request):
+    if request.method == 'POST':
+        form = userRegistration(request.POST)
+        if form.is_valid:
+            form.save()
+            return redirect('/schedule')
+    else:
+        form = userRegistration()
+        args = {'form':form}
+        return render(request, 'registration/registration_form.html', args)
+
+'''
+def register(UserCreationForm):
+    email = forms.EmailField(label="Email")
+    fullname = forms.CharField(label="First Name")
+    class Meta:
+        model = User
+        fields = ("username", "fullname", "email",)
+    def save(self, commit=True):
+        user=super(RegisterForm, self).save(commit=False)
+'''
 class CourseDetailView(generic.DetailView):
     model = Course
