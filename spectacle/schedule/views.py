@@ -263,6 +263,7 @@ def schedule(request):
         course_tabs.append(get_tab_data(course))
         
         
+        
     if form.is_valid():
         # The user has entered some information to search for
         if not (form.cleaned_data['keywords'] == '' and form.cleaned_data['departments'] == 'NULL'):
