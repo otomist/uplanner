@@ -267,6 +267,22 @@ def schedule(request):
         
         
     if form.is_valid():
+        
+        results = Course.objects.all()
+        
+        if form.cleaned_data['departments'] != 'NULL':
+            results = results.filter(dept__code=form.cleaned_data['departments'])
+        
+        if form.cleaned_data['keywords'] != '':
+            keys = form.cleaned_data['keywords']
+            title_set = results.filter(title__icontains=keys)
+            desc_set = results.filter(description__icontains=keys)
+            results = title_set.union(desc_set)
+            
+        if form.cleaned_data['departments'] == 'NULL' and form.cleaned_data['keywords'] == '':
+            results = []
+        
+        """
         # The user has entered some information to search for
         if not (form.cleaned_data['keywords'] == '' and form.cleaned_data['departments'] == 'NULL'):
             # The depatments dropdown has been used; return some subset from that dept
@@ -286,6 +302,7 @@ def schedule(request):
         # Display error - no search parameters given
         else:
             pass
+        """
     
     # Display error - no search results match
     if len(results) == 0:
