@@ -84,21 +84,21 @@
                 <div class="col-lg-auto col-md-auto col-sm-auto col-xs-auto bg-light">
                   <div class="checkbox">
                     <label>
-                      <input type="checkbox" value=""> Show closed courses </label>
+                      {{ form.closed }} Show closed courses </label>
                   </div>
                   <div class="checkbox">
                     <label>
-                      <input type="checkbox" value=""> Show conflicting courses </label>
+                      {{ form.conflicted }} Show conflicting courses </label>
                   </div>
                 </div>
                 <div class="col-lg-auto col-md-auto col-sm-auto col-xs-auto bg-light">
                   <div class="checkbox">
                     <label>
-                      <input type="checkbox" value=""> Show courses with unmet requirements </label>
+                      {{ form.unmet_req }}Show courses with unmet requirements </label>
                   </div>
                   <div class="checkbox">
                     <label>
-                      <input type="checkbox" value=""> Show only honors courses </label>
+                      {{ form.honors_only }} Show only honors courses </label>
                   </div>
                 </div>
               </div>
@@ -142,23 +142,23 @@
                 </label>
                 <div class="checkbox">
                   <label>
-                    <input type="checkbox" value=""> 100</label>
+                    {{ form.l100 }} 100</label>
                 </div>
                 <div class="checkbox">
                   <label>
-                    <input type="checkbox" value=""> 200</label>
+                    {{ form.l200 }} 200</label>
                 </div>
                 <div class="checkbox">
                   <label>
-                    <input type="checkbox" value=""> 300</label>
+                    {{ form.l300 }} 300</label>
                 </div>
                 <div class="checkbox">
                   <label>
-                    <input type="checkbox" value=""> 400</label>
+                    {{ form.l400 }} 400</label>
                 </div>
                 <div class="checkbox">
                   <label>
-                    <input type="checkbox" value=""> 500+</label>
+                    {{ form.l500 }} 500+</label>
                 </div>
               </div>
               <!-- End coure level checkboxes -->
@@ -170,23 +170,23 @@
                 </label>
                 <div class="checkbox">
                   <label>
-                    <input type="checkbox" value=""> 1.0</label>
+                    {{ form.cr1 }} 1.0</label>
                 </div>
                 <div class="checkbox">
                   <label>
-                    <input type="checkbox" value=""> 2.0</label>
+                    {{ form.cr2 }} 2.0</label>
                 </div>
                 <div class="checkbox">
                   <label>
-                    <input type="checkbox" value=""> 3.0</label>
+                    {{ form.cr3 }} 3.0</label>
                 </div>
                 <div class="checkbox">
                   <label>
-                    <input type="checkbox" value=""> 4.0</label>
+                    {{ form.cr4 }} 4.0</label>
                 </div>
                 <div class="checkbox">
                   <label>
-                    <input type="checkbox" value=""> 5.0+</label>
+                    {{ form.cr5 }} 5.0+</label>
                 </div>
               </div>
               <!-- End # credits checkboxes -->
