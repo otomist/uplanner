@@ -391,18 +391,23 @@ def prereqs(request):
         'prereqs.html',
         context={'highlight_prereqs':highlight_prereqs, 'form':form, 'course_list':course_list}
     )
-
-def register(request):
+from django.urls import reverse_lazy
+class register(generic.CreateView):
+    form_class = UserCreationForm
+    success_url = reverse_lazy('login')
+    template_name = 'registration/registration_form.html'
+    '''
     if request.method == 'POST':
-        form = userRegistration(request.POST)
+        form = UserCreationForm(request.POST)
         if form.is_valid:
             form.save()
-            return redirect('/schedule')
-    else:
-        form = userRegistration()
-        args = {'form':form}
-        return render(request, 'registration/registration_form.html', args)
+            return redirect('uplanner/schedule.html')
 
+    else:
+        form = UserCreationForm()
+        args = {'form':form}
+    return render(request, 'registration/registration_form.html', args)
+'''
 '''
 def register(UserCreationForm):
     email = forms.EmailField(label="Email")
