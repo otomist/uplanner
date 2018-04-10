@@ -5,6 +5,8 @@ from django.urls import reverse
 from .models import Course, Department, Student, Section, Schedule, ScheduleCourse
 from .forms import ScheduleForm, NewScheduleForm, flowchartForm
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import UserCreationForm
+from schedule.forms import userRegistration
 import json
 import re
 
@@ -263,7 +265,24 @@ def schedule(request):
         course_tabs.append(get_tab_data(course))
         
         
+        
     if form.is_valid():
+        
+        results = Course.objects.all()
+        
+        if form.cleaned_data['departments'] != 'NULL':
+            results = results.filter(dept__code=form.cleaned_data['departments'])
+        
+        if form.cleaned_data['keywords'] != '':
+            keys = form.cleaned_data['keywords']
+            title_set = results.filter(title__icontains=keys)
+            desc_set = results.filter(description__icontains=keys)
+            results = title_set.union(desc_set)
+            
+        if form.cleaned_data['departments'] == 'NULL' and form.cleaned_data['keywords'] == '':
+            results = []
+        
+        """
         # The user has entered some information to search for
         if not (form.cleaned_data['keywords'] == '' and form.cleaned_data['departments'] == 'NULL'):
             # The depatments dropdown has been used; return some subset from that dept
@@ -283,6 +302,7 @@ def schedule(request):
         # Display error - no search parameters given
         else:
             pass
+        """
     
     # Display error - no search results match
     if len(results) == 0:
@@ -315,7 +335,9 @@ def schedule(request):
 #==================================================================#    
 #       ^-------------End schedule views------------^
 #==================================================================#
-    
+
+from django.shortcuts import render, HttpResponse, redirect
+
 @login_required(login_url='/profile/login/')
 def profile(request):
     
@@ -323,6 +345,7 @@ def profile(request):
     
     # temporarily just grab the first user
     student = Student.objects.all()[0]
+    
     user_courses = map(lambda c: {
                                   'dept':c.clss.dept,
                                   'number':c.clss.number,
@@ -368,6 +391,32 @@ def prereqs(request):
         'prereqs.html',
         context={'highlight_prereqs':highlight_prereqs, 'form':form, 'course_list':course_list}
     )
-    
+from django.urls import reverse_lazy
+class register(generic.CreateView):
+    form_class = UserCreationForm
+    success_url = reverse_lazy('login')
+    template_name = 'registration/registration_form.html'
+    '''
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid:
+            form.save()
+            return redirect('uplanner/schedule.html')
+
+    else:
+        form = UserCreationForm()
+        args = {'form':form}
+    return render(request, 'registration/registration_form.html', args)
+'''
+'''
+def register(UserCreationForm):
+    email = forms.EmailField(label="Email")
+    fullname = forms.CharField(label="First Name")
+    class Meta:
+        model = User
+        fields = ("username", "fullname", "email",)
+    def save(self, commit=True):
+        user=super(RegisterForm, self).save(commit=False)
+'''
 class CourseDetailView(generic.DetailView):
     model = Course

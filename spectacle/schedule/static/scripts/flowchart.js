@@ -37,9 +37,11 @@ for(p in parsed)
 // examle data for test and implement, will connect to serve later.
 // courseNumber: [listOfPreRequirement, courseLevelNum]
 // will add more features for more funcitons. 
-// examples with format courseNum: [listOfPre(0), levelNumber(1), Selected(2), linked(3), credits(4), required(5), root(6)]
+// Note: (D) means things should be loaded from server. 
+// Selected, Linked, root shouble be initialized to 0.
+// examples with format courseNum: [(D)listOfPre(0), (D)levelNumber(1), Selected(2), linked(3), (D)credits(4), (D)required(5), root(6)]
 // var examples = {
-// 	"cs121":[[],1, 0, 0,4,1,0],
+// 	"cs121":[[],1,0,0,4,1,0],
 // 	"cs187":[["cs121"], 1,0,0,4,1,0],
 // 	"cs220":[["cs121","cs187"], 2,0,0,4,1,0],
 // 	"cs230":[["cs121","cs187"], 2,0,0,4,1,0],
@@ -94,7 +96,6 @@ function makeTable(){
 	}
 	document.write("<table>" + table + "</table>");
 }
-makeTable();
 function highlight(e){
 	e.style.border = "7px solid #881c1c";
 }
@@ -229,6 +230,15 @@ function totalCredits(){
 	}
 	var element = document.getElementById("credits");
 	element.innerHTML = "Total Credits: " + credits;
+}
+function drawTable(){
+	makeTable();
+	for(var key in examples){
+		addMoveOverEvent(key);
+		addOnClikerEvent(key);
+		addDoubleClickerEvent(key);
+	}
+	
 }
 
 
