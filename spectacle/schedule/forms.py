@@ -11,7 +11,30 @@ class ScheduleForm(forms.Form):
     departments = forms.TypedChoiceField(choices=depts, coerce=str, initial='NULL', empty_value='NULL', help_text="Enter department to search within")
     
     
-    #Sihua's Edit start 
+    # Sihua's Edit start
+    # Note: I replaced all checkboxes, but I need help to determine the search keys for course level, credits, course_status.They are not straight as weekdays constrains.
+    l100 = forms.BooleanField(required=False)
+    l200 = forms.BooleanField(required=False)
+    l300 = forms.BooleanField(required=False)
+    l400 = forms.BooleanField(required=False)
+    # Note: 500+ needs more than one keys to search or is there a better way for level?
+    l500 = forms.BooleanField(required=False)
+    levels = [l100, l200, l300, l400, l500]
+
+    # 1 credit, I tried to use 1cr as variable name but failed. 
+    cr1 = forms.BooleanField(required=False)
+    cr2 = forms.BooleanField(required=False)
+    cr3 = forms.BooleanField(required=False)
+    cr4 = forms.BooleanField(required=False)
+    cr5 = forms.BooleanField(required=False)
+    credits = [cr1, cr2, cr3, cr4, cr5]
+
+    closed = forms.BooleanField(required=False)
+    conflicted = forms.BooleanField(required=False)
+    unmet_req = forms.BooleanField(required=False)
+    honors_only = forms.BooleanField(required=False)
+    course_cat = [closed, conflicted, unmet_req, honors_only]
+
     # need checkbox for every day and will return True or False
     Mon = forms.BooleanField(required=False)
     Tus = forms.BooleanField(required=False)
