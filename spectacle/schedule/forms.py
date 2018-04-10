@@ -27,10 +27,11 @@ class ScheduleForm(forms.Form):
         for x in range(5):
             if days[x]:
                 finalKeys.append(dayKeys[x])
+        if len(finalKeys) == 0:
+            return dayKeys
         return finalKeys
     
     days = get_daykeys(days)
-    
     #Sihua's Edit End
 	
     # cleaning functions -- currently they do nothing
