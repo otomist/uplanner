@@ -1,32 +1,33 @@
-<h6><p>{{tab.course.dept.code}} {{tab.course.number}}</p></h6>
-<!--TODO: incorporate more generic fields -->
-<p>Description: {{tab.course.description}}</p>
-<p>Requirements: {{tab.course.reqs}}</p>
-{% for component in tab.sections %}
-  {% if component.sections %}
-    <strong>{{component.name}}:</strong>
-    <ul>
-    {% for section in component.sections %}
-      <li>
-        <p>{{section.id}}</p>
-        <p>{{section.days}}, {{section.start}} - {{section.ending}}<p>
-        <p>Professor: {{section.professor}}</p>
-        <p>Room: {{section.room}}</p>
-        <p>Cap: {{section.cap}} || Enrolled: {{section.enrolled}}</p>
-        <p>Waitlist capacity: {{section.wcap}} || Waitlist Enrolled: {{section.wenrolled}}</p>
-        <p>Spire link: {{section.link}}</p>
+<div class="container-fluid fixed-panel">
+  <br>
+  <h6><p>{{tab.course.dept.code}} {{tab.course.number}}</p></h6>
+  <!--TODO: incorporate more generic fields -->
+  <p>Description: {{tab.course.description}}</p>
+  <p>Requirements: {{tab.course.reqs}}</p>
+  {% for component in tab.sections %}
+    {% if component.sections %}
+      <strong>{{component.name}}:</strong>
+      <ul class="list-group">
+      {% for section in component.sections %}
+          <li class="list-group-item">{{section.id}}</li>
+          <li class="list-group-item">{{section.days}}, {{section.start}} - {{section.ending}}</li>
+          <li class="list-group-item">Professor: {{section.professor}}</li>
+          <li class="list-group-item">Room: {{section.room}}</li>
+          <li class="list-group-item">Cap: {{section.cap}} || Enrolled: {{section.enrolled}}</li>
+          <li class="list-group-item">Waitlist capacity: {{section.wcap}} || Waitlist Enrolled: {{section.wenrolled}}</li>
+          <li class="list-group-item">Spire link: {{section.link}}</li>
         
         <!-- buttons for adding / deleting classes -->        
         <button class="btn btn-primary btn-xs btn-results js-add" html-url="{% url 'make_current_course' %}" ajax-url="{% url 'add_section' %}" section-id='{{section.id}}'>Add</button>
         <button class="btn btn-danger btn-xs btn-results js-del" ajax-url="{% url 'del_section' %}" section-id='{{section.id}}'>Delete</button>
-      </li>
-    {% endfor %}
+        <br>
+      {% endfor %}
     </ul>
-  {% endif %}
-{% endfor %}
+    {% endif %}
+  {% endfor %}
+</div>
 
-
-<!-
+<!--
 sections:
 [{'name':lab, 'sections':[lab 1, lab 2,...]}, {'name':lec, 'sections':[lec1, lec2, ...]}, {'name':colloquium, 'sections':[]}]
 -->
