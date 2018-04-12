@@ -44,7 +44,11 @@ class ScheduleForm(forms.Form):
     # a list of False or True from checkbox
     days = [Mon, Tus, Wed, Thu, Fri]
     
+    def get_days(self):
+        return ['Mon', 'Tus', 'Wed', 'Thu', 'Fri']
     
+    # it turns out this always adds everything to the list, since days[x] is always a BooleanField object; it has no value yet
+    # ie, this function is run when the form is initialized, not when data is submitted.
     # a function to change a list of True or False to keys for searching
     def get_daykeys(days):
         dayKeys = ["Mo", "Tu", "We", "Th", "Fr"]

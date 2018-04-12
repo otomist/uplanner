@@ -164,6 +164,7 @@ def get_current_data(schedulecourse):
         'title': course.title,
         'number': course.number,
         'id': section.id,
+        'professor': section.professor,
     }
 
 def make_current_course(request):
@@ -270,39 +271,50 @@ def schedule(request):
         
         results = Course.objects.all()
         
+        #filter based on department
         if form.cleaned_data['departments'] != 'NULL':
             results = results.filter(dept__code=form.cleaned_data['departments'])
         
+        #filter based on keywords
         if form.cleaned_data['keywords'] != '':
             keys = form.cleaned_data['keywords']
             title_set = results.filter(title__icontains=keys)
             desc_set = results.filter(description__icontains=keys)
             results = title_set.union(desc_set)
-            
+        
+        
+        #filter based on days
+        #if a course has at least one related section with days
+        #  containing day, keep it in the results.
+        
+        days_set = None
+        for day in form.get_days():
+            if form.cleaned_data[day]:
+                if days_set == None:
+                    days_set = results.select_related().filter(section__days__contains=day[:2]).distinct()
+                else:
+                    days_set.union(results.select_related().filter(section__days__contains=day[:2]).distinct())
+        if days_set != None:
+            results = days_set
+        """ 
+        for day in form.days:
+            print("day is ", day)
+            # There is a high probability this will not work
+            # We can't test until sections are added
+            # Option one:  -- uses relatedname
+            #results.filter(sections__days__contains=day)
+            # Option two:
+            #sections = Section.objects.filter(clss__in=results).filter(days__contains=day)
+            #sections.values_list('clss', flat=True)
+            # Option three:  this should work and may be most efficient
+            print(results.select_related().count())
+            #print(results.select_related().all()[0])
+            results = results.select_related().filter(section__days__contains=day).distinct()
+        """
+        
+        #if department/keywords are not selected, return nothing
         if form.cleaned_data['departments'] == 'NULL' and form.cleaned_data['keywords'] == '':
             results = []
-        
-        """
-        # The user has entered some information to search for
-        if not (form.cleaned_data['keywords'] == '' and form.cleaned_data['departments'] == 'NULL'):
-            # The depatments dropdown has been used; return some subset from that dept
-            if form.cleaned_data['departments'] != 'NULL':
-                results = Course.objects.filter(dept__code=form.cleaned_data['departments'])
-            if form.cleaned_data['keywords'] != '':
-                keys = form.cleaned_data['keywords']
-                # Return a subset from the selected dept
-                if form.cleaned_data['departments'] != 'NULL':
-                    dept_set = results
-                    results = results.filter(title__icontains=keys)
-                    results.union(results, dept_set.filter(description__icontains=keys))
-                # Return a subset from all courses; no dept selected
-                else:
-                    results = Course.objects.filter(title__icontains=keys)
-                    results.union(results, Course.objects.filter(description__icontains=keys))
-        # Display error - no search parameters given
-        else:
-            pass
-        """
     
     # Display error - no search results match
     if len(results) == 0:
