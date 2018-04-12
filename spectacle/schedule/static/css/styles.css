@@ -81,8 +81,8 @@ h4{
     font-size: .9rem;
 }
 .fixed-panel {
-    min-height: 30rem;
-    max-height: 30rem;
+    min-height: 28rem;
+    max-height: 28rem;
     overflow-y: scroll;
 }
 .accInfo{
