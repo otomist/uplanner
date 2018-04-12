@@ -262,11 +262,19 @@ $(function () {
         if (searchHidden) {
             //switch between max/minimize arrows
             expandBtn.style.display = 'block';
-            hideBtn.style.display = 'none'; 
+            hideBtn.style.display = 'none';
+
+            //change the size of results to larger when search filters hidden
+            $('.fixed-panel').css('min-height', '42rem');
+            $('.fixed-panel').css('max-height', '42rem'); 
         } else {
             //switch between max/minimize arrows
             expandBtn.style.display = 'none';
-            hideBtn.style.display = 'block'; 
+            hideBtn.style.display = 'block';
+
+            //change the size of results to smaller when search filters shown
+            $('.fixed-panel').css('min-height', '28rem');
+            $('.fixed-panel').css('max-height', '28rem');
         }
     });
 

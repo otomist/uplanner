@@ -20,8 +20,11 @@
           {% endfor %}
         </div>
         <!-- Button that displays "add a schedule" modal-->
-        <button class="btn btn-info btn-xs" data-toggle="modal" data-target="#schedule-modal">Add new schedule</button>
-        <button class="btn btn-danger btn-xs js-del-schedule" url="{% url 'del_schedule' %}">Remove active schedule</button>
+        <div class="bg-light text-center">
+          <button class="btn btn-info btn-xs" data-toggle="modal" data-target="#schedule-modal">Add new schedule</button>
+          <button class="btn btn-danger btn-xs js-del-schedule" url="{% url 'del_schedule' %}">Remove active schedule</button>
+          <button class="btn btn-warning btn-xs" id="export-btn" type="button">Export to Spire</button>
+        </div>
         <!-- "add a schedule" modal with form -->
         <form action="{% url 'make_schedule' %}" method="post" id="js-submit-schedule-btn" form-url="{% url 'make_schedule' %}">
         {% csrf_token %}
@@ -75,7 +78,7 @@
         <!-- End Start Search Button -->
           </div>
           <!-- End top search bar -->
-          <div class="js-expand-info"
+          <div class="js-expand-info">
             <h6 class="search-toggle">Search filters: </h6>
 
             <!-- Begin misc options -->
@@ -289,9 +292,6 @@
   </div>
   <!-- End Row -->
 
-  <div class="text-center">
-    <button class="btn btn-warning btn-md" id="export-btn" type="button">Export to Spire</button>
-  </div>
 {% endblock %}
 
 {% block imports %}
