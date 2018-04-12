@@ -10,6 +10,14 @@ from schedule.forms import userRegistration
 import json
 import re
 
+"""
+TODO: 
+ >rewrite fake json
+ >don't display courses with no sections
+ >fix no schedule selected error
+"""
+
+
 def index(request):
     """
     View function for home page of site.
@@ -33,9 +41,11 @@ def schedule_courses(request):
     it passes json with the current courses on the schedule to scheduleBuilder.js
     for rendering
     """
+    #TODO: we never really use this...
     schedule_title = request.GET.get('schedule', None)
     
-    temp_courses = ScheduleCourse.objects.all()
+    current_user = Student.objects.all()[0]
+    temp_courses = ScheduleCourse.objects.filter(schedule__student=current_user)
     courses = []
     
     def parse_dates(dates):
@@ -73,7 +83,9 @@ def schedule_courses(request):
     if 'active_schedule' in request.session:
         schedule = request.session['active_schedule']
     else:
-        request.session['active_schedule'] = schedule
+        #TODO: this breaks if doesn't exist
+        schedule = Schedule.objects.filter(student=current_user)[0]
+        request.session['active_schedule'] = schedule.title
         request.session.save()
         
     print("active schedule is ", schedule)
@@ -96,9 +108,10 @@ def del_section(request):
     id = request.GET.get('id', None)
     schedule_title = request.GET.get('schedule', None)
     
+    current_user = Student.objects.all()[0]
     # TODO: this will break if the section/schedule are not found
     section = Section.objects.filter(id=id)[0]
-    schedule = Schedule.objects.filter(title=schedule_title)[0]
+    schedule = Schedule.objects.filter(title=schedule_title, student=current_user)[0]
     
     schedulecourse = ScheduleCourse.objects.filter(course=section).filter(schedule=schedule)
     if schedulecourse.exists():
@@ -124,7 +137,9 @@ def add_section(request):
     start_time = section.start
     end_time = section.ending
     days = section.days
-    schedule_id = Schedule.objects.filter(title=schedule)[0].id
+    current_user = Student.objects.all()[0]
+    #TODO: this will break if does not exist
+    schedule_id = Schedule.objects.filter(student=current_user).filter(title=schedule)[0].id
     
     if not schedule == None:
         # TODO: this will break if the schedule doesn't exist
@@ -219,7 +234,9 @@ def make_current_course(request):
 def make_current_courses(request):
     schedule_id = request.GET.get('schedule', None)
     
-    schedule = Schedule.objects.filter(id=schedule_id)[0]
+    #TODO: this will fail if schedule doesn't exist
+    current_user = Student.objects.all()[0]
+    schedule = Schedule.objects.filter(student=current_user).filter(id=schedule_id)[0]
     
     user_courses = []
     
@@ -235,7 +252,8 @@ def make_current_courses(request):
 def del_schedule(request):
     schedule_title = request.GET.get('schedule', None)
     new_schedule_title = request.GET.get('new_schedule', None)
-    schedule = Schedule.objects.filter(title=schedule_title)
+    current_user = Student.objects.all()[0]
+    schedule = Schedule.objects.filter(student=current_user).filter(title=schedule_title)
     if schedule.exists():
         schedule[0].delete()
     request.session['active_schedule'] = new_schedule_title
@@ -255,7 +273,8 @@ def make_schedule(request):
             data['url'] = reverse(make_current_courses)
             data['schedule_url'] = reverse(change_schedule)
             if not Schedule.objects.filter(title=title):
-                Schedule.objects.create_schedule(title, Student.objects.all()[0])
+                current_user = Student.objects.all()[0]
+                Schedule.objects.create_schedule(title, current_user)
             data['id'] = Schedule.objects.filter(title=title)[0].id
             
         else:
@@ -294,13 +313,13 @@ def schedule(request):
     context = {}
     
     #replace with actual student later
-    student = Student.objects.all()[0]
-    for schedule in student.schedule_set.all():
+    current_user = Student.objects.all()[0]
+    for schedule in current_user.schedule_set.all():
         user_schedules.append(schedule)
     #as default, always displays the first schedule
-    for section in student.schedule_set.all()[0].schedulecourse_set.all():
+    for section in current_user.schedule_set.all()[0].schedulecourse_set.all():
         user_courses.append(get_current_data(section))
-        
+    
     # these are the course tabs previously opened and stored in a session
     # note that each element of a course_tab must also agree with the format served by
     # make_tab_content()
@@ -313,7 +332,7 @@ def schedule(request):
             data = get_tab_data(course)
             course_tabs.append(get_tab_data(course))
         
-        
+    
     if form.is_valid():
         
         results = Course.objects.all()
@@ -332,6 +351,8 @@ def schedule(request):
         #filter based on days
         #if a course has at least one related section with days
         #  containing day, keep it in the results.
+        #TODO: this should have more intelligent filtering. What about courses with a lab on Fri, but no lectures?
+        #      it probably shouldn't show up, but it will
         days_set = None
         for day in form.get_days():
             if form.cleaned_data[day]:

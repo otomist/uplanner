@@ -59,7 +59,6 @@ function init() {
             if (filter_inputs_radio[j].name !== schedule_name) {
                 filter_inputs_radio[j].checked = false;
             }
-            console.log(filter_inputs_radio[j].checked);
             filters[filter_inputs_radio[j].name] = !!filter_inputs_radio[j].checked;
         }
         scheduler.updateView();
