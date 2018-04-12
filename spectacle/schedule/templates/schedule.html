@@ -258,8 +258,8 @@
                   <!-- temporary buttons for debugging scheduler -->
                   <!--button class="btn btn-primary btn-xs btn-results" id='add{{course.id}}' onClick="add( {{course.id}} )">Add</button>
                   <button class="btn btn-danger btn-xs btn-results" id='del{{course.id}}' onClick="del( {{course.id}} )">Delete</button-->
-                  
-                  <button class="btn btn-info btn-xs btn-results js-make-tab" course-id="{{course.pk}}" href="{% url 'make_tab_content' %}" course-dept="{{ course.dept.code }}" course-num="{{ course.number }}">View full course info</button>
+                  <br>
+                  <button class="btn btn-primary btn-xs btn-results js-make-tab" course-id="{{course.pk}}" href="{% url 'make_tab_content' %}" course-dept="{{ course.dept.code }}" course-num="{{ course.number }}">Full course info</button>
                 </li>
               {% endfor %}
               </ul>
