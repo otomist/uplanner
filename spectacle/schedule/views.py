@@ -148,13 +148,33 @@ def get_tab_data(course):
 def make_tab_content(request):
     course_pk = request.GET.get('course_pk', None)
     
+    #TODO: this will break if size of list is 0
     course = Course.objects.filter(pk=course_pk)[0]
-    
+    print("Add a new tab to session!")
+    print("Course is ", course_pk)
+    if 'tabs' in request.session:
+        request.session['tabs'].append(course_pk)
+        request.session.save()
+    else:
+        request.session['tabs'] = [course_pk]
+        request.session.save()
+        
     return render (
         request,
         'schedule_tabs_content.html',
-        get_tab_data(course)
+        {'tab':get_tab_data(course)}
     )
+    
+def delete_tab(request):
+    course_pk = request.GET.get('id', None)
+    #TODO: this will fail if course doesn't exist
+    course = Course.objects.filter(pk=course_pk)[0]
+    if 'tabs' in request.session:
+        if course_pk in request.session['tabs']:
+            request.session['tabs'].remove(course_pk)
+            request.session.save()
+
+    return JsonResponse({'status':'SUCCESS'})
 
 # returns data needed to render a single current course listing
 def get_current_data(schedulecourse):
@@ -262,9 +282,13 @@ def schedule(request):
     # note that each element of a course_tab must also agree with the format served by
     # make_tab_content()
     course_tabs = []
-    for course in course_tabs:
-        course_tabs.append(get_tab_data(course))
-        
+    if 'tabs' in request.session:
+        tabs = request.session['tabs']
+        for course_pk in tabs:
+            #TODO: this will fail if course doesn't exist
+            course = Course.objects.filter(pk=course_pk)[0]
+            data = get_tab_data(course)
+            course_tabs.append(get_tab_data(course))
         
         
     if form.is_valid():
@@ -282,11 +306,9 @@ def schedule(request):
             desc_set = results.filter(description__icontains=keys)
             results = title_set.union(desc_set)
         
-        
         #filter based on days
         #if a course has at least one related section with days
         #  containing day, keep it in the results.
-        
         days_set = None
         for day in form.get_days():
             if form.cleaned_data[day]:
@@ -296,21 +318,6 @@ def schedule(request):
                     days_set.union(results.select_related().filter(section__days__contains=day[:2]).distinct())
         if days_set != None:
             results = days_set
-        """ 
-        for day in form.days:
-            print("day is ", day)
-            # There is a high probability this will not work
-            # We can't test until sections are added
-            # Option one:  -- uses relatedname
-            #results.filter(sections__days__contains=day)
-            # Option two:
-            #sections = Section.objects.filter(clss__in=results).filter(days__contains=day)
-            #sections.values_list('clss', flat=True)
-            # Option three:  this should work and may be most efficient
-            print(results.select_related().count())
-            #print(results.select_related().all()[0])
-            results = results.select_related().filter(section__days__contains=day).distinct()
-        """
         
         #if department/keywords are not selected, return nothing
         if form.cleaned_data['departments'] == 'NULL' and form.cleaned_data['keywords'] == '':

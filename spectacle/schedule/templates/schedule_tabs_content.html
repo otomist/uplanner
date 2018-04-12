@@ -1,8 +1,8 @@
-<h6><p>{{course.dept.code}} {{course.number}}</p></h6>
+<h6><p>{{tab.course.dept.code}} {{tab.course.number}}</p></h6>
 <!--TODO: incorporate more generic fields -->
-<p>Description: {{course.description}}</p>
-<p>Requirements: {{course.reqs}}</p>
-{% for component in sections %}
+<p>Description: {{tab.course.description}}</p>
+<p>Requirements: {{tab.course.reqs}}</p>
+{% for component in tab.sections %}
   {% if component.sections %}
     <strong>{{component.name}}:</strong>
     <ul>

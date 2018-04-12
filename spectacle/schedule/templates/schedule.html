@@ -204,17 +204,17 @@
             <a class="nav-link active" id="results-tab" data-toggle="tab" href="#results">Results</a>
           </li>
           
-          <!-- Begin courses tab -->
+          <!-- Begin current courses tab -->
           <li class="nav-item">
             <a class="nav-link" id="courses-tab" data-toggle="tab" href="#courses">Courses</a>
           </li>
           
           <!-- Begin course detail tabs -->
-          {% for course in course_tabs %}
-            <li class="nav-item" id="nav-{{course.pk}}">
-              <a class="nav-link" id="{{course.pk}}-tab" data-toggle="tab" href="#{{course.pk}}">
-                Courses
-                  <button class="btn btn-danger btn-xs js-del-tab" course-id='{{course.pk}}'>x</button>
+          {% for tab in course_tabs %}
+            <li class="nav-item" id="nav-{{tab.course.pk}}">
+              <a class="nav-link" id="{{tab.course.pk}}-tab" data-toggle="tab" href="#{{tab.course.pk}}">
+                {{tab.course.dept.code}} {{tab.course.number}}
+                  <button class="btn btn-danger btn-xs js-del-tab btn-results" course-id='{{tab.course.pk}}' del-url="{% url 'delete_tab' %}">x</button>
               </a>
             </li>
           {% endfor %}
@@ -223,6 +223,7 @@
         
         <!-- Begin tab contents -->
         <div class="tab-content" id="scheduleTabContent">
+          
           <!-- Begin search results -->
           <div class="tab-pane show active" id="results">
             {% if results %}
@@ -259,7 +260,7 @@
                   <!--button class="btn btn-primary btn-xs btn-results" id='add{{course.id}}' onClick="add( {{course.id}} )">Add</button>
                   <button class="btn btn-danger btn-xs btn-results" id='del{{course.id}}' onClick="del( {{course.id}} )">Delete</button-->
                   
-                  <button class="btn btn-info btn-xs btn-results js-make-tab" course-id="{{course.pk}}" href="{% url 'make_tab_content' %}" course-dept="{{ course.dept.code }}" course-num="{{ course.number }}">View full course info</button>
+                  <button class="btn btn-info btn-xs btn-results js-make-tab" course-id="{{course.pk}}" href="{% url 'make_tab_content' %}" course-dept="{{ course.dept.code }}" course-num="{{ course.number }}" del-url="{% url 'delete_tab' %}">View full course info</button>
                 </li>
               {% endfor %}
               </ul>
@@ -273,14 +274,16 @@
             </ul>
           </div>
           
+          <!-- Begin course tabs -->
           {% if course_tabs %}
-            {% for course in course_tabs %}
-              <div class="tab-pane" id="{{course.pk}}">
+            {% for tab in course_tabs %}
+              <div class="tab-pane" id="{{tab.course.pk}}">
                 {% include 'schedule_tabs_content.html' %}
+                {{tab.course.pk}}
               </div>
             {% endfor %}
           {% endif %}
-                  
+          
         </div>
       </div>
       <!-- End Columns -->

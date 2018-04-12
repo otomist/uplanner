@@ -15,6 +15,7 @@ $(function () {
         dept = $(event.target).attr('course-dept');
         num = $(event.target).attr('course-num');
         url_content = $(event.target).attr('href');
+        url_delete = $(event.target).attr('del-url');
         
         // If the course tab does not already exist, make a new tab for it
         if ( !$("#nav-"+id).length ) {
@@ -23,7 +24,7 @@ $(function () {
             $('<li class="nav-item" id="nav-'+id+'">\
             <a class="nav-link" id="'+id+'-tab" data-toggle="tab" href="#'+id+'">'+
             dept+' '+num+
-            '  <button class="btn btn-danger btn-xs js-del-tab btn-results" course-id="'+id+'">X</button>\
+            '  <button class="btn btn-danger btn-xs js-del-tab btn-results" course-id="'+id+'" del-url="' + url_delete + '">X</button>\
             </a>').appendTo('#scheduleTab');
             
             // Add a new tab content pane including the schedule_tabs_content.html file
@@ -47,10 +48,30 @@ $(function () {
     */
     $(document).on('click', '.js-del-tab', function () {
         id = $(event.target).attr('course-id');
+        url = $(event.target).attr('del-url');
+        
+        /*
         if ( $('#nav-'+id).length ) {
             $('#nav-'+id).remove();
             $('#'+id).remove();
         }
+        */
+        
+        //use ajax to update server session variable
+        $.ajax({
+            url: url,
+            data: {
+                'id':id,
+            },
+            dataType: 'json',
+            success: function (data) {
+                if ( $('#nav-'+id).length ) {
+                    $('#nav-'+id).remove();
+                    $('#'+id).remove();
+                }
+            }
+        });
+        
     });
     
     /*
