@@ -219,7 +219,7 @@ $(function () {
             method: 'POST',
             success: function (data) {
                 $('<label class="js-schedule-container">\
-                   <input type="radio" class="js-schedule" name="'+data['title']+'" courses-url="'+ data['url'] + '" schedule-id="' + data['id'] +'"/>'+
+                   <input type="radio" class="js-schedule" name="'+data['title']+'" courses-url="'+ data['url'] + '" schedule-url="' + data['schedule_url'] + '" schedule-id="' + data['id'] +'"/>'+
                    data['title']+
                    '</label>'
                    ).appendTo('#filters_wrapper');
@@ -227,31 +227,7 @@ $(function () {
         });
     });
     
-    // Delete a schedule
-    $('.js-del-schedule').on('click', function () {
-        var schedule = $(".js-schedule:checked");
-        var url = $(event.target).attr('url');
-        if ($('.js-schedule').length === 1) {
-            //TODO: give error message to user
-            console.log("cannot delete last schedule");
-            return
-        }
-        //make ajax call to delete schedule from database
-        $.ajax({
-            url: url,
-            data: {
-                'schedule':schedule.attr('name')
-            },
-            dataType: 'json',
-            success: function (data) {
-                //console.log("successfully deleted");
-            }
-        });
-        
-        schedule.closest('.js-schedule-container').remove();
-        $(".js-schedule")[0].checked = true;
-        
-    });
+    //Delete schedule is in scheduleBuilder.js
     
     /*
       Button for expanding information

@@ -14,7 +14,7 @@
         <div class="filters_wrapper" id="filters_wrapper">
           {% for schedule in user_schedules %}
             <label class="js-schedule-container">
-              <input type="radio" class="js-schedule" name="{{schedule.title}}" courses-url="{% url 'make_current_courses' %}" schedule-id="{{ schedule.id }}"/>
+              <input type="radio" class="js-schedule" name="{{schedule.title}}" courses-url="{% url 'make_current_courses' %}" schedule-url="{% url 'change_schedule' %}" schedule-id="{{ schedule.id }}"/>
               {{ schedule.title }}
             </label>
           {% endfor %}

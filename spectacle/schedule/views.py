@@ -33,6 +33,8 @@ def schedule_courses(request):
     it passes json with the current courses on the schedule to scheduleBuilder.js
     for rendering
     """
+    schedule_title = request.GET.get('schedule', None)
+    
     temp_courses = ScheduleCourse.objects.all()
     courses = []
     
@@ -67,9 +69,20 @@ def schedule_courses(request):
             })
             i += 1
             
+    schedule = schedule_title
+    if 'active_schedule' in request.session:
+        schedule = request.session['active_schedule']
+    else:
+        request.session['active_schedule'] = schedule
+        request.session.save()
+        
+    print("active schedule is ", schedule)
+        
     data = {
         'count': len(courses),
         'courses': courses,
+        'active_schedule': schedule,
+        'url': reverse(make_current_courses),
     }
     
     return JsonResponse(data)
@@ -205,7 +218,7 @@ def make_current_course(request):
     
 def make_current_courses(request):
     schedule_id = request.GET.get('schedule', None)
-        
+    
     schedule = Schedule.objects.filter(id=schedule_id)[0]
     
     user_courses = []
@@ -221,9 +234,11 @@ def make_current_courses(request):
 
 def del_schedule(request):
     schedule_title = request.GET.get('schedule', None)
+    new_schedule_title = request.GET.get('new_schedule', None)
     schedule = Schedule.objects.filter(title=schedule_title)
     if schedule.exists():
         schedule[0].delete()
+    request.session['active_schedule'] = new_schedule_title
     return JsonResponse({})
     
 # ajax view for making a new schedule
@@ -238,6 +253,7 @@ def make_schedule(request):
             
             data['title'] = title
             data['url'] = reverse(make_current_courses)
+            data['schedule_url'] = reverse(change_schedule)
             if not Schedule.objects.filter(title=title):
                 Schedule.objects.create_schedule(title, Student.objects.all()[0])
             data['id'] = Schedule.objects.filter(title=title)[0].id
@@ -252,6 +268,13 @@ def make_schedule(request):
         print("=============Error! new schedule form received non-ajax request!============")
         return schedule(request) # attempt to salvage situation
     
+# ajax view for updating session when schedule is changed
+def change_schedule(request):
+    print("got a request!")
+    active_schedule = request.GET.get('schedule_title')
+    request.session['active_schedule'] = active_schedule
+    request.session.save()
+    return JsonResponse({'status':'SUCCESS'})
     
 def schedule(request):
     """

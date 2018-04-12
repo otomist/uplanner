@@ -49,18 +49,35 @@ function init() {
         
         // set initial input value based on filters settings
         filters[filter_input.name] = false;
-        if (i === 0) {
-            filters[filter_input.name] = true;
+        filter_input.checked = false;
+    }
+    
+    function change_schedule(url, schedule_name) {
+        var filter_inputs_radio = document.getElementById("filters_wrapper").getElementsByTagName("input");
+        for(var j=0; j<filter_inputs_radio.length; j++) {
+            
+            if (filter_inputs_radio[j].name !== schedule_name) {
+                filter_inputs_radio[j].checked = false;
+            }
+            console.log(filter_inputs_radio[j].checked);
+            filters[filter_inputs_radio[j].name] = !!filter_inputs_radio[j].checked;
         }
-        filter_input.checked = filters[filter_input.name];
+        scheduler.updateView();
+        
+        var schedule = $(".js-schedule:checked").attr('schedule-id');
+        
+        $('#current-courses').html('').load(
+            url + '?schedule=' + schedule
+        );
     }
     
     // function for toggling radio buttons and updating display
     // to change between user schedules
     $(document).on('change', '.js-schedule', function () {
         var url = $(event.target).attr('courses-url');
-        var filter_inputs_radio = document.getElementById("filters_wrapper").getElementsByTagName("input");
-        
+        //var filter_inputs_radio = document.getElementById("filters_wrapper").getElementsByTagName("input");
+        var schedule_url = $(event.target).attr('schedule-url');
+        /*
         for(var j=0; j<filter_inputs_radio.length; j++) {
                         
             if(filter_inputs_radio[j] !== this) {
@@ -75,7 +92,57 @@ function init() {
         $('#current-courses').html('').load(
             url + '?schedule=' + schedule
         );
+        */
         
+        change_schedule(url, $(event.target).attr('name'));
+        
+        $.ajax({
+            url: schedule_url,
+            data: {'schedule_title': $(".js-schedule:checked").attr('name')},
+            dataType: 'json',
+            success: function (data) {
+                
+            }
+        });
+        
+    });
+    
+    //TODO: consider positioning of this function
+    //It needs direct access to change_schedule, which needs access to
+    // filters. But it is strange that it is separated
+    // Delete a schedule
+    $('.js-del-schedule').on('click', function () {
+        var schedule = $(".js-schedule:checked");
+        var url = $(event.target).attr('url');
+        var courses_url = schedule.attr('courses-url');
+        
+        if ($('.js-schedule').length === 1) {
+            //TODO: give error message to user
+            console.log("cannot delete last schedule");
+            return
+        }
+        
+        var new_schedule = $(".js-schedule")[0].name;
+        
+        schedule.closest('.js-schedule-container').remove();
+        $(".js-schedule")[0].checked = true;
+        
+        change_schedule(courses_url, $(".js-schedule")[0].name);
+        
+        console.log("name of new schedule is: ", new_schedule);
+        
+        //make ajax call to delete schedule from database
+        $.ajax({
+            url: url,
+            data: {
+                'schedule':schedule.attr('name'),
+                'new_schedule': new_schedule,
+            },
+            dataType: 'json',
+            success: function (data) {
+                //console.log("successfully deleted");
+            }
+        });
     });
 
     // logic for workweek view
@@ -116,16 +183,28 @@ function init() {
     Processed as an ajax json request for convenience.
     */
     $.ajax({
-        url: 'ajax/schedule',
-        data: {},
+        url: 'ajax/schedule',       //TODO: probably shouldn't be hardcoded
+        data: {'schedule':$(".js-schedule:checked").attr('name')},
         dataType: 'json',
-        success: function (data) {            
+        success: function (data) {
             count = data['count'];
             courses = data['courses'];
+            schedule = data['active_schedule'];
+            url = data['url'];
             
             for (i = 0; i < count; i++) {
                 scheduler.parse([courses[i]], 'json');
             }
+            console.log("schedule is ", $(".js-schedule[name='" + schedule + "']").attr('name'));
+            $('.js-schedule:checked').prop('checked', false);
+            $('.js-schedule[name="' + schedule + '"]').prop('checked', true);
+            
+            change_schedule(url, schedule);
+            //$('.js-schedule[name="' + schedule + '"]').change();
+            //console.log(filters[schedule]);
+            //filters[$('.js-schedule:checked').attr('name')] = false;
+            //filters[schedule] = true;
+            //scheduler.updateView();
         }
     });
 }
