@@ -35,7 +35,7 @@ class Course(models.Model):
     number = models.CharField(max_length=6, help_text="Enter the course's title number (220 in COMPSCI 220)")
     description = models.TextField(max_length=1000, help_text="Enter the course description")
     reqs = models.TextField(max_length=1000, blank=True, default="", help_text="Enter the course requirements")
-    credits = models.IntegerField(help_text="Enter # of credits")
+    credits = models.CharField(max_length=3, help_text="Enter # of credits")
     honors = models.BooleanField("Enter whether this class is an honors course")
     CAREERS = (
         ('u', 'Undergraduate'),
