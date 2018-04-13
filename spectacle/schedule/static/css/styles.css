@@ -70,6 +70,9 @@ h4{
     display: block;
 }
 .js-expand-info{
+    display: none;
+}
+.js-expand-default{
     display: block;
 }
 .btn-results{

@@ -78,7 +78,7 @@
         <!-- End Start Search Button -->
           </div>
           <!-- End top search bar -->
-          <div class="js-expand-info">
+          <div class="js-expand-info js-expand-default">
             <h6 class="search-toggle">Search filters: </h6>
 
             <!-- Begin misc options -->
@@ -279,7 +279,6 @@
             {% for tab in course_tabs %}
               <div class="tab-pane" id="{{tab.course.pk}}">
                 {% include 'schedule_tabs_content.html' %}
-                {{tab.course.pk}}
               </div>
             {% endfor %}
           {% endif %}
