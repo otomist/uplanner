@@ -128,6 +128,7 @@ class ItemLoader(ItemLoader):
     default_input_processor = MapCompose(default_proc)
     default_output_processor = TakeFirst()
 
+    #course model attributes
     title_in = MapCompose(default_proc, proc_title)
     dept_in = MapCompose(default_proc, proc_dept)
     number_in = MapCompose(default_proc, proc_number)
@@ -137,3 +138,4 @@ class ItemLoader(ItemLoader):
     start_date_in = MapCompose(default_proc, proc_start_date)
     end_date_in = MapCompose(default_proc, proc_end_date)
 
+    #section model attributes
