@@ -6,6 +6,7 @@ from .models import Course, Department, Student, Section, Schedule, ScheduleCour
 from .forms import ScheduleForm, NewScheduleForm, flowchartForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
+from schedule.forms import StudentForm,UserForm
 import json
 import re
 
