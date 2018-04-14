@@ -1,5 +1,6 @@
 from .models import Course, Department, Student, Section, Schedule, ScheduleCourse
 from .forms import ScheduleForm, NewScheduleForm, flowchartForm, StudentForm,UserForm
+from django.contrib.auth.models import AnonymousUser
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
@@ -298,13 +299,16 @@ def change_schedule(request):
     request.session['active_schedule'] = active_schedule
     request.session.save()
     return JsonResponse({'status':'SUCCESS'})
-    
+
+@login_required(login_url='/profile/login/')
 def schedule(request):
     """
     The view for the schedule uses a form with GET for receiving search parameters
     Eventually it will also have POST for updating the database when the user adds
     a course to their schedule
     """
+    
+
     form = ScheduleForm(request.GET)
     schedule_form = NewScheduleForm(request.GET)
     results = []
@@ -316,13 +320,17 @@ def schedule(request):
     user_schedules = []
     context = {}
     
-    #TODO: breaks is student doesn't exist
-    current_user = Student.objects.get(user_email=request.user.email)
-    if not current_user.schedule_set.all().exists():
-        Schedule.objects.create_schedule("Schedule 1", current_user)
+    if request.user.is_staff:
+        print()
+
+    else:
+        #TODO: breaks is student doesn't exist
+        current_user = Student.objects.get(user_email=request.user.email)
+        if not current_user.schedule_set.all().exists():
+            Schedule.objects.create_schedule("Schedule 1", current_user)
         
-    for schedule in current_user.schedule_set.all():
-        user_schedules.append(schedule)
+        for schedule in current_user.schedule_set.all():
+            user_schedules.append(schedule)
     #as default, always displays the first schedule
     #TODO URGENT: this should adjust based on which schedule is selected
     """
@@ -466,7 +474,7 @@ def prereqs(request):
         'prereqs.html',
         context={'highlight_prereqs':highlight_prereqs, 'form':form, 'course_list':course_list}
     )
-
+#compsci326
 def register(request):
     if request.method == 'POST':
         request.POST._mutable = True

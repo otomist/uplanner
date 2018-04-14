@@ -82,7 +82,7 @@ class flowchartForm(forms.Form):
 	departments = forms.TypedChoiceField(choices=depts, coerce=str, empty_value='', help_text="Enter Department")
 
 class StudentForm(forms.ModelForm):
-    
+    error_css_class = "error"
     sid = forms.CharField(max_length=8, required=True)
     credits = forms.IntegerField(required=True)
     user_email = forms.EmailField(widget = forms.HiddenInput(), required=False)
@@ -106,6 +106,7 @@ class StudentForm(forms.ModelForm):
         return student
     
 class UserForm(UserCreationForm):
+    error_css_class = "error"
     first_name = forms.CharField(max_length = 30, required=True)
     last_name = forms.CharField(max_length = 30, required=True)
     email = forms.EmailField(required=True)

@@ -18,13 +18,16 @@
         <form action="" method="post" style="background-color:rgb(230, 230, 230)" class="row">
                 {% csrf_token %}
             <div class = "col-md-6">
-                    <p>{{ user_form.fieldname.errors.as_text }}</p>
-                    <p>{{ user_form.as_p }}</p> 
+                <p class='errorlist'>{{ user_form.fieldname.errors.as_text }}</p>
+                <p>{{ user_form.as_p }}</p> 
             </div>
             <div class = "col-md-6" style="position:relative">
-                <p>{{ student_form.fieldname.errors.as_text }}</p>
-                <p>{{ student_form.as_p }}</p>
-
+                {% for field in student_form.visible_fields %}
+                    <p class="fieldwrapper">
+                        <p class='errorlist' >{{field.errors}}</p>
+                        <p>{{field.label_tag}}{{field}}</p></p>
+                    </p>
+                {%endfor%}
                 <input type="submit" class="btn btn-danger btn-lg" value="Register"  style="position:absolute;bottom:1em;right:1em"/>
             </div>
             

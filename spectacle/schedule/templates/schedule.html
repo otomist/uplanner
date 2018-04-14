@@ -3,7 +3,7 @@
 {% block body %} onload="init();" {% endblock %} 
 
 {% block title %}<title>Uplanner-Schedule</title>{% endblock %}
-
+{% if user.is_authenticated %}
 {% block content %}
   <!-- Begin row -->
   <div class="container-fluid">
@@ -292,7 +292,9 @@
   <!-- End Row -->
 
 {% endblock %}
-
+{% else %}
+<li><a href="{% url 'login'%}?next={{request.path}}">Login</a></li>
+{% endif %}
 {% block imports %}
   <!-- Import dhtmlx schedule builder modules -->
   {% load static %}
@@ -305,4 +307,5 @@
   <!-- Import our schedule builder javascript -->
   {% load static %}
   <script src="{% static 'scripts/scheduleBuilder.js' %}" type="text/javascript" charset="utf-8"></script>
+
 {% endblock %}

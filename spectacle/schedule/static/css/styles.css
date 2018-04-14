@@ -117,3 +117,7 @@ h4{
     /* This color is good for classes!*/
     background-color: #94b0ca9f;
 }
+.errorlist {
+    background-color: yellow;
+    color:red;
+}

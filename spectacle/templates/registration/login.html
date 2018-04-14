@@ -30,7 +30,7 @@
         </div>
         <div>
           <input type="submit" value="login" />
-          <input type="hidden" name="next" value="{% url 'profile' %}" />
+          <input type="hidden" name="next" value="{% url 'schedule'%}?next={{request.path}}" />
         </div>
       </form>
 
