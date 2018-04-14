@@ -95,15 +95,15 @@ class Section(models.Model):
         return "{} {}".format(self.clss, self.id)
     
 class Student(models.Model):
-    email = models.EmailField()
-    username = models.CharField(max_length=30)
+    user_email = models.EmailField(unique=True, null=False, blank = False,default='')
     courses = models.ManyToManyField(Section, blank=True, help_text='The previous courses taken by the user')
     sid = models.CharField(max_length=8, help_text='8 digit spire id')
     major = models.ForeignKey(Department, on_delete='SET_NULL', null=True)
     credits = models.IntegerField(help_text='The current cumulative number of credits taken')
-    
+    USERNAME_FIELD = 'user'
+        
     def __str__(self):
-        return "{}".format(self.username)
+        return "{} {} {}".format(self.user_email, self.sid, self.major)
     
 class ScheduleManager(models.Manager):
     def create_schedule(self, title, student):
