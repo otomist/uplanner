@@ -428,7 +428,7 @@ def profile(request):
     user = request.user
     #TODO: this will break if the student doesn't exist
     student = Student.objects.get(user_email=request.user.email)
-    
+    remaining_credits = 120 - student.credits
     user_courses = map(lambda c: {
                                   'dept':c.clss.dept,
                                   'number':c.clss.number,
@@ -440,7 +440,7 @@ def profile(request):
     return render(
         request,
         'profile.html',
-        context={'highlight_profile':highlight_profile, 'student':student, 'user':user,'user_courses':user_courses}
+        context={'highlight_profile':highlight_profile, 'student':student, 'user':user,'user_courses':user_courses, 'remaining_credits':remaining_credits, 'credits':student.credits}
     )
     
 def prereqs(request):
