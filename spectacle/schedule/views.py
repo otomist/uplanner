@@ -84,8 +84,8 @@ def schedule_courses(request):
         schedule = request.session['active_schedule']
     else:
         #TODO: this breaks if doesn't exist
-        schedule = Schedule.objects.filter(student=current_user)[0]
-        request.session['active_schedule'] = schedule.title
+        schedule = Schedule.objects.filter(student=current_user)[0].title
+        request.session['active_schedule'] = schedule
         request.session.save()
         
     print("active schedule is ", schedule)
@@ -207,6 +207,7 @@ def delete_tab(request):
 # returns data needed to render a single current course listing
 def get_current_data(schedulecourse):
     section = schedulecourse.course
+    #TODO: this will fail is course doesn't exist
     course = section.clss
     return {
         'title': course.title,
@@ -407,8 +408,8 @@ def profile(request):
     
     highlight_profile = True
     
-    # temporarily just grab the first user
     user = request.user
+    #TODO: this will break if the student doesn't exist
     student = Student.objects.get(user_email=request.user.email)
     
     user_courses = map(lambda c: {
@@ -462,6 +463,7 @@ def register(request):
         request.POST._mutable = True
         student_form = StudentForm(request.POST)
         user_form = UserForm(request.POST)
+        # this links the UserForm and StudentForm:
         request.POST['user_email'] = request.POST['email']
         request.POST._mutable = False
         if user_form.is_valid():
