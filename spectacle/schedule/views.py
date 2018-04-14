@@ -1,12 +1,12 @@
+from .models import Course, Department, Student, Section, Schedule, ScheduleCourse
+from .forms import ScheduleForm, NewScheduleForm, flowchartForm, StudentForm,UserForm
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib import messages
 from django.shortcuts import render
 from django.views import generic
 from django.http import JsonResponse
 from django.urls import reverse
-from .models import Course, Department, Student, Section, Schedule, ScheduleCourse
-from .forms import ScheduleForm, NewScheduleForm, flowchartForm
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import UserCreationForm
-from schedule.forms import StudentForm,UserForm
 import json
 import re
 
@@ -403,11 +403,13 @@ from django.shortcuts import render, HttpResponse, redirect
 
 @login_required(login_url='/profile/login/')
 def profile(request):
+
     
     highlight_profile = True
     
     # temporarily just grab the first user
-    student = Student.objects.all()[0]
+    user = request.user
+    student = Student.objects.get(user_email=request.user.email)
     
     user_courses = map(lambda c: {
                                   'dept':c.clss.dept,
@@ -420,7 +422,7 @@ def profile(request):
     return render(
         request,
         'profile.html',
-        context={'highlight_profile':highlight_profile, 'user':student, 'user_courses':user_courses}
+        context={'highlight_profile':highlight_profile, 'student':student, 'user':user,'user_courses':user_courses}
     )
     
 def prereqs(request):
@@ -454,28 +456,20 @@ def prereqs(request):
         'prereqs.html',
         context={'highlight_prereqs':highlight_prereqs, 'form':form, 'course_list':course_list}
     )
+
 def register(request):
     if request.method == 'POST':
         request.POST._mutable = True
-        
         student_form = StudentForm(request.POST)
         user_form = UserForm(request.POST)
         request.POST['user_email'] = request.POST['email']
-        #request.POST.user_email= request.POST['email']
-        #student_form.user_email = user_form['email']
-        #print(student_form)
         request.POST._mutable = False
-        #student_form.fields['email'].widget = forms.HiddenInput()
         if user_form.is_valid():
-            #student_form.user_email= user_form['email']
-            
-
             user_form.save()
             if student_form.is_valid():
                 student_form.save()
             return profile(request)
         else:
-            #messages.error(request, 'Please correct the error below.')
             args = {'user_form':user_form, 'student_form':student_form}
             return render(request, 'registration/registration_form.html', args)
     else:
