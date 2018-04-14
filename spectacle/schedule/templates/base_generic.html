@@ -36,6 +36,11 @@
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav ml-auto">
+        {% if user.is_authenticated %}
+        <li class="nav-item {% if highlight_index %} active {% endif %}">
+          <a class="nav-link" href="{% url 'profile' %}">Welcome, {{user.first_name}}</a>
+        </li>
+        {% endif %}
         <li class="nav-item {% if highlight_index %} active {% endif %}">
           <a class="nav-link" href="{% url 'index' %}">Home</a>
         </li>
