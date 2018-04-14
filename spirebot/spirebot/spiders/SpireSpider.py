@@ -25,10 +25,10 @@ class SpireSpider(scrapy.Spider):
     def __init__(self):
         self.driver = webdriver.Chrome('C:/Users/Kerry Ngan\Miniconda3/chromedriver.exe')
     
-    def load_termitem(self, page_selector):
+    def load_termitem(self, page_selector, index):
         term_loader = ItemLoader(item = TermItem(), selector = page_selector)
-        course_loader.add_css('season', "[id^='DERIVED_CLSRCH_DESCR200$" + str(index) + "']")
-        course_loader.add_css('year', "[id^='DERIVED_CLSRCH_DESCR200$" + str(index) + "']")
+        course_loader.add_xpath('season', '//*[@id="UM_DERIVED_SA_UM_TERM_DESCR"]/option['+ str(course_index) +']')
+        course_loader.add_xpath('year', '//*[@id="UM_DERIVED_SA_UM_TERM_DESCR"]/option['+ str(course_index) +']')
     
     #creates an item for each section and passes it into a pipeline
     def load_courseitem(self, page1_selector, page2_selector, index):  
@@ -44,12 +44,12 @@ class SpireSpider(scrapy.Spider):
         if page2_selector.css("[id^='win0divDERIVED_CLSRCH_DESCRLONG']"):
             course_loader.add_css('description', "[id^='win0divDERIVED_CLSRCH_DESCRLONG']")
         else: 
-            course_loader.add_value('description', "Description not available at this time")
+            course_loader.add_value('description', "Not available at this time")
 
         if page2_selector.css("#SSR_CLS_DTL_WRK_SSR_REQUISITE_LONG"):
             course_loader.add_css('reqs', "#SSR_CLS_DTL_WRK_SSR_REQUISITE_LONG")
         else: 
-            course_loader.add_value('reqs', "Requirements not available at this time")
+            course_loader.add_value('reqs', "Not available at this time")
 
         course_loader.add_css('credits', "[id^='SSR_CLS_DTL_WRK_UNITS_RANGE']")
         course_loader.add_css('career', "[id^='PSXLATITEM_XLATLONGNAME$33$']")
@@ -100,7 +100,10 @@ class SpireSpider(scrapy.Spider):
 
         #select options for searching
         option_selector = Selector(text = self.driver.page_source)
-        self.driver.find_element_by_xpath('//*[@id="UM_DERIVED_SA_UM_TERM_DESCR"]/option[3]').click() #spring 2018
+        term_index = 3
+        self.load_termitem(option_selector, term_index)
+        
+        self.driver.find_element_by_xpath('//*[@id="UM_DERIVED_SA_UM_TERM_DESCR"]/option['+ str(course_index) +']').click() #spring 2018
         self.driver.find_element_by_xpath('//*[@id="CLASS_SRCH_WRK2_SUBJECT$108$"]/option[35]').click() #computer science
         self.driver.find_element_by_xpath('//*[@id="CLASS_SRCH_WRK2_SESSION_CODE$12$"]/option[2]').click() #university
         self.driver.find_element_by_xpath('//*[@id="CLASS_SRCH_WRK2_SSR_OPEN_ONLY"]').click() #uncheck only open courses
