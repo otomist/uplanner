@@ -44,7 +44,8 @@ def schedule_courses(request):
     #TODO: we never really use this...
     schedule_title = request.GET.get('schedule', None)
     
-    current_user = Student.objects.all()[0]
+    #TODO: this will fail if user does not exist
+    current_user = Student.objects.get(user_email=request.user.email)
     temp_courses = ScheduleCourse.objects.filter(schedule__student=current_user)
     courses = []
     
@@ -108,10 +109,10 @@ def del_section(request):
     id = request.GET.get('id', None)
     schedule_title = request.GET.get('schedule', None)
     
-    current_user = Student.objects.all()[0]
+    current_user = Student.objects.get(user_email=request.user.email)
     # TODO: this will break if the section/schedule are not found
-    section = Section.objects.filter(id=id)[0]
-    schedule = Schedule.objects.filter(title=schedule_title, student=current_user)[0]
+    section = Section.objects.get(id=id)
+    schedule = Schedule.objects.get(title=schedule_title, student=current_user)
     
     schedulecourse = ScheduleCourse.objects.filter(course=section).filter(schedule=schedule)
     if schedulecourse.exists():
@@ -132,18 +133,19 @@ def add_section(request):
     id = request.GET.get('id', None)
     schedule = request.GET.get('schedule', None)
     
-    section = Section.objects.filter(id=id)[0]
+    #TODO: this will break if does not exist
+    section = Section.objects.get(id=id)
     title = section.clss.dept.code + ' ' + section.clss.number
     start_time = section.start
     end_time = section.ending
     days = section.days
-    current_user = Student.objects.all()[0]
+    current_user = Student.objects.get(user_email=request.user.email)
     #TODO: this will break if does not exist
-    schedule_id = Schedule.objects.filter(student=current_user).filter(title=schedule)[0].id
+    schedule_id = Schedule.objects.filter(student=current_user).get(title=schedule).id
     
     if not schedule == None:
         # TODO: this will break if the schedule doesn't exist
-        schedule = Schedule.objects.filter(id=schedule_id)[0]
+        schedule = Schedule.objects.get(id=schedule_id)
         if not ScheduleCourse.objects.filter(course=section).filter(schedule=schedule).exists():
             ScheduleCourse.objects.create_schedulecourse(section, schedule)
 
@@ -236,8 +238,8 @@ def make_current_courses(request):
     schedule_id = request.GET.get('schedule', None)
     
     #TODO: this will fail if schedule doesn't exist
-    current_user = Student.objects.all()[0]
-    schedule = Schedule.objects.filter(student=current_user).filter(id=schedule_id)[0]
+    current_user = Student.objects.get(user_email=request.user.email)
+    schedule = Schedule.objects.filter(student=current_user).get(id=schedule_id)
     
     user_courses = []
     
@@ -253,7 +255,7 @@ def make_current_courses(request):
 def del_schedule(request):
     schedule_title = request.GET.get('schedule', None)
     new_schedule_title = request.GET.get('new_schedule', None)
-    current_user = Student.objects.all()[0]
+    current_user = Student.objects.get(user_email=request.user.email)
     schedule = Schedule.objects.filter(student=current_user).filter(title=schedule_title)
     if schedule.exists():
         schedule[0].delete()
@@ -274,9 +276,10 @@ def make_schedule(request):
             data['url'] = reverse(make_current_courses)
             data['schedule_url'] = reverse(change_schedule)
             if not Schedule.objects.filter(title=title):
-                current_user = Student.objects.all()[0]
+                current_user = Student.objects.get(user_email=request.user.email)
                 Schedule.objects.create_schedule(title, current_user)
-            data['id'] = Schedule.objects.filter(title=title)[0].id
+            #TODO: this will break if does not exist
+            data['id'] = Schedule.objects.get(title=title).id
             
         else:
             # check why title is invalid??
@@ -309,17 +312,23 @@ def schedule(request):
     num_dept = 0
     num_key = 0
     course_views = []
-    user_courses = []
+    user_courses = []   #this will be filled in later by ajax
     user_schedules = []
     context = {}
     
-    #replace with actual student later
-    current_user = Student.objects.all()[0]
+    #TODO: breaks is student doesn't exist
+    current_user = Student.objects.get(user_email=request.user.email)
+    if not current_user.schedule_set.all().exists():
+        Schedule.objects.create_schedule("Schedule 1", current_user)
+        
     for schedule in current_user.schedule_set.all():
         user_schedules.append(schedule)
     #as default, always displays the first schedule
+    #TODO URGENT: this should adjust based on which schedule is selected
+    """
     for section in current_user.schedule_set.all()[0].schedulecourse_set.all():
         user_courses.append(get_current_data(section))
+    """
     
     # these are the course tabs previously opened and stored in a session
     # note that each element of a course_tab must also agree with the format served by
@@ -336,7 +345,7 @@ def schedule(request):
     
     if form.is_valid():
         
-        results = Course.objects.all()
+        results = Course.objects.select_related().exclude(section=None)
         
         #filter based on department
         if form.cleaned_data['departments'] != 'NULL':
