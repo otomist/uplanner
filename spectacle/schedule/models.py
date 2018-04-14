@@ -35,7 +35,7 @@ class Course(models.Model):
     number = models.CharField(max_length=6, help_text="Enter the course's title number (220 in COMPSCI 220)")
     description = models.TextField(max_length=1000, help_text="Enter the course description")
     reqs = models.TextField(max_length=1000, blank=True, default="", help_text="Enter the course requirements")
-    credits = models.IntegerField(help_text="Enter # of credits")
+    credits = models.CharField(max_length=3, help_text="Enter # of credits")
     honors = models.BooleanField("Enter whether this class is an honors course")
     CAREERS = (
         ('u', 'Undergraduate'),
@@ -95,15 +95,15 @@ class Section(models.Model):
         return "{} {}".format(self.clss, self.id)
     
 class Student(models.Model):
-    email = models.EmailField()
-    username = models.CharField(max_length=30)
+    user_email = models.EmailField(unique=True, null=False, blank = False,default='')
     courses = models.ManyToManyField(Section, blank=True, help_text='The previous courses taken by the user')
     sid = models.CharField(max_length=8, help_text='8 digit spire id')
     major = models.ForeignKey(Department, on_delete='SET_NULL', null=True)
     credits = models.IntegerField(help_text='The current cumulative number of credits taken')
-    
+    USERNAME_FIELD = 'user'
+        
     def __str__(self):
-        return "{}".format(self.username)
+        return "{} {} {}".format(self.user_email, self.sid, self.major)
     
 class ScheduleManager(models.Manager):
     def create_schedule(self, title, student):

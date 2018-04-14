@@ -1,5 +1,5 @@
 from django import forms
-from .models import Course, Department
+from .models import Course, Department, Student
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 
@@ -81,27 +81,51 @@ class flowchartForm(forms.Form):
 	
 	departments = forms.TypedChoiceField(choices=depts, coerce=str, empty_value='', help_text="Enter Department")
 
-class userRegistration(UserCreationForm):
+class StudentForm(forms.ModelForm):
+    
+    sid = forms.CharField(max_length=8, required=True)
+    credits = forms.IntegerField(required=True)
+    user_email = forms.EmailField(widget = forms.HiddenInput(), required=False)
+    class Meta:
+        model = Student
+        fields = {
+            'sid',
+            'credits',
+            'user_email',
+            'major',
+        }
+    
+    def save(self, commit=True):
+        student = super(StudentForm, self).save(commit=False)
+        student.sid = self.cleaned_data['sid']
+        student.credits = self.cleaned_data['credits']
+        student.user_email = self.cleaned_data['user_email']
+        if commit:
+            student.save()
+
+        return student
+    
+class UserForm(UserCreationForm):
+    first_name = forms.CharField(max_length = 30, required=True)
+    last_name = forms.CharField(max_length = 30, required=True)
     email = forms.EmailField(required=True)
 
     class Meta:
         model = User
-        fields = {
-            'username',
+        fields = (
             'first_name',
             'last_name',
-            'email',
+            'username',
             'password1',
-            'password2'
-        }
-    
+            'password2',
+            'email',
+        )
     def save(self, commit=True):
-        user = super(userRegistration, self).save(commit=False)
+        user = super(UserForm, self).save(commit=False)
         user.first_name = self.cleaned_data['first_name']
         user.last_name = self.cleaned_data['last_name']
+        user.username = self.cleaned_data['username']
         user.email = self.cleaned_data['email']
-
         if commit:
             user.save()
-
         return user

@@ -1,12 +1,12 @@
+from .models import Course, Department, Student, Section, Schedule, ScheduleCourse
+from .forms import ScheduleForm, NewScheduleForm, flowchartForm, StudentForm,UserForm
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib import messages
 from django.shortcuts import render
 from django.views import generic
 from django.http import JsonResponse
 from django.urls import reverse
-from .models import Course, Department, Student, Section, Schedule, ScheduleCourse
-from .forms import ScheduleForm, NewScheduleForm, flowchartForm
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import UserCreationForm
-from schedule.forms import userRegistration
 import json
 import re
 
@@ -403,11 +403,13 @@ from django.shortcuts import render, HttpResponse, redirect
 
 @login_required(login_url='/profile/login/')
 def profile(request):
+
     
     highlight_profile = True
     
     # temporarily just grab the first user
-    student = Student.objects.all()[0]
+    user = request.user
+    student = Student.objects.get(user_email=request.user.email)
     
     user_courses = map(lambda c: {
                                   'dept':c.clss.dept,
@@ -420,7 +422,7 @@ def profile(request):
     return render(
         request,
         'profile.html',
-        context={'highlight_profile':highlight_profile, 'user':student, 'user_courses':user_courses}
+        context={'highlight_profile':highlight_profile, 'student':student, 'user':user,'user_courses':user_courses}
     )
     
 def prereqs(request):
@@ -454,32 +456,27 @@ def prereqs(request):
         'prereqs.html',
         context={'highlight_prereqs':highlight_prereqs, 'form':form, 'course_list':course_list}
     )
-from django.urls import reverse_lazy
-class register(generic.CreateView):
-    form_class = UserCreationForm
-    success_url = reverse_lazy('login')
-    template_name = 'registration/registration_form.html'
-    '''
-    if request.method == 'POST':
-        form = UserCreationForm(request.POST)
-        if form.is_valid:
-            form.save()
-            return redirect('uplanner/schedule.html')
 
+def register(request):
+    if request.method == 'POST':
+        request.POST._mutable = True
+        student_form = StudentForm(request.POST)
+        user_form = UserForm(request.POST)
+        request.POST['user_email'] = request.POST['email']
+        request.POST._mutable = False
+        if user_form.is_valid():
+            user_form.save()
+            if student_form.is_valid():
+                student_form.save()
+            return profile(request)
+        else:
+            args = {'user_form':user_form, 'student_form':student_form}
+            return render(request, 'registration/registration_form.html', args)
     else:
-        form = UserCreationForm()
-        args = {'form':form}
-    return render(request, 'registration/registration_form.html', args)
-'''
-'''
-def register(UserCreationForm):
-    email = forms.EmailField(label="Email")
-    fullname = forms.CharField(label="First Name")
-    class Meta:
-        model = User
-        fields = ("username", "fullname", "email",)
-    def save(self, commit=True):
-        user=super(RegisterForm, self).save(commit=False)
-'''
+        user_form = UserForm()
+        student_form = StudentForm()
+        args = {'user_form':user_form, 'student_form':student_form}
+        return render(request, 'registration/registration_form.html', args)
+
 class CourseDetailView(generic.DetailView):
     model = Course

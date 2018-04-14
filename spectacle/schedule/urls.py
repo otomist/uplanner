@@ -20,5 +20,5 @@ urlpatterns = [
     path('schedule/ajax/change_schedule/', views.change_schedule, name='change_schedule'),
     path('profile/', views.profile, name='profile'),
     path('prereqs/', views.prereqs, name='prereqs'),
-    path('register/', views.register.as_view(), name='register'),
+    path('register/', views.register, name='register'),
 ]

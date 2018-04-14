@@ -90,6 +90,9 @@ class ItemLoader(ItemLoader):
         words = input_str.split()
         return '1' if words[1][0] == 'H' else '0'
 
+    def proc_credits(input_str):
+        return input_str.replace(' ', '')
+
     def proc_career(input_str):
         career_dict = {
             'Undergraduate' : 'u',
@@ -128,12 +131,15 @@ class ItemLoader(ItemLoader):
     default_input_processor = MapCompose(default_proc)
     default_output_processor = TakeFirst()
 
+    #course model attributes
     title_in = MapCompose(default_proc, proc_title)
     dept_in = MapCompose(default_proc, proc_dept)
     number_in = MapCompose(default_proc, proc_number)
     honors_in = MapCompose(default_proc, proc_honor)
+    credits_in = MapCompose(default_proc, proc_credits)
     career_in = MapCompose(default_proc, proc_career)
     session_in = MapCompose(default_proc, proc_session)
     start_date_in = MapCompose(default_proc, proc_start_date)
     end_date_in = MapCompose(default_proc, proc_end_date)
 
+    #section model attributes
