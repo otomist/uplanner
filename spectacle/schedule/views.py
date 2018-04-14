@@ -319,24 +319,17 @@ def schedule(request):
     user_courses = []   #this will be filled in later by ajax
     user_schedules = []
     context = {}
-    
-    if request.user.is_staff:
-        print()
 
-    else:
-        #TODO: breaks is student doesn't exist
-        current_user = Student.objects.get(user_email=request.user.email)
-        if not current_user.schedule_set.all().exists():
-            Schedule.objects.create_schedule("Schedule 1", current_user)
-        
-        for schedule in current_user.schedule_set.all():
-            user_schedules.append(schedule)
-    #as default, always displays the first schedule
-    #TODO URGENT: this should adjust based on which schedule is selected
-    """
-    for section in current_user.schedule_set.all()[0].schedulecourse_set.all():
-        user_courses.append(get_current_data(section))
-    """
+    #TODO: breaks is student doesn't exist
+    current_user = Student.objects.get(user_email=request.user.email)
+    
+    # if a new user has no schedule, make them their first schedule
+    if not current_user.schedule_set.all().exists():
+        Schedule.objects.create_schedule("Schedule 1", current_user)
+    
+    for schedule in current_user.schedule_set.all():
+        user_schedules.append(schedule)
+    
     
     # these are the course tabs previously opened and stored in a session
     # note that each element of a course_tab must also agree with the format served by
