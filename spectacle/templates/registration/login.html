@@ -6,20 +6,23 @@
   <div class="row align-items-center">
     <div class="col-md-4"></div>
     <div class="col-md-4" style="background-color:rgb(214, 214, 214)">
+        <div style="text-align: center; padding-top:1em"><h1>Login</h1></div>
       {% if form.errors %}
-      <p>Your username and password didn't match. Please try again.</p>
+      <div style="text-align: center;"><p>Your username and password didn't match. Please try again.</p></div>
+      
       {% endif %}
 
       {% if next %}
         {% if user.is_authenticated %}
       <h2>Your account doesn't have access to this page. To proceed, please login with an account that has access.</h2>
         {% else %}
-      <h2 style="text-align: center; padding:0.2em">Login</h2>
+      
         {% endif %}
       {% endif %}
-
-      <form method="post" action="{% url 'login' %}" style="text-align: center;padding:0.2em">
+      
+      <form method="post" action="{% url 'login' %}" style="text-align: center;">
       {% csrf_token %}
+      
         <div>
           <td>{{ form.username.label_tag }}</td>
           <td>{{ form.username }}</td>

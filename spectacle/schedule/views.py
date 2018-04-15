@@ -421,7 +421,7 @@ def profile(request):
     user = request.user
     #TODO: this will break if the student doesn't exist
     student = Student.objects.get(user_email=request.user.email)
-    remaining_credits = 120 - student.credits
+    remaining_credits = (120 - student.credits) if (120 - student.credits)> 0 else 0
     user_courses = map(lambda c: {
                                   'dept':c.clss.dept,
                                   'number':c.clss.number,
@@ -468,6 +468,8 @@ def prereqs(request):
         context={'highlight_prereqs':highlight_prereqs, 'form':form, 'course_list':course_list}
     )
 #compsci326
+from django.contrib.auth import logout, login, authenticate
+
 def register(request):
     if request.method == 'POST':
         request.POST._mutable = True
@@ -480,6 +482,12 @@ def register(request):
             user_form.save()
             if student_form.is_valid():
                 student_form.save()
+                new_user = authenticate(
+                    username=user_form.cleaned_data['username'],
+                    password=user_form.cleaned_data['password1'],
+                )
+                login(request, new_user)
+            
             return profile(request)
         else:
             args = {'user_form':user_form, 'student_form':student_form}
