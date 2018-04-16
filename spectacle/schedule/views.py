@@ -448,12 +448,30 @@ def prereqs(request):
         if(form.cleaned_data['departments'] != 'NULL'):
             course_list = Course.objects.filter(dept__code=form.cleaned_data['departments'])
 
+    #for getting the list of 
+    # print(type(course_list))
+    # c_list = map(lambda c:{c.title:c.reqs}, course_list)
+    # for x in c_list:
+    #     print(x)
+    # abr = open('abbreviations.txt', 'w')
+    # for item in c_list:
+    #     abr.write("%s\n" % item)
+
+    #format courseNum: [(D)listOfPre(0), (D)levelNumber(1), Selected(2), linked(3), (D)credits(4), (D)required(5), root(6), title(7)]
     #this is a very silly way to tranfser the data but it works for now until I start using ajax.
-    course_list = json.dumps(list(map(lambda c: {str(c.number):[
-                                 c.reqs.split(" "),
-                                 len(c.reqs.split(" ")),
+    course_list = json.dumps(list(map(lambda c: {('title' + str(c.number)):[
+                                [int(s) for s in c.reqs.split() if s.isdigit()],#listOfPre(0)... #listOfPre(0)... TODO: this extracts the numbers for the prereqs but does not do complex parsing on things like and and or statements
+                                 re.search(r'\d+', c.number).group()[:1],#levelNumber(1)...The regex gets the first number in the course number
+                                 '0',#Selected(2)...default is 0
+                                 '0',#linked(3)...default is 0
+                                 str(c.credits),#credits(4)
+                                 '1',#required(5)...TODO get required from server right now using temp default to 1 
+                                 '0',#root(6)]...default is 0
                                  c.title,
-                                 c.description]
+                                 form.cleaned_data['departments']
+                                 ]
+                                 # len(c.reqs.split(" ")),
+                                 # c.description]
         }, list(course_list))))
     
     #DEBUG:
