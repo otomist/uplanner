@@ -79,21 +79,21 @@ class Section(models.Model):
     wenrolled = models.IntegerField(help_text='The current size of the waitlist')
     clss = models.ForeignKey(Course, on_delete=models.CASCADE, help_text='The corresponding generic class for this section')
     COMPONENTS = (
-        ('lec', 'Lecture'),
-        ('dis', 'Discussion'),
-        ('lab', 'Laboratory'),
-        ('col', 'Colloquium'),
-        ('the', 'Dissertation / Thesis'),
-        ('stu', 'Individualized Study'),
-        ('pra', 'Practicum'),
-        ('sem', 'Seminar'),
-        ('ski', 'Studio / Skills'),
+        ('LEC', 'Lecture'),
+        ('DIS', 'Discussion'),
+        ('LAB', 'Laboratory'),
+        ('COL', 'Colloquium'),
+        ('DST', 'Dissertation / Thesis'),
+        ('IND', 'Individualized Study'),
+        ('PRA', 'Practicum'),
+        ('SEM', 'Seminar'),
+        ('STS', 'Studio / Skills'),
     )
     component = models.CharField(max_length=3, choices=COMPONENTS)
     
     def __str__(self):
         return "{} {}".format(self.clss, self.id)
-    
+        
 class Student(models.Model):
     user_email = models.EmailField(unique=True, null=False, blank = False,default='')
     courses = models.ManyToManyField(Section, blank=True, help_text='The previous courses taken by the user')
@@ -109,6 +109,8 @@ class ScheduleManager(models.Manager):
     def create_schedule(self, title, student):
         schedule = self.create(title=title, student=student)
         return schedule
+    #def create_temp_schedule(self):
+        
     
 class Schedule(models.Model):
     title = models.CharField(max_length=100, help_text='User-set title for this schedule')

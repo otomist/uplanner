@@ -46,8 +46,12 @@ def schedule_courses(request):
     schedule_title = request.GET.get('schedule', None)
     
     #TODO: this will fail if user does not exist
-    current_user = Student.objects.get(user_email=request.user.email)
-    temp_courses = ScheduleCourse.objects.filter(schedule__student=current_user)
+    current_user = Student.objects.filter(user_email=request.user.email)
+    temp_courses = []
+    if current_user.exists():
+        #current_user = current_user[0]
+        temp_courses = ScheduleCourse.objects.filter(schedule__student=current_user[0])
+    
     courses = []
     
     def parse_dates(dates):
@@ -84,11 +88,13 @@ def schedule_courses(request):
     schedule = schedule_title
     if 'active_schedule' in request.session:
         schedule = request.session['active_schedule']
-    else:
+    elif current_user.exists():
         #TODO: this breaks if doesn't exist
-        schedule = Schedule.objects.filter(student=current_user)[0].title
+        schedule = Schedule.objects.filter(student=current_user[0])[0].title
         request.session['active_schedule'] = schedule
         request.session.save()
+    #else:
+        #schedule = Schedule.objects.create_temp_schedule()
         
     print("active schedule is ", schedule)
         
