@@ -66,6 +66,7 @@ class ScheduleCourseItem(DjangoItem):
     
 class ItemLoader(ItemLoader):
 
+    #course
     def default_proc(input):
         input = remove_tags(input)
         input = replace_escape_chars(input)
@@ -126,6 +127,112 @@ class ItemLoader(ItemLoader):
         date_split = end_date.split('/')  #["month", "day", "year"]
         return date_split[2] + '-' + date_split[0] + '-' + date_split[1]  #"year-month-day"
 
+    #term
+    def proc_season(input_str):
+        season_dict = {
+            'Winter': 'w',
+            'Summer' : 't',
+            'Spring' : 's',
+            'Fall' : 'f',
+        }
+        return season_dict[input_str.split(' ')[1]]
+    
+    def proc_year(input_str):
+        return input_str.split(' ')[0]
+    
+    #section
+    def proc_days(input_str):
+        if 'Mo' not in input_str and 'Tu' not in input_str and 'We' not in input_str and 'Th' not in input_str and 'Fr' not in input_str:
+            return 'TBA'     
+        daytime_list = re.split(r'[\s-]+', input_str)
+        return daytime_list[0]
+    
+    def proc_start(input_str):
+
+        start_time = None
+
+        if(input_str == 'TBA'):
+            return '00:00:00'
+        militarytime = None
+
+        daytime_list = re.split(r'[\s-]+', input_str)
+
+        if 'Mo' not in input_str and 'Tu' not in input_str and 'We' not in input_str and 'Th' not in input_str and 'Fr' not in input_str:
+            start_time = daytime_list[0]
+        else:
+            start_time = daytime_list[1]
+
+        if 'PM' in start_time:
+            militarytime = 12
+        if 'AM' in start_time:
+            militarytime = 0
+
+        time = re.sub(r'[APM]+','', start_time).split(':') #5:15PM becomes ["5","15"]
+        militarytime = militarytime + int(time[0])
+
+        return str(militarytime) + ':' + time[1] + ':00'
+
+    def proc_ending(input_str):
+        
+        end_time = None
+
+        if(input_str == 'TBA'):
+            return '00:00:00'
+
+        militarytime = None
+
+        daytime_list = re.split(r'[\s-]+', input_str)
+
+        if 'Mo' not in input_str and 'Tu' not in input_str and 'We' not in input_str and 'Th' not in input_str and 'Fr' not in input_str:
+            end_time = daytime_list[0]
+        else:
+            end_time = daytime_list[2]
+
+        if 'PM' in end_time:
+            militarytime = 12
+        if 'AM' in end_time:
+            militarytime = 0
+
+        time = re.sub(r'[APM]+','', end_time).split(':') #5:15PM becomes ["5","15"]
+        militarytime = militarytime + int(time[0])
+
+        return str(militarytime) + ':' + time[1] + ':00'
+
+    def proc_term(input_str):
+        season_dict = {
+            'Winter': 'w',
+            'Summer' : 't',
+            'Spring' : 's',
+            'Fall' : 'f',
+        }
+        season = season_dict[input_str.split(' ')[1]]
+        year = input_str.split(' ')[0]
+        return Term.objects.filter(season = season).get(year = year)
+    
+    def proc_open(input_str):
+        return '1' if input_str == 'Open' else '0'
+
+    def proc_clss(input_str):
+        return Course.objects.get(number = input_str.split()[1])
+    
+    def proc_component(input_str):
+        comp_dict = {
+            'Lecture' : 'lec',
+            'Discussion' : 'dis',
+            'Laboratory' : 'lab',
+            'Colloquium' : 'col',
+            'Dissertation / Thesis' : 'the',
+            'Individualized Study' : 'stu',
+            'Practicum' : 'pra',
+            'Seminar' : 'sem',
+            'Studio / Skills' : 'ski',
+        }
+
+        return input_str.split('-')[1][0:3]
+
+
+
+
     default_item_class = CourseInfo
     
     default_input_processor = MapCompose(default_proc)
@@ -142,4 +249,15 @@ class ItemLoader(ItemLoader):
     start_date_in = MapCompose(default_proc, proc_start_date)
     end_date_in = MapCompose(default_proc, proc_end_date)
 
-    #section model attributes
+    #term model attributes
+    season_in = MapCompose(default_proc, proc_season)
+    year_in = MapCompose(default_proc, proc_year)
+
+    #section model atributes
+    days_in = MapCompose(default_proc, proc_days)
+    start_in = MapCompose(default_proc, proc_start)
+    ending_in = MapCompose(default_proc, proc_ending)
+    term_in = MapCompose(default_proc, proc_term)
+    open_in = MapCompose(default_proc, proc_open)
+    clss_in = MapCompose(default_proc, proc_clss)
+    component_in = MapCompose(default_proc, proc_component)
