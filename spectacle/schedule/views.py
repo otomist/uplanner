@@ -371,7 +371,7 @@ def schedule(request):
         #TODO: this should have more intelligent filtering. What about courses with a lab on Fri, but no lectures?
         #      it probably shouldn't show up, but it will
         days_set = None
-        for day in form.get_days():
+        for day in form.days:
             if form.cleaned_data[day]:
                 if days_set == None:
                     days_set = results.select_related().filter(section__days__contains=day[:2]).distinct()
@@ -379,6 +379,22 @@ def schedule(request):
                     days_set.union(results.select_related().filter(section__days__contains=day[:2]).distinct())
         if days_set != None:
             results = days_set
+        
+        levels_set = None
+        for level in form.levels:
+            if form.cleaned_data[level]:
+                course_level = level[1]
+                if course_level == '5':
+                    course_level = '[5-9]'
+                regex = r'\w*' + course_level + '\d{2}\w*'
+                print(regex)
+                if levels_set == None:
+                    levels_set = results.filter(number__iregex=regex)
+                else:
+                    levels_set.union(results.filter(number__iregex=regex))
+        if levels_set != None:
+            results = levels_set
+        
         
         #if department/keywords are not selected, return nothing
         if form.cleaned_data['departments'] == 'NULL' and form.cleaned_data['keywords'] == '':

@@ -69,7 +69,6 @@ class Section(models.Model):
     start = models.TimeField(help_text='The starting time of the class')
     ending = models.TimeField(help_text='The ending time of the class')
     term = models.ForeignKey(Term, on_delete=models.CASCADE, default=1)
-    link = models.CharField(max_length=100, help_text='Link to the spire page for the course')
     professor = models.CharField(max_length=200)
     room = models.CharField(max_length=200)
     open = models.BooleanField("Enter whether this class is currently open", default=True)

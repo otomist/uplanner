@@ -19,7 +19,7 @@ class ScheduleForm(forms.Form):
     l400 = forms.BooleanField(required=False)
     # Note: 500+ needs more than one keys to search or is there a better way for level?
     l500 = forms.BooleanField(required=False)
-    levels = [l100, l200, l300, l400, l500]
+    levels = ["l100", "l200", "l300", "l400", "l500"]
 
     # 1 credit, I tried to use 1cr as variable name but failed. 
     cr1 = forms.BooleanField(required=False)
@@ -27,13 +27,13 @@ class ScheduleForm(forms.Form):
     cr3 = forms.BooleanField(required=False)
     cr4 = forms.BooleanField(required=False)
     cr5 = forms.BooleanField(required=False)
-    credits = [cr1, cr2, cr3, cr4, cr5]
+    credits = ["cr1", "cr2", "cr3", "cr4", "cr5"]
 
     closed = forms.BooleanField(required=False)
-    conflicted = forms.BooleanField(required=False)
-    unmet_req = forms.BooleanField(required=False)
+    conflicted = forms.BooleanField(required=False, initial=True)
+    unmet_req = forms.BooleanField(required=False, initial=True)
     honors_only = forms.BooleanField(required=False)
-    course_cat = [closed, conflicted, unmet_req, honors_only]
+    course_cat = ["closed", "conflicted", "unmet_req", "honors_only"]
 
     # need checkbox for every day and will return True or False
     Mon = forms.BooleanField(required=False)
@@ -42,8 +42,9 @@ class ScheduleForm(forms.Form):
     Thu = forms.BooleanField(required=False)
     Fri = forms.BooleanField(required=False)
     # a list of False or True from checkbox
-    days = [Mon, Tus, Wed, Thu, Fri]
+    days = ["Mon", "Tus", "Wed", "Thu", "Fri"]
     
+    """
     def get_days(self):
         return ['Mon', 'Tus', 'Wed', 'Thu', 'Fri']
     
@@ -61,6 +62,7 @@ class ScheduleForm(forms.Form):
         return finalKeys
     
     days = get_daykeys(days)
+    """
     #Sihua's Edit End
 	
     # cleaning functions -- currently they do nothing
