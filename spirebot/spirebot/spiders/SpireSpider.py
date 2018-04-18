@@ -13,7 +13,7 @@ from scrapy.http import HtmlResponse
 from scrapy.http import Request
 from scrapy.shell import inspect_response
 
-from schedule.models import Term, Department, Course
+from schedule.models import Term, Department, Course, Section
 
 
 
@@ -25,10 +25,10 @@ class SpireSpider(scrapy.Spider):
     def __init__(self):
         self.driver = webdriver.Chrome('C:/Users/Kerry Ngan\Miniconda3/chromedriver.exe')
     
-    def load_termitem(self, page_selector, index):
-        term_loader = ItemLoader(item = TermItem(), selector = page_selector)
-        course_loader.add_xpath('season', '//*[@id="UM_DERIVED_SA_UM_TERM_DESCR"]/option['+ str(course_index) +']')
-        course_loader.add_xpath('year', '//*[@id="UM_DERIVED_SA_UM_TERM_DESCR"]/option['+ str(course_index) +']')
+    def load_termitem(self, term_selector, term_index):
+        term_loader = ItemLoader(item = TermItem(), selector = term_selector)
+        term_loader.add_xpath('season', '//*[@id="UM_DERIVED_SA_UM_TERM_DESCR"]/option['+ str(term_index) +']')
+        term_loader.add_xpath('year', '//*[@id="UM_DERIVED_SA_UM_TERM_DESCR"]/option['+ str(term_index) +']')
     
     #creates an item for each section and passes it into a pipeline
     def load_courseitem(self, page1_selector, page2_selector, index):  
@@ -61,16 +61,28 @@ class SpireSpider(scrapy.Spider):
 
         return course_loader.load_item()
 
-    def load_sectionitem(self, page1_selector, page2_selector, index): 
-        section_loader = ItemLoader(item = SectionItem(), selector = page1_selector)
-        #SSR_CLS_DTL_WRK_CLASS_NBR
+    def load_sectionitem(self, page1_selector, page2_selector, term, is_open, clss, section_index, term_index, course_index): 
+        section_loader = ItemLoader(item = SectionItem(), selector = page2_selector)
 
-        course_loader.add_css('id', "[id^='SSR_CLS_DTL_WRK_CLASS_NBR']")
-        course_loader.add_css('days', "[id^='MTG_SCHED$0']")
-        course_loader.add_css('start', "[id^='MTG_SCHED$0']")
-        course_loader.add_css('end', "[id^='MTG_SCHED$0']")
-        course_loader.add_css('term', "[id^='MTG_SCHED$0']") #foriegn key
+        section_loader.add_xpath('id', '//*[@id="SSR_CLS_DTL_WRK_CLASS_NBR"]')
+        section_loader.add_xpath('days', '//*[@id="MTG_SCHED$0"]')
+        section_loader.add_xpath('start', '//*[@id="MTG_SCHED$0"]')
+        section_loader.add_xpath('ending', '//*[@id="MTG_SCHED$0"]')
+        section_loader.add_xpath('professor', '//*[@id="MTG_INSTR$0"]')
+        section_loader.add_xpath('room', '//*[@id="MTG_LOC$0"]')
+        section_loader.add_xpath('cap', '//*[@id="SSR_CLS_DTL_WRK_ENRL_CAP"]')
+        section_loader.add_xpath('enrolled', '//*[@id="SSR_CLS_DTL_WRK_ENRL_TOT"]') #can have indidual and combined capacities
+        section_loader.add_xpath('wcap', '//*[@id="SSR_CLS_DTL_WRK_WAIT_CAP"]')
+        section_loader.add_xpath('wenrolled', '//*[@id="SSR_CLS_DTL_WRK_WAIT_TOT"]')
+        
+        section_loader.add_value('term', term)
 
+        section_loader.selector = page1_selector
+        section_loader.add_value('open', is_open)
+        section_loader.add_value('clss',  clss)
+        section_loader.add_xpath('component', '//*[@id="DERIVED_CLSRCH_SSR_CLASSNAME_LONG$'+ str(course_index) +'"]')
+
+        return section_loader.load_item()
 
     def parse(self, response):
         wait = WebDriverWait(self.driver,10)
@@ -99,11 +111,12 @@ class SpireSpider(scrapy.Spider):
         wait.until(EC.element_to_be_clickable((By.XPATH,'//*[@id="CLASS_SRCH_WRK2_SSR_PB_CLASS_SRCH$29$"]')))
 
         #select options for searching
-        option_selector = Selector(text = self.driver.page_source)
+        term_selector = Selector(text = self.driver.page_source)
         term_index = 3
-        self.load_termitem(option_selector, term_index)
-        
-        self.driver.find_element_by_xpath('//*[@id="UM_DERIVED_SA_UM_TERM_DESCR"]/option['+ str(course_index) +']').click() #spring 2018
+        term = self.driver.find_element_by_xpath('//*[@id="UM_DERIVED_SA_UM_TERM_DESCR"]/option['+ str(term_index) +']').text #example  '2018 Spring'
+        self.load_termitem(term_selector, term_index)
+
+        self.driver.find_element_by_xpath('//*[@id="UM_DERIVED_SA_UM_TERM_DESCR"]/option['+ str(term_index) +']').click() #spring 2018
         self.driver.find_element_by_xpath('//*[@id="CLASS_SRCH_WRK2_SUBJECT$108$"]/option[35]').click() #computer science
         self.driver.find_element_by_xpath('//*[@id="CLASS_SRCH_WRK2_SESSION_CODE$12$"]/option[2]').click() #university
         self.driver.find_element_by_xpath('//*[@id="CLASS_SRCH_WRK2_SSR_OPEN_ONLY"]').click() #uncheck only open courses
@@ -118,7 +131,10 @@ class SpireSpider(scrapy.Spider):
 
         while self.driver.find_elements_by_css_selector("[id^='ACE_$ICField106$" + str(course_index) + "']"):
             is_course = False
-            while  self.driver.find_element_by_css_selector("[id^='ACE_$ICField106$" + str(course_index) + "']").find_elements_by_css_selector("[id^='DERIVED_CLSRCH_SSR_CLASSNAME_LONG$" + str(selector_index) + "']"): 
+            is_open = self.driver.find_element_by_css_selector('#win0divDERIVED_CLSRCH_SSR_STATUS_LONG\\24 ' + str(course_index) + ' > div > img').get_attribute('alt')
+            clss = self.driver.find_element_by_css_selector("[id^='DERIVED_CLSRCH_DESCR200$" + str(course_index) + "']").text
+
+            while  self.driver.find_element_by_css_selector("[id^='ACE_$ICField106$" + str(course_index) + "']").find_elements_by_css_selector("[id^='DERIVED_CLSRCH_SSR_CLASSNAME_LONG$" + str(selector_index) + "']") : 
                 
                 search_result = self.driver.find_element_by_css_selector("[id^='DERIVED_CLSRCH_SSR_CLASSNAME_LONG$" + str(selector_index) + "']") #finds the first section for a course
                 search_result.click() #clicks on the section
@@ -130,7 +146,7 @@ class SpireSpider(scrapy.Spider):
                     is_course = True
 
                 #webelement2_list.append(driver_selector.xpath("//div[@id = 'win0divPSPAGECONTAINER']/table/tbody/tr")) #splits the page source into elements for each row 
-                #yield self.load_sectionitem(page1_selector,page2_selector,selector_index)
+                yield self.load_sectionitem(page1_selector, page2_selector, term, is_open, clss, selector_index, term_index, course_index)
 
                 self.driver.find_element_by_css_selector("[id^='CLASS_SRCH_WRK2_SSR_PB_BACK']").click() #clicks on view search results to go back
                 wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR,"[id^='DERIVED_CLSRCH_SSR_CLASSNAME_LONG$" + str(selector_index) + "']")))#wait for page to load
