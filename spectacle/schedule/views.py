@@ -84,7 +84,7 @@ def schedule_courses(request):
                 'readonly': True,
             })
             i += 1
-            
+    
     schedule = schedule_title
     if 'active_schedule' in request.session:
         schedule = request.session['active_schedule']
@@ -376,10 +376,11 @@ def schedule(request):
                 if days_set == None:
                     days_set = results.select_related().filter(section__days__contains=day[:2]).distinct()
                 else:
-                    days_set.union(results.select_related().filter(section__days__contains=day[:2]).distinct())
+                    days_set = days_set.union(results.select_related().filter(section__days__contains=day[:2]).distinct())
         if days_set != None:
             results = days_set
         
+        #filter based on course level
         levels_set = None
         for level in form.levels:
             if form.cleaned_data[level]:
@@ -387,15 +388,45 @@ def schedule(request):
                 if course_level == '5':
                     course_level = '[5-9]'
                 regex = r'\w*' + course_level + '\d{2}\w*'
-                print(regex)
                 if levels_set == None:
                     levels_set = results.filter(number__iregex=regex)
                 else:
-                    levels_set.union(results.filter(number__iregex=regex))
+                    levels_set = levels_set.union(results.filter(number__iregex=regex))
         if levels_set != None:
             results = levels_set
+            
+        #filter based on number of credits
+        credits_set = None
+        for credit in form.credits:
+            if form.cleaned_data[credit]:
+                credit_level = credit[2]
+                regex = credit_level + '|[1-' + credit_level +' ]-[' + credit_level + '-9]'
+                if credit_level == '5':
+                    regex = r'[' + credit_level + '-9]|[1-' + credit_level +' ]-[' + credit_level + '-9]'
+                if credits_set == None:
+                    credits_set = results.filter(credits__iregex=regex)
+                else:
+                    credits_set = credits_set.union(results.filter(credits__iregex=regex))
+        if credits_set != None:
+            results = credits_set
+            
+        # filter based on whether a course has open sections
+        if not form.cleaned_data['closed']:
+            results = results.select_related().filter(section__open=True).distinct()
         
+        # filter out all non-honors courses
+        if form.cleaned_data['honors_only']:
+            results = results.filter(honors=True)
         
+        # filter out all courses that conflict with current courses
+        if not form.cleaned_data['conflicted']:
+            #results = results.select_related().filter(section__open=True).distinct()
+            pass
+            
+        if not form.cleaned_data['unmet_req']:
+            pass
+                
+        #TODO: this should come first and bypass further searching
         #if department/keywords are not selected, return nothing
         if form.cleaned_data['departments'] == 'NULL' and form.cleaned_data['keywords'] == '':
             results = []
