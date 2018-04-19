@@ -66,6 +66,11 @@ class Course(models.Model):
 class Section(models.Model):
     id = models.IntegerField(primary_key=True, help_text="The 5 digit spire course number")
     days = models.CharField(max_length=10, help_text="Days the course is taught")
+    mon = models.BooleanField(blank=True, default=False)
+    tue = models.BooleanField(blank=True, default=False)
+    wed = models.BooleanField(blank=True, default=False)
+    thu = models.BooleanField(blank=True, default=False)
+    fri = models.BooleanField(blank=True, default=False)
     start = models.TimeField(help_text='The starting time of the class')
     ending = models.TimeField(help_text='The ending time of the class')
     term = models.ForeignKey(Term, on_delete=models.CASCADE, default=1)

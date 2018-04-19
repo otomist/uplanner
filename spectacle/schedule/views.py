@@ -161,6 +161,9 @@ def add_section(request):
     }
     
     return JsonResponse(data)
+
+#def make_model_dict(model):
+    
     
 # returns data needed to fill in a course tab
 def get_tab_data(course):
@@ -168,8 +171,8 @@ def get_tab_data(course):
     components = map(
                  lambda comp: 
                         {'name': comp[1],
-                         'sections':course.section_set.filter(component=comp[0])},
-                        Section.COMPONENTS)
+                         'sections': course.section_set.filter(component=comp[0])},
+                        Section.COMPONENTS)            
 
     return {
             'course':course,
@@ -430,21 +433,63 @@ def schedule(request):
             #   it has at least one section with a time/day that does not conflict with any
             #   of the courses in current_courses
             
-            conflicts = current_courses.values_list('course__days', 'course__start', 'course__ending').distinct()
             
+            # option 1: regex. option 2: boolean fields
+            #conflicts = current_courses.values_list('course__days', 'course__start', 'course__ending').distinct()
+            conflicts = current_courses.values_list('course__mon', 'course__tue', 'course__wed', 'course__thu', 'course__fri', 'course__start', 'course__ending').distinct()
+            
+            #enable for regex
+            """
             days = set()
             for day_set, start, end in conflicts:
                 for i in range(0, len(day_set), 2):
                     if not day_set[i:i+2] in days:
                         days.add((day_set[i:i+2], start, end))
             
+            
             # A list of tuples which current courses can't conflict with [(day, start, end), ...]
             conflicts = days
-                        
+            """       
+            
             for section in conflicts:
-                day_filter = Q(section__days__iregex=r'(\w\w)*(' + section[0] + ')(\w\w)*')
-                start_filter = Q(section__start__gte=section[2]) # the new course starts after the old course ends
-                end_filter = Q(section__ending__lte=section[1])  # the new course ends before the old course starts
+                # uses regex
+                #day_filter = Q(section__days__iregex=r'(\w\w)*(' + section[0] + ')(\w\w)*')
+                
+                #uses boolean fields
+                day_filter = None
+                if section[0] == True:
+                    if day_filter == None:
+                        day_filter = Q(section__mon=True)
+                    else:
+                        day_filter = day_filter | Q(section__mon=True)
+                if section[1] == True:
+                    if day_filter == None:
+                        day_filter = Q(section__tue=True)
+                    else:
+                        day_filter = day_filter | Q(section__tue=True)
+                if section[2] == True:
+                    if day_filter == None:
+                        day_filter = Q(section__wed=True)
+                    else:
+                        day_filter = day_filter | Q(section__wed=True)
+                if section[3] == True:
+                    if day_filter == None:
+                        day_filter = Q(section__thu=True)
+                    else:
+                        day_filter = day_filter | Q(section__thu=True)
+                if section[4] == True:
+                    if day_filter == None:
+                        day_filter = Q(section__fri=True)
+                    else:
+                        day_filter = day_filter | Q(section__fri=True)
+                
+                #regex
+                #start_filter = Q(section__start__gte=section[2]) # the new course starts after the old course ends
+                #end_filter = Q(section__ending__lte=section[1])  # the new course ends before the old course starts
+                
+                #boolean fields
+                start_filter = Q(section__start__gte=section[6]) # the new course starts after the old course ends
+                end_filter = Q(section__ending__lte=section[5])  # the new course ends before the old course starts
                 results = results.select_related().exclude(day_filter &  ~(start_filter | end_filter)).distinct()
             
         if not form.cleaned_data['unmet_req']:
