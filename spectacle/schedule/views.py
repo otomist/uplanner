@@ -351,7 +351,7 @@ def schedule(request):
     else:
         #TODO: this breaks if doesn't exist
         schedule_title = Schedule.objects.filter(student=current_user)[0].title
-        request.session['active_schedule'] = schedule
+        request.session['active_schedule'] = schedule_title
         request.session.save()
     schedule = Schedule.objects.filter(student=current_user).filter(title=schedule_title)[0]
     
