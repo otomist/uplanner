@@ -146,7 +146,6 @@ $(function () {
                         url_html + "?course_id=" + id + '&schedule=' + data['schedule_id']
                     );
                 }
-                
             }
         });
 

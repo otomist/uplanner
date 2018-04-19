@@ -8,6 +8,7 @@ from django.shortcuts import render
 from django.views import generic
 from django.http import JsonResponse
 from django.urls import reverse
+from django.db.models import Q
 import json
 import re
 
@@ -42,8 +43,6 @@ def schedule_courses(request):
     it passes json with the current courses on the schedule to scheduleBuilder.js
     for rendering
     """
-    #TODO: we never really use this...
-    schedule_title = request.GET.get('schedule', None)
     
     #TODO: this will fail if user does not exist
     current_user = Student.objects.filter(user_email=request.user.email)
@@ -85,7 +84,7 @@ def schedule_courses(request):
             })
             i += 1
     
-    schedule = schedule_title
+    schedule = ''
     if 'active_schedule' in request.session:
         schedule = request.session['active_schedule']
     elif current_user.exists():
@@ -93,11 +92,7 @@ def schedule_courses(request):
         schedule = Schedule.objects.filter(student=current_user[0])[0].title
         request.session['active_schedule'] = schedule
         request.session.save()
-    #else:
-        #schedule = Schedule.objects.create_temp_schedule()
-        
-    print("active schedule is ", schedule)
-        
+    
     data = {
         'count': len(courses),
         'courses': courses,
@@ -231,7 +226,6 @@ def make_current_course(request):
     
     # TODO: this will break if any of these do not exist
     section = Section.objects.filter(id=course_id)[0]
-    #schedulecourse = section.schedulecourse_set.all()[0]
     schedule = Schedule.objects.filter(id=schedule_id)[0]
     schedulecourse = section.schedulecourse_set.filter(schedule=schedule)[0]
     
@@ -348,7 +342,18 @@ def schedule(request):
             course = Course.objects.filter(pk=course_pk)[0]
             data = get_tab_data(course)
             course_tabs.append(get_tab_data(course))
-        
+    
+    # Get the currently active scedule
+    #schedule = schedule_title
+    schedule_title = None
+    if 'active_schedule' in request.session:
+        schedule_title = request.session['active_schedule']
+    else:
+        #TODO: this breaks if doesn't exist
+        schedule_title = Schedule.objects.filter(student=current_user)[0].title
+        request.session['active_schedule'] = schedule
+        request.session.save()
+    schedule = Schedule.objects.filter(student=current_user).filter(title=schedule_title)[0]
     
     if form.is_valid():
         
@@ -420,8 +425,27 @@ def schedule(request):
         
         # filter out all courses that conflict with current courses
         if not form.cleaned_data['conflicted']:
-            #results = results.select_related().filter(section__open=True).distinct()
-            pass
+            current_courses = ScheduleCourse.objects.filter(schedule=schedule)
+            # for every course in results, display it if:
+            #   it has at least one section with a time/day that does not conflict with any
+            #   of the courses in current_courses
+            
+            conflicts = current_courses.values_list('course__days', 'course__start', 'course__ending').distinct()
+            
+            days = set()
+            for day_set, start, end in conflicts:
+                for i in range(0, len(day_set), 2):
+                    if not day_set[i:i+2] in days:
+                        days.add((day_set[i:i+2], start, end))
+            
+            # A list of tuples which current courses can't conflict with [(day, start, end), ...]
+            conflicts = days
+                        
+            for section in conflicts:
+                day_filter = Q(section__days__iregex=r'(\w\w)*(' + section[0] + ')(\w\w)*')
+                start_filter = Q(section__start__gte=section[2]) # the new course starts after the old course ends
+                end_filter = Q(section__ending__lte=section[1])  # the new course ends before the old course starts
+                results = results.select_related().exclude(day_filter &  ~(start_filter | end_filter)).distinct()
             
         if not form.cleaned_data['unmet_req']:
             pass

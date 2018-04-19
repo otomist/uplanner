@@ -74,24 +74,7 @@ function init() {
     // to change between user schedules
     $(document).on('change', '.js-schedule', function () {
         var url = $(event.target).attr('courses-url');
-        //var filter_inputs_radio = document.getElementById("filters_wrapper").getElementsByTagName("input");
         var schedule_url = $(event.target).attr('schedule-url');
-        /*
-        for(var j=0; j<filter_inputs_radio.length; j++) {
-                        
-            if(filter_inputs_radio[j] !== this) {
-                filter_inputs_radio[j].checked = false;
-            }
-            filters[filter_inputs_radio[j].name] = !!filter_inputs_radio[j].checked;
-        }
-        scheduler.updateView();
-        
-        var schedule = $(".js-schedule:checked").attr('schedule-id');
-                
-        $('#current-courses').html('').load(
-            url + '?schedule=' + schedule
-        );
-        */
         
         change_schedule(url, $(event.target).attr('name'));
         
@@ -183,7 +166,7 @@ function init() {
     */
     $.ajax({
         url: 'ajax/schedule',       //TODO: probably shouldn't be hardcoded
-        data: {'schedule':$(".js-schedule:checked").attr('name')},
+        data: {},
         dataType: 'json',
         success: function (data) {
             count = data['count'];
@@ -194,16 +177,11 @@ function init() {
             for (i = 0; i < count; i++) {
                 scheduler.parse([courses[i]], 'json');
             }
-            console.log("schedule is ", $(".js-schedule[name='" + schedule + "']").attr('name'));
+            //console.log("schedule is ", $(".js-schedule[name='" + schedule + "']").attr('name'));
             $('.js-schedule:checked').prop('checked', false);
             $('.js-schedule[name="' + schedule + '"]').prop('checked', true);
             
             change_schedule(url, schedule);
-            //$('.js-schedule[name="' + schedule + '"]').change();
-            //console.log(filters[schedule]);
-            //filters[$('.js-schedule:checked').attr('name')] = false;
-            //filters[schedule] = true;
-            //scheduler.updateView();
         }
     });
 }

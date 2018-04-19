@@ -1,9 +1,7 @@
 {% if user_courses %}
-  <div class="fixed-panel">
   {% for course in user_courses %}
     <li class="list-group-item" id="curr-{{ course.id }}">
       {% include 'schedule_current_course.html' %}
     </li>
   {% endfor %}
-  </div>
 {% endif %}
