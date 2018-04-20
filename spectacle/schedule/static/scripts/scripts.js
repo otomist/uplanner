@@ -20,7 +20,6 @@ $(function () {
         // If the course tab does not already exist, make a new tab for it
         if ( !$("#nav-"+id).length ) {
             // Create the new tab
-            
             $('<li class="nav-item" id="nav-'+id+'">\
             <a class="nav-link" id="'+id+'-tab" data-toggle="tab" href="#'+id+'">'+
             dept+' '+num+

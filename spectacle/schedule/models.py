@@ -114,7 +114,7 @@ class ScheduleManager(models.Manager):
         schedule = self.create(title=title, student=student)
         return schedule
     #def create_temp_schedule(self):
-        
+    
     
 class Schedule(models.Model):
     title = models.CharField(max_length=100, help_text='User-set title for this schedule')

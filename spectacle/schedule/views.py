@@ -1,5 +1,6 @@
 from .models import Course, Department, Student, Section, Schedule, ScheduleCourse
 from .forms import ScheduleForm, NewScheduleForm, flowchartForm, StudentForm,UserForm
+from django.db import models
 from django.contrib.auth.models import AnonymousUser
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
@@ -162,18 +163,72 @@ def add_section(request):
     
     return JsonResponse(data)
 
-#def make_model_dict(model):
+# convenience function for model -> dict, so that the dictionary can be extended with extra_fields
+def make_model_dict(model, extra_fields):
     
+    d = {}
+    for field in model._meta.get_fields():
+        if not isinstance(field, models.ManyToManyRel) and not isinstance(field, models.ManyToOneRel):
+            d[field.name] = eval('model.' + field.name)
+    
+    for item in extra_fields:
+        d[item[0]] = item[1]
+    return d
+    
+# convenience function for returning a list of conflicted  with section. empty list if none
+def get_conflicting_sections(section, request):
+    #TODO: may break if 'active_schedule' not in request, or user is not logged in
+    current_user = Student.objects.get(user_email=request.user.email)
+    schedule = Schedule.objects.get(student=current_user, title=request.session['active_schedule'])
+    
+    current_courses = ScheduleCourse.objects.filter(schedule=schedule)
+    # for every course in results, display it if:
+    #   it has at least one section with a time/day that does not conflict with any
+    #   of the courses in current_courses
+    
+    conflicts = current_courses.values_list('course__days', 'course__start', 'course__ending', 'course__id').distinct()
+    
+    days = []
+    for day_set, start, end, id in conflicts:
+        for i in range(0, len(day_set), 2):
+            days.append((day_set[i:i+2], start, end, id))
+    
+    # A list of tuples which current courses can't conflict with [(day, start, end), ...]
+    conflicts = days
+    
+    conflict_courses = []
+    for day, start, end, course_id in conflicts:
+        if day in section.days:
+            print("Share the same day")
+            print("start time: ", start)
+            if not (section.start > end or section.ending < start):
+                print("And overlap in time!")
+                
+                conflict_courses.append(Section.objects.get(id=course_id))
+    
+    return conflict_courses
+    
+def get_section_list(sections, request):
+    print("get section list!!!")
+    if sections.exists():
+        print(" the sections exist! ")
+        return map(lambda section: make_model_dict(section, [('conflicts', get_conflicting_sections(section, request))]), sections)
+    else:
+        return []
     
 # returns data needed to fill in a course tab
-def get_tab_data(course):
+def get_tab_data(course, request=None):
+    
+    # I'm sorry for the double lambda and helper functions... it started simple I promise
+    # This creates a list of dictionaries like: [{'name': lecture, 'sections': [section1, section2]}, {'name': labratory, 'sections':[...]}...]
+    # the helper functions translate each "section" into a dictionary of its fields, and then adds information about any conflicts with current courses
     
     components = map(
                  lambda comp: 
                         {'name': comp[1],
-                         'sections': course.section_set.filter(component=comp[0])},
-                        Section.COMPONENTS)            
-
+                         'sections': get_section_list(course.section_set.filter(component=comp[0]), request)},
+                        Section.COMPONENTS)
+    
     return {
             'course':course,
             'sections':components,
@@ -185,8 +240,6 @@ def make_tab_content(request):
     
     #TODO: this will break if size of list is 0
     course = Course.objects.filter(pk=course_pk)[0]
-    print("Add a new tab to session!")
-    print("Course is ", course_pk)
     if 'tabs' in request.session:
         request.session['tabs'].append(course_pk)
         request.session.save()
@@ -197,7 +250,7 @@ def make_tab_content(request):
     return render (
         request,
         'schedule_tabs_content.html',
-        {'tab':get_tab_data(course)}
+        {'tab':get_tab_data(course, request)}
     )
     
 def delete_tab(request):
@@ -343,8 +396,8 @@ def schedule(request):
         for course_pk in tabs:
             #TODO: this will fail if course doesn't exist
             course = Course.objects.filter(pk=course_pk)[0]
-            data = get_tab_data(course)
-            course_tabs.append(get_tab_data(course))
+            data = get_tab_data(course, request)
+            course_tabs.append(get_tab_data(course, request))
     
     # Get the currently active scedule
     #schedule = schedule_title
@@ -435,11 +488,11 @@ def schedule(request):
             
             
             # option 1: regex. option 2: boolean fields
-            #conflicts = current_courses.values_list('course__days', 'course__start', 'course__ending').distinct()
-            conflicts = current_courses.values_list('course__mon', 'course__tue', 'course__wed', 'course__thu', 'course__fri', 'course__start', 'course__ending').distinct()
+            conflicts = current_courses.values_list('course__days', 'course__start', 'course__ending').distinct()
+            #conflicts = current_courses.values_list('course__mon', 'course__tue', 'course__wed', 'course__thu', 'course__fri', 'course__start', 'course__ending').distinct()
             
             #enable for regex
-            """
+            
             days = set()
             for day_set, start, end in conflicts:
                 for i in range(0, len(day_set), 2):
@@ -449,13 +502,14 @@ def schedule(request):
             
             # A list of tuples which current courses can't conflict with [(day, start, end), ...]
             conflicts = days
-            """       
+            
             
             for section in conflicts:
                 # uses regex
-                #day_filter = Q(section__days__iregex=r'(\w\w)*(' + section[0] + ')(\w\w)*')
+                day_filter = Q(section__days__iregex=r'(\w\w)*(' + section[0] + ')(\w\w)*')
                 
                 #uses boolean fields
+                """
                 day_filter = None
                 if section[0] == True:
                     if day_filter == None:
@@ -482,19 +536,19 @@ def schedule(request):
                         day_filter = Q(section__fri=True)
                     else:
                         day_filter = day_filter | Q(section__fri=True)
-                
+                """
                 #regex
-                #start_filter = Q(section__start__gte=section[2]) # the new course starts after the old course ends
-                #end_filter = Q(section__ending__lte=section[1])  # the new course ends before the old course starts
+                start_filter = Q(section__start__gte=section[2]) # the new course starts after the old course ends
+                end_filter = Q(section__ending__lte=section[1])  # the new course ends before the old course starts
                 
                 #boolean fields
-                start_filter = Q(section__start__gte=section[6]) # the new course starts after the old course ends
-                end_filter = Q(section__ending__lte=section[5])  # the new course ends before the old course starts
+                #start_filter = Q(section__start__gte=section[6]) # the new course starts after the old course ends
+                #end_filter = Q(section__ending__lte=section[5])  # the new course ends before the old course starts
                 results = results.select_related().exclude(day_filter &  ~(start_filter | end_filter)).distinct()
             
         if not form.cleaned_data['unmet_req']:
             pass
-                
+        
         #TODO: this should come first and bypass further searching
         #if department/keywords are not selected, return nothing
         if form.cleaned_data['departments'] == 'NULL' and form.cleaned_data['keywords'] == '':

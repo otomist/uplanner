@@ -18,7 +18,13 @@
           <li class="list-group-item">Spire link: {{section.link}}</li>
         
         <!-- buttons for adding / deleting classes -->        
-        <button class="btn btn-primary btn-xs btn-results js-add" html-url="{% url 'make_current_course' %}" ajax-url="{% url 'add_section' %}" section-id='{{section.id}}'>Add</button>
+        <button class="btn btn-primary btn-xs btn-results js-add" html-url="{% url 'make_current_course' %}" ajax-url="{% url 'add_section' %}" section-id='{{section.id}}'>
+          {% if section.conflicts %}
+            Conflict with {{section.conflicts.0.clss.dept.code}} {{section.conflicts.0.clss.number}}
+          {% else %}
+            Add
+          {% endif %}
+        </button>
         <button class="btn btn-danger btn-xs btn-results js-del" ajax-url="{% url 'del_section' %}" section-id='{{section.id}}'>Delete</button>
         <br>
       {% endfor %}
