@@ -543,9 +543,6 @@ def schedule(request):
                 #start_filter = Q(section__start__gte=section[6]) # the new course starts after the old course ends
                 #end_filter = Q(section__ending__lte=section[5])  # the new course ends before the old course starts
                 results = results.select_related().exclude(day_filter &  ~(start_filter | end_filter)).distinct()
-            
-        if not form.cleaned_data['unmet_req']:
-            pass
         
         #TODO: this should come first and bypass further searching
         #if department/keywords are not selected, return nothing

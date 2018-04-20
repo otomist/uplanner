@@ -31,9 +31,7 @@ class ScheduleForm(forms.Form):
 
     closed = forms.BooleanField(required=False)
     conflicted = forms.BooleanField(required=False, initial=True)
-    unmet_req = forms.BooleanField(required=False, initial=True)
     honors_only = forms.BooleanField(required=False)
-    course_cat = ["closed", "conflicted", "unmet_req", "honors_only"]
 
     # need checkbox for every day and will return True or False
     Mon = forms.BooleanField(required=False)
