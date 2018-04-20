@@ -1,4 +1,4 @@
-from .models import Course, Department, Student, Section, Schedule, ScheduleCourse
+from .models import Course, Department, Student, Section, Schedule, ScheduleCourse, Term
 from .forms import ScheduleForm, NewScheduleForm, flowchartForm, StudentForm,UserForm
 from django.db import models
 from django.contrib.auth.models import AnonymousUser
@@ -7,7 +7,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 from django.shortcuts import render
 from django.views import generic
-from django.http import JsonResponse
+from django.http import JsonResponse, QueryDict
 from django.urls import reverse
 from django.db.models import Q
 import json
@@ -361,16 +361,33 @@ def schedule(request):
     Eventually it will also have POST for updating the database when the user adds
     a course to their schedule
     """
+    form = None
     
-
-    form = ScheduleForm(request.GET)
+    #If GET is not empty (ie, if the user has searched for something), use those search parameters to
+    # populate form and get search results
+    #If they have not, then populate search form based on initial values
+    if len(request.GET):
+        
+        # copy request.GET into custom QueryDict
+        updated_get = QueryDict(mutable=True)
+        for k, v in request.GET.items():
+                updated_get[k] = v
+        
+        # if user has deleted keywords, replace with prompt 'Enter keywords...'
+        if 'keywords' in updated_get and updated_get['keywords'] == '':
+            updated_get['keywords'] = 'Enter keywords...'
+        form = ScheduleForm(updated_get)
+    else:
+        form = ScheduleForm(initial={'keywords': 'Enter keywords...'})
+    
+    #form = ScheduleForm(initial={'keywords': "Enter keywords..."})
     schedule_form = NewScheduleForm(request.GET)
     results = []
     highlight_schedule = True
     num_dept = 0
     num_key = 0
     course_views = []
-    user_courses = []   #this will be filled in later by ajax
+    user_courses = []   # this will be filled in later by ajax
     user_schedules = []
     context = {}
 
@@ -410,8 +427,9 @@ def schedule(request):
     schedule = Schedule.objects.filter(student=current_user).filter(title=schedule_title)[0]
     
     if form.is_valid():
-        
-        results = Course.objects.select_related().exclude(section=None)
+                
+        term = Term.objects.get(id=form.cleaned_data['course_term'])
+        results = Course.objects.select_related().filter(section__term=term)
         
         #filter based on department
         if form.cleaned_data['departments'] != 'NULL':
@@ -548,6 +566,7 @@ def schedule(request):
         #if department/keywords are not selected, return nothing
         if form.cleaned_data['departments'] == 'NULL' and form.cleaned_data['keywords'] == '':
             results = []
+            print("This shouldn't happen!!!")
     
     # Display error - no search results match
     if len(results) == 0:

@@ -1,16 +1,20 @@
 from django import forms
-from .models import Course, Department, Student
+from django.core.exceptions import ValidationError
+from .models import Course, Department, Student, Term
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 
 class ScheduleForm(forms.Form):
-    keywords = forms.CharField(required=False, help_text="Enter keywords to search for", max_length=200)
+    keywords = forms.CharField(required=False, initial="Enter keywords...", help_text="Enter keywords to search for", max_length=200)
     
     depts = list(map(lambda obj: (obj.code, obj.name), Department.objects.all()))
-    depts = [('NULL','')] + depts
+    depts = [('NULL','Pick a department...')] + depts
     departments = forms.TypedChoiceField(choices=depts, coerce=str, initial='NULL', empty_value='NULL', help_text="Enter department to search within")
     
-    
+    terms = list(map(lambda term: (term.id, list(filter(lambda season: season[0]==term.season, Term.SEASONS))[0][1] + " " + str(term.year) ), Term.objects.all()))
+    course_term = forms.ChoiceField(choices=terms, help_text="Enter term to search within")
+
+
     # Sihua's Edit start
     # Note: I replaced all checkboxes, but I need help to determine the search keys for course level, credits, course_status.They are not straight as weekdays constrains.
     l100 = forms.BooleanField(required=False)
@@ -44,12 +48,24 @@ class ScheduleForm(forms.Form):
     
     #Sihua's Edit End
 	
-    # cleaning functions -- currently they do nothing
-    def clean_keywords(self):
-        return self.cleaned_data['keywords']
+    # make either departments or keywords mandatory; at least one must be filled in
+    def clean(self):
+        super().clean()
         
-    def clean_departments(self):
-        return self.cleaned_data['departments']
+        if self.cleaned_data.get('keywords') == "Enter keywords...":
+            self.cleaned_data['keywords'] = ''
+        
+        department = self.cleaned_data.get('departments')
+        keywords = self.cleaned_data.get('keywords')
+        
+        if department == 'NULL' and keywords == '':
+            msg = forms.ValidationError("Values must be given for \"keywords\", \"departments\", or both.", code='blank')            
+            raise ValidationError([
+                msg,
+            ])
+            
+        else:
+            return self.cleaned_data
 
 class NewScheduleForm(forms.Form):
     title = forms.CharField(required=True, max_length=200)

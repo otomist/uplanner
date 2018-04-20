@@ -67,6 +67,13 @@
         <!-- Begin top search bar -->
         <form action="" method="get" class="js-expand-block">
           <div class="row">
+            {% if form.errors %}
+              {% for error in form.non_field_errors %}
+                <div class="alert alert-danger">
+                  <strong>{{ error|escape }}</strong>
+                </div>
+              {% endfor %}
+            {% endif %}
             <button type="button" class="btn js-expand-btn btn-secondary btn-sm" id="searchToggleBTN">
               {% load static %}
               <img id="expandBtn" src="{% static 'images/expand.svg' %}" style="display: none">
@@ -75,12 +82,10 @@
             </button>
             {{ form.keywords }}
             {{ form.departments }}
-        <!-- End Start Search Button -->
           </div>
           <!-- End top search bar -->
           <div class="js-expand-info js-expand-default">
             <h6 class="search-toggle">Search filters: </h6>
-
             <!-- Begin misc options -->
             <div class="search-container search-toggle">
               <div class="row justify-content-sm-left">
@@ -193,6 +198,7 @@
           </div>
           <!-- End checkbox column options -->
           <!-- Begin Start Search Button TODO: reconsider the positioning of this, or its necessity -->
+          {{ form.course_term }}
           <input type="submit" value="Search" class="btn btn-primary btn-sm"/>
         </form>
 
