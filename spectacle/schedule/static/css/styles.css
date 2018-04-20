@@ -23,6 +23,9 @@ body{
 .navbar-dark .navbar-nav .nav-link {
     color: rgba(255, 255, 255, .7);
 }
+.navbar{
+    color: rgba(255, 255, 255);
+}
 .nav-link:hover, .nav-link:focus{
     border-radius: .5rem;
     background-color: #a92323;
