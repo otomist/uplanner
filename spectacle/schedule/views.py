@@ -199,19 +199,13 @@ def get_conflicting_sections(section, request):
     conflict_courses = []
     for day, start, end, course_id in conflicts:
         if day in section.days:
-            print("Share the same day")
-            print("start time: ", start)
             if not (section.start > end or section.ending < start):
-                print("And overlap in time!")
-                
                 conflict_courses.append(Section.objects.get(id=course_id))
     
     return conflict_courses
     
 def get_section_list(sections, request):
-    print("get section list!!!")
     if sections.exists():
-        print(" the sections exist! ")
         return map(lambda section: make_model_dict(section, [('conflicts', get_conflicting_sections(section, request))]), sections)
     else:
         return []
