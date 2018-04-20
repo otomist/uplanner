@@ -159,6 +159,7 @@ $(function () {
         console.log("delete events:");
         console.log(id + "0" + schedule);
                 
+        //TODO: adjust for saturday/sunday
         //Attempt to delete every possible occurrence of the section
         // there are many, because each ScheduleCourse can meet on many
         // different days, and each day needs its own id
@@ -209,18 +210,20 @@ $(function () {
         event.preventDefault(); //Prevents auto-submission of form through server
         
         url = $(event.target).attr('form-url');
-                
+        
         $.ajax({
             url: url,
             data: $(this).serialize(),
             dataType: 'json',
             method: 'POST',
             success: function (data) {
-                $('<label class="js-schedule-container">\
-                   <input type="radio" class="js-schedule" name="'+data['title']+'" courses-url="'+ data['url'] + '" schedule-url="' + data['schedule_url'] + '" schedule-id="' + data['id'] +'"/>'+
-                   data['title']+
-                   '</label>'
-                   ).appendTo('#filters_wrapper');
+                if (data['status'] === 'SUCCESS') {
+                    $('<label class="js-schedule-container">\
+                       <input type="radio" class="js-schedule" name="'+data['title']+'" courses-url="'+ data['url'] + '" schedule-url="' + data['schedule_url'] + '" schedule-id="' + data['id'] +'"/>'+
+                       data['title']+
+                       '</label>'
+                       ).appendTo('#filters_wrapper');
+                }
             }
         });
     });

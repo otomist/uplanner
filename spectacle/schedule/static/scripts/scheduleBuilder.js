@@ -123,6 +123,18 @@ function init() {
             dataType: 'json',
             success: function (data) {
                 //console.log("successfully deleted");
+                schedule = schedule.attr('name');
+                
+                for (var i = 0; i < data['course_ids'].length; i++) {
+                    id = data['course_ids'][i]
+                    scheduler.deleteEvent(id + "0" + schedule);
+                    scheduler.deleteEvent(id + "1" + schedule);
+                    scheduler.deleteEvent(id + "2" + schedule);
+                    scheduler.deleteEvent(id + "3" + schedule);
+                    scheduler.deleteEvent(id + "4" + schedule);
+                }
+                
+                scheduler.updateView();
             }
         });
     });

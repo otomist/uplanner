@@ -306,31 +306,35 @@ def make_current_courses(request):
 def del_schedule(request):
     schedule_title = request.GET.get('schedule', None)
     new_schedule_title = request.GET.get('new_schedule', None)
+    #TODO: this will break if user doesn't exist
     current_user = Student.objects.get(user_email=request.user.email)
     schedule = Schedule.objects.filter(student=current_user).filter(title=schedule_title)
+    # using list() should normally be avoided on a queryset, but it is reasonable to assume
+    # that the course_ids set will be very small
+    course_ids = list(schedule[0].schedulecourse_set.values_list('course__id', flat=True))
+    print(course_ids)
     if schedule.exists():
         schedule[0].delete()
     request.session['active_schedule'] = new_schedule_title
-    return JsonResponse({})
+    
+    return JsonResponse({'course_ids':course_ids})
     
 # ajax view for making a new schedule
-# TODO: currently, form.is_valid() does not get triggered without
-# page reload. Consider bypassing forms altogether
 def make_schedule(request):
     if request.is_ajax():
         form = NewScheduleForm(request.POST)
         data = {'status':'failure'}
         if form.is_valid():
             title = form.cleaned_data['title']
-            
+            current_user = Student.objects.get(user_email=request.user.email)
             data['title'] = title
             data['url'] = reverse(make_current_courses)
             data['schedule_url'] = reverse(change_schedule)
-            if not Schedule.objects.filter(title=title):
-                current_user = Student.objects.get(user_email=request.user.email)
+            if not Schedule.objects.filter(student=current_user).filter(title=title):
+                data['status'] = 'SUCCESS'
                 Schedule.objects.create_schedule(title, current_user)
             #TODO: this will break if does not exist
-            data['id'] = Schedule.objects.get(title=title).id
+            data['id'] = Schedule.objects.filter(student=current_user).get(title=title).id
             
         else:
             # check why title is invalid??
@@ -396,7 +400,7 @@ def schedule(request):
     # Get the currently active scedule
     #schedule = schedule_title
     schedule_title = None
-    if 'active_schedule' in request.session:
+    if 'active_schedule' in request.session and Schedule.objects.filter(student=current_user).filter(title=request.session['active_schedule']).exists():
         schedule_title = request.session['active_schedule']
     else:
         #TODO: this breaks if doesn't exist
