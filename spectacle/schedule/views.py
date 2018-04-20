@@ -502,7 +502,6 @@ def schedule(request):
             #   it has at least one section with a time/day that does not conflict with any
             #   of the courses in current_courses
             
-            
             # option 1: regex. option 2: boolean fields
             conflicts = current_courses.values_list('course__days', 'course__start', 'course__ending').distinct()
             #conflicts = current_courses.values_list('course__mon', 'course__tue', 'course__wed', 'course__thu', 'course__fri', 'course__start', 'course__ending').distinct()
