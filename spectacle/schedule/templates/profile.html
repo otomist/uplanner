@@ -1,91 +1,44 @@
-{% extends "base_generic.html" %}
-{% block title %}<title>Uplanner-Profile</title> {% endblock %}
+{% extends "base_generic.html" %} {% block title %}
+<title>Uplanner-Profile</title> {% endblock %}
 
 <ul>
-{% if user.is_authenticated %}
+  {% if user.is_authenticated %} {% block content %}
+  <!-- Begin Profile Edit-->
+  <div class="container">
+    <h5 class="text-center accInfo">Account Info</h5>
+    <p>&nbsp; </p>
+    <p>
+      <strong>First Name: </strong>{{user.first_name}}</p>
+    <p>
+      <strong>Last Name: </strong>{{user.last_name}}</p>
+    <p>
+      <strong>Username: </strong>{{user.username}}</p>
+    <p>
+      <strong>Email: </strong>{{user.email}}</p>
+    <p>
+      <strong>Major: </strong>{{student.major}}</p>
+    <p>
+      <strong>SID: </strong>{{student.sid}}</p>
 
-{% block content %}
-  <div class="container-fluid">
-    <div class="row">
-      <!-- Being Courses Taken Column-->
-      <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6 bg-light">
-        <table class="table table-hover">
-          <thead>
-            <tr>
-              <th colspan="2" style="font-size: 30px;  text-align: center;">Courses Taken</th>
-            </tr>
-            <tr>
-              <th>Course Number</th>
-              <th>Credits</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for course in user_courses %}
-              <tr>
-                <td>
-                  <!--button class="btn btn-info btn-xs btn-results" id="b1">+</button-->
-                  {{course.dept.code}} {{course.number}}
-                  <p>{{course.description}}</p>
-                </td>
-                <td>{{course.credits}} cr</td>
-              </tr>
-            {% endfor %}
-          </tbody>
-          <tfoot>
-            <tr>
-              <td>Total Credits:</td>
-              <td>{{credits}} cr</td>
-            </tr>
-            <tr>
-              <td>Credits needed:</td>
-              <td>{{remaining_credits}}</td>
-            </tr>
-          </tfoot>
-        </table>
-        <label>Add Courses:</label>
-        <input class="rounded" type="text" placeholder="Course Number">
-        <div class="text-center">
-          <button class="btn btn-info btn-sm" type="button">Add Course</button>
-        </div>
-      </div>
-      <!-- End Courses Taken Column -->
-
-      <!-- Begin Profile Edit-->
-      <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 bg-light">
-        <div class="container">
-          <h5 class="text-center accInfo">Account Info</h5>
-          <p>&nbsp; </p>
-          <p>
-            <strong>Username: </strong>{{user.username}}</p>
-          <p>
-            <strong>Email: </strong>{{user.email}}</p>
-          <p>
-            <strong>Major: </strong>{{student.major}}</p>
-          <p>
-            <strong>SID: </strong>{{student.sid}}</p>
-
-          <!-- Begin Acount Change links -->
-          <div class="text-right">
-            <a href="#">Change Email</a>
-          </div>
-          <div class="text-right">
-            <a href="#">Change Password</a>
-          </div>
-          <div class="text-right">
-            <a href="#">Change Major</a>
-          </div>
-          <div class="text-right">
-            <a href="{% url 'logout'%}">Sign Out</a>
-          </div>
-          <!-- End Account Change links -->
-        </div>
-      </div>
-      <!-- End Profile Edit -->
+    <!-- Begin Acount Change links -->
+    <div class="text-center">
+      <a href="#">Change Email</a>
     </div>
+    <div class="text-center">
+      <a href="#">Change Password</a>
+    </div>
+    <div class="text-center">
+      <a href="#">Change Major</a>
+    </div>
+    <div class="text-center">
+      <a href="{% url 'logout'%}">Sign Out</a>
+    </div>
+    <!-- End Account Change links -->
   </div>
 
-{% endblock %}
-{% else %}
-<li><a href="{% url 'login'%}?next={{request.path}}">Login</a></li>
-{% endif %}
+  {% endblock %} {% else %}
+  <li>
+    <a href="{% url 'login'%}?next={{request.path}}">Login</a>
+  </li>
+  {% endif %}
 </ul>

@@ -692,5 +692,11 @@ def register(request):
         args = {'user_form':user_form, 'student_form':student_form}
         return render(request, 'registration/registration_form.html', args)
 
+def login(request):
+    return render(request, 'registration/login.html', {})
+
+def logout(request):
+    return render(request, 'registration/logout.html', {})
+
 class CourseDetailView(generic.DetailView):
     model = Course
