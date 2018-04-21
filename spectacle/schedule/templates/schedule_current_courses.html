@@ -1,7 +1,31 @@
 {% if user_courses %}
   {% for course in user_courses %}
-    <li class="list-group-item" id="curr-{{ course.id }}">
+    <li onmouseover="highlight_events()" onmouseout="remove_highlight()" class="list-group-item" id="curr-{{ course.id }}">
       {% include 'schedule_current_course.html' %}
     </li>
+    <script>
+        //We can compare event_id's with the events that have been rendered on the scheduler and if they match
+        //what we are looking for we can change the style of those events.
+        
+        function highlight_events() {
+          for(var i=0; i<scheduler._rendered.length; i++) {
+            if(scheduler._rendered[i].getAttribute('event_id') == /* hardcoded */'10Schedule 1'/* hardcoded */) {
+                var event = scheduler._rendered[i];
+                event.style.backgroundColor = "black";
+                event.style.borderRadius = "6px";
+            }
+          }
+        }
+        
+        function remove_highlight() {
+          for(var i=0; i<scheduler._rendered.length; i++) {
+            if(scheduler._rendered[i].getAttribute('event_id') == /* hardcoded */"10Schedule 1"/* hardcoded */) {
+                var event = scheduler._rendered[i];
+                event.style.backgroundColor = "transparent";
+                event.style.borderRadius = "0";
+            }
+          }
+        }
+    </script>
   {% endfor %}
 {% endif %}
