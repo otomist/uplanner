@@ -41,21 +41,32 @@ $(function () {
     
     });
     
+    
+    // Reloads a course tab every time it is visited, in case something has changed
+    $(document).on('click', '.course-tab', function () {
+        var id = $(event.target).attr('id');
+        var url_content = $('#meta').attr('make-tab-content-url');
+        
+        if (id) {
+            id = id.slice(0, id.length-4)
+            //Populate it with the schedule_tabs_content.html file through django
+            $('#'+id).html('').load(
+                url_content + "?course_pk=" + id
+            );
+        }
+        
+    });
+    
+    
     /*
     Adds the delete function to any element currently in the page or
     added dynamically later. deletes the tab and its contents
     */
     $(document).on('click', '.js-del-tab', function () {
-        id = $(event.target).attr('course-id');
-        url = $(event.target).attr('del-url');
-        
-        /*
-        if ( $('#nav-'+id).length ) {
-            $('#nav-'+id).remove();
-            $('#'+id).remove();
-        }
-        */
-        
+                
+        var id = $(event.target).attr('course-id');
+        var url = $(event.target).attr('del-url');
+                
         //use ajax to update server session variable
         $.ajax({
             url: url,
@@ -65,6 +76,7 @@ $(function () {
             dataType: 'json',
             success: function (data) {
                 if ( $('#nav-'+id).length ) {
+                    console.log("found the course tab to delete...");
                     $('#nav-'+id).remove();
                     $('#'+id).remove();
                 }

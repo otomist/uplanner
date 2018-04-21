@@ -6,6 +6,9 @@
 {% if user.is_authenticated %}
 {% block content %}
   <!-- Begin row -->
+  <div id="meta"
+    make-tab-content-url="{% url 'make_tab_content' %}"
+  ></div>
   <div class="container-fluid">
     <div class="row">
 
@@ -234,7 +237,7 @@
           
           <!-- Begin course detail tabs -->
           {% for tab in course_tabs %}
-            <li class="nav-item" id="nav-{{tab.course.pk}}">
+            <li class="nav-item course-tab" id="nav-{{tab.course.pk}}">
               <a class="nav-link" id="{{tab.course.pk}}-tab" data-toggle="tab" href="#{{tab.course.pk}}">
                 {{tab.course.dept.code}} {{tab.course.number}}
                   <button class="btn btn-danger btn-xs js-del-tab btn-results" course-id='{{tab.course.pk}}' del-url="{% url 'delete_tab' %}">x</button>

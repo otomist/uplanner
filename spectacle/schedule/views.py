@@ -233,11 +233,14 @@ def get_tab_data(course, request=None):
 def make_tab_content(request):
     course_pk = request.GET.get('course_pk', None)
     
+    print("===== Make tab contents!!! =====")
+    
     #TODO: this will break if size of list is 0
     course = Course.objects.filter(pk=course_pk)[0]
     if 'tabs' in request.session:
-        request.session['tabs'].append(course_pk)
-        request.session.save()
+        if course_pk not in request.session['tabs']:
+            request.session['tabs'].append(course_pk)
+            request.session.save()
     else:
         request.session['tabs'] = [course_pk]
         request.session.save()
@@ -307,13 +310,19 @@ def make_current_courses(request):
 def del_schedule(request):
     schedule_title = request.GET.get('schedule', None)
     new_schedule_title = request.GET.get('new_schedule', None)
+    
+    print("======== schedule title: ========")
+    print(schedule_title)
+    
     #TODO: this will break if user doesn't exist
     current_user = Student.objects.get(user_email=request.user.email)
     schedule = Schedule.objects.filter(student=current_user).filter(title=schedule_title)
     # using list() should normally be avoided on a queryset, but it is reasonable to assume
     # that the course_ids set will be very small
-    course_ids = list(schedule[0].schedulecourse_set.values_list('course__id', flat=True))
-    print(course_ids)
+    course_ids = []
+    if schedule[0].schedulecourse_set.exists():
+        course_ids = list(schedule[0].schedulecourse_set.values_list('course__id', flat=True))
+        #print(course_ids)
     if schedule.exists():
         schedule[0].delete()
     request.session['active_schedule'] = new_schedule_title
