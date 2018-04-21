@@ -1,5 +1,5 @@
 $(function () {
-            
+    
     // Makes a new tab in schedule.html, and populates it with course details.
     $('.js-make-tab').on('click', function() {
         /*
@@ -18,8 +18,8 @@ $(function () {
         // If the course tab does not already exist, make a new tab for it
         if ( !$("#nav-"+id).length ) {
             // Create the new tab
-            $('<li class="nav-item course-tab" id="nav-'+id+'">\
-            <a class="nav-link navTab" id="'+id+'-tab" data-toggle="tab" href="#'+id+'">'+
+            $('<li class="nav-item" id="nav-'+id+'">\
+            <a class="nav-link navTab course-tab" id="'+id+'-tab" data-toggle="tab" href="#'+id+'">'+
             dept+' '+num+
             '  <button class="btn btn-danger btn-xs js-del-tab btn-results" course-id="'+id+'" del-url="' + url_delete + '">&times;</button>\
             </a></li>').appendTo('#scheduleTab');
@@ -38,22 +38,22 @@ $(function () {
     
     });
     
-    
     // Reloads a course tab every time it is visited, in case something has changed
-    $(document).on('click', '.course-tab', function () {
+    $(document).on('show.bs.tab', '.course-tab', function() {
+        console.log("Wow, I'm about to be shown!!!!");
+        console.log($(event.target));
         var id = $(event.target).attr('id');
         var url_content = $('#meta').attr('make-tab-content-url');
         
         if (id) {
             id = id.slice(0, id.length-4)
+            console.log("reload with id ", id);
             //Populate it with the schedule_tabs_content.html file through django
             $('#'+id).html('').load(
                 url_content + "?course_pk=" + id
             );
         }
-        
     });
-    
     
     /*
     Adds the delete function to any element currently in the page or
@@ -76,6 +76,9 @@ $(function () {
                     console.log("found the course tab to delete...");
                     $('#nav-'+id).remove();
                     $('#'+id).remove();
+                    
+                    // Show a new tab
+                    $('#results-tab').tab('show');
                 }
             }
         });
@@ -159,6 +162,9 @@ $(function () {
 
     });
     
+    /*
+     Delete a course from the schedule
+    */
     $(document).on('click', '.js-del', function() {
         var id = $(event.target).attr('section-id');
         var url = $(event.target).attr('ajax-url');

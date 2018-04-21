@@ -62,7 +62,8 @@ function init() {
         );
         
         // If the currently open tab is a course detail tab, reload it
-        var active_tab = $('.course-tab').find("a.active");
+        var active_tab = $('.course-tab.active');
+        console.log($('.course-tab.active'));
         var id = active_tab.attr('id');
         if (id) {
             id = id.slice(0, id.length-4);
@@ -184,7 +185,7 @@ function init() {
 			html: highlight_html
 		});
 	});
-
+    
     scheduler.init('scheduler_here', new Date(2018, 0, 1), "workweek");
     
     var searchHidden = false;
