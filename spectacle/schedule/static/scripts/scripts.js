@@ -40,14 +40,11 @@ $(function () {
     
     // Reloads a course tab every time it is visited, in case something has changed
     $(document).on('show.bs.tab', '.course-tab', function() {
-        console.log("Wow, I'm about to be shown!!!!");
-        console.log($(event.target));
         var id = $(event.target).attr('id');
         var url_content = $('#meta').attr('make-tab-content-url');
         
         if (id) {
             id = id.slice(0, id.length-4)
-            console.log("reload with id ", id);
             //Populate it with the schedule_tabs_content.html file through django
             $('#'+id).html('').load(
                 url_content + "?course_pk=" + id
@@ -261,7 +258,7 @@ $(function () {
       Making the button's text content "+" will make it automatically switch to "-" as necessary.
        For custom response, a new function must be implemented (see the next function for example)
     */
-    $('.js-expand-btn').on('click', function() {
+    $(document).on('click', '.js-expand-btn', function() {
         info = $(event.target).closest('.js-expand-block').find('.js-expand-info');
         info.toggle(100);
         if ($(event.target).text() === "+") {
