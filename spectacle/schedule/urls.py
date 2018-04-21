@@ -18,6 +18,7 @@ urlpatterns = [
     path('schedule/ajax/make_schedule/', views.make_schedule, name='make_schedule'),
     path('schedule/ajax/del_schedule/', views.del_schedule, name='del_schedule'),
     path('schedule/ajax/change_schedule/', views.change_schedule, name='change_schedule'),
+    path('schedule/ajax/update_session/', views.update_session, name='update_session'),
     path('profile/', views.profile, name='profile'),
     path('prereqs/', views.prereqs, name='prereqs'),
     path('register/', views.register, name='register'),

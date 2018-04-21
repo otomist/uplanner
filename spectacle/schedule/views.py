@@ -44,6 +44,7 @@ def schedule_courses(request):
     An ajax view ran every time the schedule page is loaded.
     it passes json with the current courses on the schedule to scheduleBuilder.js
     for rendering
+    This is the main function for initializing the schedule.
     """
     
     #TODO: this will fail if user does not exist
@@ -95,14 +96,33 @@ def schedule_courses(request):
         request.session['active_schedule'] = schedule
         request.session.save()
     
+    filters_expanded = True
+    if 'filters_expanded' in request.session:
+        print("!!!!!!!!!!!!!!")
+        filters_expanded = request.session['filters_expanded']
+    else:
+        request.session['filters_expanded'] = filters_expanded
+        request.session.save()
+    print("*******filters expanded is ", filters_expanded)
+    
     data = {
         'count': len(courses),
         'courses': courses,
         'active_schedule': schedule,
         'url': reverse(make_current_courses),
+        'filters_expanded': filters_expanded,
     }
     
     return JsonResponse(data)
+    
+# ajax view for updating the session variable
+def update_session(request):
+    print("Got a request to update schedule")
+    for k, v in request.GET.items():
+        print(k, v)
+        request.session[k] = v
+    request.session.save()
+    return JsonResponse({})
     
 # ajax view
 def del_section(request):

@@ -1,6 +1,4 @@
 $(function () {
-    //Button used to hide the search criteria and show more results
-    var searchHidden = false;
             
     // Makes a new tab in schedule.html, and populates it with course details.
     $('.js-make-tab').on('click', function() {
@@ -265,29 +263,6 @@ $(function () {
             $(event.target).text("-");
         } else if ($(event.target).text() === "-") {
             $(event.target).text("+");
-        }
-    });
-    
-    // This function handles extra behavior for expanding search filters, such as swapping
-    // the expand button
-    $('#searchToggleBTN').on('click', function () {
-        searchHidden ? searchHidden = false : searchHidden = true;
-        if (searchHidden) {
-            //switch between max/minimize arrows
-            expandBtn.style.display = 'block';
-            hideBtn.style.display = 'none';
-
-            //change the size of results to larger when search filters hidden
-            $('.fixed-panel').css('min-height', '42rem');
-            $('.fixed-panel').css('max-height', '42rem'); 
-        } else {
-            //switch between max/minimize arrows
-            expandBtn.style.display = 'none';
-            hideBtn.style.display = 'block';
-
-            //change the size of results to smaller when search filters shown
-            $('.fixed-panel').css('min-height', '28rem');
-            $('.fixed-panel').css('max-height', '28rem');
         }
     });
 

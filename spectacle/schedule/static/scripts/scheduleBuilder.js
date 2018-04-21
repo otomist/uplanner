@@ -186,7 +186,45 @@ function init() {
 	});
 
     scheduler.init('scheduler_here', new Date(2018, 0, 1), "workweek");
+    
+    var searchHidden = false;
+    function toggleSearch() {
+        console.log("Toggle search!!!");
+        console.log("at start, search hidden is ", searchHidden);
+        searchHidden ? searchHidden = false : searchHidden = true;
+        if (searchHidden) {
+            //switch between max/minimize arrows
+            expandBtn.style.display = 'block';
+            hideBtn.style.display = 'none';
 
+            //change the size of results to larger when search filters hidden
+            $('.fixed-panel').css('min-height', '42rem');
+            $('.fixed-panel').css('max-height', '42rem'); 
+        } else {
+            //switch between max/minimize arrows
+            expandBtn.style.display = 'none';
+            hideBtn.style.display = 'block';
+
+            //change the size of results to smaller when search filters shown
+            $('.fixed-panel').css('min-height', '28rem');
+            $('.fixed-panel').css('max-height', '28rem');
+        }
+        $.ajax({
+            url: $('#meta').attr('update-session-url'),
+            data: {'filters_expanded': !searchHidden,},
+            dataType: 'json',
+            success: function (data) {
+                
+            }
+        });
+    }
+    
+    // This function handles extra behavior for expanding search filters, such as swapping
+    // the expand button
+    $('#searchToggleBTN').on('click', function () {
+        toggleSearch();
+    });
+    
     /*
     Add all previously stored classes to the schedule
     Processed as an ajax json request for convenience.
@@ -196,17 +234,28 @@ function init() {
         data: {},
         dataType: 'json',
         success: function (data) {
-            count = data['count'];
-            courses = data['courses'];
-            schedule = data['active_schedule'];
-            url = data['url'];
+            var count = data['count'];
+            var courses = data['courses'];
+            var schedule = data['active_schedule'];
+            var url = data['url'];
+            var filters_expanded = data['filters_expanded'];
+            
+            console.log("filters_expanded: ", filters_expanded);
+            
+            //I don't know why this gets converted to a string...
+            if (filters_expanded === 'false') {
+                console.log("hide the filters!!!");
+                $('.js-expand-default').hide();
+                //$('#meta').attr('search-hidden', 'true');
+                toggleSearch();
+            }
             
             for (i = 0; i < count; i++) {
                 scheduler.parse([courses[i]], 'json');
             }
             $('.js-schedule:checked').prop('checked', false);
             $('.js-schedule[name="' + schedule + '"]').prop('checked', true);
-                        
+            
             change_schedule(url, schedule);
             update_page(url);
         }
