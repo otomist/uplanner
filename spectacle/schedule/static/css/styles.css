@@ -78,9 +78,17 @@ h4{
 .js-expand-default{
     display: block;
 }
+.expandBtn:hover{
+    background-color: #8799ac;
+    border-color: #8799ac;
+}
+.expandBtn:focus{
+    background-color: #8799ac;
+    border-color: #8799ac;
+}
 .btn-results{
     margin: 0;
-    padding: 0;
+    padding: 1px 1.5px 2px 1px;
     line-height: 1;
 }
 .list-group-item{
@@ -123,4 +131,57 @@ h4{
 .errorlist {
     background-color: yellow;
     color:red;
+}
+.btn-warning{
+    color: white;
+}
+.btn-info:hover{
+    color: black;
+}
+.btn-danger:hover{
+    color: black;
+}
+.btn-primary:hover{
+    color: black;
+}
+.btn-info:focus{
+    color: black;
+}
+.btn-danger:focus{
+    color: black;
+}
+.btn-primary:focus{
+    color: black;
+}
+.btn-fullInfo {
+    color: #fff;
+    background-color: #8ac3ff;
+    border-color: #8ac3ff;
+}
+.btn-fullInfo:hover{
+    color: rgb(0, 0, 0);
+    background-color: #1f88f8;
+    border-color: #1f88f8;
+}
+.btn-fullInfo:focus{
+    color: rgb(0, 0, 0);
+    background-color: #1f88f8;
+    border-color: #1f88f8;
+}
+.navTab:hover{
+    color: white;
+    background-color: #5e7083;
+    border-color: #5e7083;
+}
+.navTab:focus{
+    color: white;
+    background-color: #5e7083;
+    border-color: #5e7083;
+}
+.input:hover{
+    background-color: #5e7083;
+    border-color: #5e7083;
+}
+.btnAddDelTab{
+    padding: 8px;
 }
