@@ -52,6 +52,28 @@ function init() {
         filter_input.checked = false;
     }
     
+    // Call this after changing schedule and database has been updated
+    function update_page(url) {
+        var schedule = $(".js-schedule:checked").attr('schedule-id');
+                
+        // Reload the current courses
+        $('#current-courses').html('').load(
+            url + '?schedule=' + schedule
+        );
+        
+        // If the currently open tab is a course detail tab, reload it
+        var active_tab = $('.course-tab').find("a.active");
+        var id = active_tab.attr('id');
+        if (id) {
+            id = id.slice(0, id.length-4);
+            var url_content = $('#meta').attr('make-tab-content-url');
+            //Populate it with the schedule_tabs_content.html file through django
+            $('#'+id).html('').load(
+                url_content + "?course_pk=" + id
+            );
+        }
+    }
+    
     function change_schedule(url, schedule_name) {
         var filter_inputs_radio = document.getElementById("filters_wrapper").getElementsByTagName("input");
         for(var j=0; j<filter_inputs_radio.length; j++) {
@@ -61,13 +83,8 @@ function init() {
             }
             filters[filter_inputs_radio[j].name] = !!filter_inputs_radio[j].checked;
         }
+                
         scheduler.updateView();
-        
-        var schedule = $(".js-schedule:checked").attr('schedule-id');
-        
-        $('#current-courses').html('').load(
-            url + '?schedule=' + schedule
-        );
     }
     
     // function for toggling radio buttons and updating display
@@ -83,7 +100,7 @@ function init() {
             data: {'schedule_title': $(".js-schedule:checked").attr('name')},
             dataType: 'json',
             success: function (data) {
-                
+                update_page(url);
             }
         });
         
@@ -110,9 +127,7 @@ function init() {
         $(".js-schedule")[0].checked = true;
         
         change_schedule(courses_url, $(".js-schedule")[0].name);
-        
-        console.log("name of new schedule is: ", new_schedule);
-        
+                
         //make ajax call to delete schedule from database
         $.ajax({
             url: url,
@@ -122,7 +137,6 @@ function init() {
             },
             dataType: 'json',
             success: function (data) {
-                //console.log("successfully deleted");
                 schedule = schedule.attr('name');
                 
                 for (var i = 0; i < data['course_ids'].length; i++) {
@@ -135,6 +149,7 @@ function init() {
                 }
                 
                 scheduler.updateView();
+                update_page(courses_url);
             }
         });
     });
@@ -189,11 +204,11 @@ function init() {
             for (i = 0; i < count; i++) {
                 scheduler.parse([courses[i]], 'json');
             }
-            //console.log("schedule is ", $(".js-schedule[name='" + schedule + "']").attr('name'));
             $('.js-schedule:checked').prop('checked', false);
             $('.js-schedule[name="' + schedule + '"]').prop('checked', true);
-            
+                        
             change_schedule(url, schedule);
+            update_page(url);
         }
     });
 }

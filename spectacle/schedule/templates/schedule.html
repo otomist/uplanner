@@ -6,6 +6,9 @@
 {% if user.is_authenticated %}
 {% block content %}
   <!-- Begin row -->
+  <div id="meta"
+    make-tab-content-url="{% url 'make_tab_content' %}"
+  ></div>
   <div class="container-fluid">
     <div class="row">
 
@@ -88,6 +91,7 @@
             <h6 class="search-toggle">Search filters: </h6>
             <!-- Begin misc options -->
             <div class="search-container search-toggle">
+            
               <div class="row justify-content-sm-left">
                 <div class="col-lg-auto col-md-auto col-sm-auto col-xs-auto bg-light">
                   <div class="checkbox">
@@ -98,11 +102,28 @@
                     <label>
                       {{ form.conflicted }} Show conflicting courses </label>
                   </div>
+                  <!--div class="checkbox">
+                    <label>
+                      {{ form.honors_only }} Show only honors courses </label>
+                  </div-->
                 </div>
                 <div class="col-lg-auto col-md-auto col-sm-auto col-xs-auto bg-light">
+                  <!--div>
+                    <label>
+                      {{ form.geneds }} </label>
+                  </div-->
                   <div class="checkbox">
                     <label>
                       {{ form.honors_only }} Show only honors courses </label>
+                  </div>
+                  <div class="btn-group">
+                    <a class="btn-small dropdown-toggle" data-toggle="dropdown" href="#">
+                      gened filters
+                      <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu search-container">
+                      {{ form.geneds }}
+                    </ul>
                   </div>
                 </div>
               </div>
@@ -216,8 +237,13 @@
           
           <!-- Begin course detail tabs -->
           {% for tab in course_tabs %}
+<<<<<<< HEAD
             <li class="nav-item" id="nav-{{tab.course.pk}}">
               <a class="nav-link navTab" id="{{tab.course.pk}}-tab" data-toggle="tab" href="#{{tab.course.pk}}">
+=======
+            <li class="nav-item course-tab" id="nav-{{tab.course.pk}}">
+              <a class="nav-link" id="{{tab.course.pk}}-tab" data-toggle="tab" href="#{{tab.course.pk}}">
+>>>>>>> 4b59dd65cb0312611dc4be66efa1b6dbb74d7d9c
                 {{tab.course.dept.code}} {{tab.course.number}}
                   <button class="btn btn-danger btn-xs js-del-tab btn-results" course-id='{{tab.course.pk}}' del-url="{% url 'delete_tab' %}">x</button>
               </a>
