@@ -28,7 +28,7 @@ class MultiWidgetCheckbox(forms.MultiWidget):
         curr = html
         start = 0
         end = 0
-        while end < len(curr)-2:
+        while '/>' in curr:
             start = curr.index('<')
             end = curr.index('/>') + start
             tags.append(curr[start:end+2])
@@ -41,7 +41,6 @@ class MultiWidgetCheckbox(forms.MultiWidget):
         html = super(MultiWidgetCheckbox, self).render(name, value, attrs)
         #print(html)
         #print(self.parse_html(html))
-        
         labeled_html = '<div class=\'row\'>'
         tags = self.parse_html(html)
         for i in range(len(tags)):
@@ -53,23 +52,17 @@ class MultiWidgetCheckbox(forms.MultiWidget):
             labeled_html += label
             labeled_html += tags[i]
             labeled_html += '<br>'
-        labeled_html += '</div>'
+        labeled_html += '</div></div>'
         
         return mark_safe(labeled_html)
     
 class MultiBooleanField(forms.MultiValueField):
-    #widget = MultiWidgetCheckbox()
     
     def __init__(self, choices=[], *args, **kwargs):
-        #print(choices)
         widgets = MultiWidgetCheckbox(choices=choices)
-        list_fields = []
         self.choices = choices
-        for c in choices:
-            list_fields.append(forms.BooleanField(required=False, label=c[0]))
+        list_fields = [forms.BooleanField(required=False) for c in choices]
         
-        #list_fields=[forms.BooleanField(required=False),
-        #             forms.BooleanField(required=False)]
         super(MultiBooleanField, self).__init__(list_fields, widget=widgets, *args, **kwargs)
 
     def compress(self, values):
@@ -119,7 +112,7 @@ class ScheduleForm(forms.Form):
     #Sihua's Edit End
     
     gened_list = list(map(lambda gened: (gened.code, gened.code + ": " + gened.name), Gened.objects.all()))
-    
+        
     geneds = MultiBooleanField(choices=gened_list, required=False)
     
     
