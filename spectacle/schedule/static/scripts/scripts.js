@@ -18,11 +18,11 @@ $(function () {
         // If the course tab does not already exist, make a new tab for it
         if ( !$("#nav-"+id).length ) {
             // Create the new tab
-            $('<li class="nav-item" id="nav-'+id+'">\
-            <a class="nav-link" id="'+id+'-tab" data-toggle="tab" href="#'+id+'">'+
+            $('<li class="nav-item course-tab" id="nav-'+id+'">\
+            <a class="nav-link navTab" id="'+id+'-tab" data-toggle="tab" href="#'+id+'">'+
             dept+' '+num+
-            '  <button class="btn btn-danger btn-xs js-del-tab btn-results" course-id="'+id+'" del-url="' + url_delete + '">x</button>\
-            </a>').appendTo('#scheduleTab');
+            '  <button class="btn btn-danger btn-xs js-del-tab btn-results" course-id="'+id+'" del-url="' + url_delete + '">&times;</button>\
+            </a></li>').appendTo('#scheduleTab');
             
             // Add a new tab content pane including the schedule_tabs_content.html file
             $('<div class="tab-pane" id='+id+'></div>').appendTo('#scheduleTabContent');
@@ -31,7 +31,6 @@ $(function () {
             $('#'+id).html('').load(
                 url_content + "?course_pk=" + id
             );
-            
         }
       
         // Show the tab
