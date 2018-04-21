@@ -12,6 +12,7 @@ from django.urls import reverse
 from django.db.models import Q
 import json
 import re
+import pickle
 
 """
 TODO: 
@@ -495,6 +496,22 @@ def schedule(request):
         if form.cleaned_data['honors_only']:
             results = results.filter(honors=True)
         
+        if form.cleaned_data['geneds']:
+            geneds = pickle.loads(form.cleaned_data['geneds'])
+            gened_set = None
+            any_selected = False
+            #print(geneds)
+            for gened, selected in geneds.items():
+                if selected:
+                    any_selected = True
+                    if gened_set == None:
+                        gened_set = results.filter(gened__code=gened)
+                    else:
+                        gened_set = gened_set.union(results.filter(gened__code=gened))
+            if any_selected:
+                results = gened_set
+        
+            
         # filter out all courses that conflict with current courses
         if not form.cleaned_data['conflicted']:
             current_courses = ScheduleCourse.objects.filter(schedule=schedule)

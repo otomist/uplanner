@@ -88,6 +88,7 @@
             <h6 class="search-toggle">Search filters: </h6>
             <!-- Begin misc options -->
             <div class="search-container search-toggle">
+            
               <div class="row justify-content-sm-left">
                 <div class="col-lg-auto col-md-auto col-sm-auto col-xs-auto bg-light">
                   <div class="checkbox">
@@ -98,11 +99,28 @@
                     <label>
                       {{ form.conflicted }} Show conflicting courses </label>
                   </div>
+                  <!--div class="checkbox">
+                    <label>
+                      {{ form.honors_only }} Show only honors courses </label>
+                  </div-->
                 </div>
                 <div class="col-lg-auto col-md-auto col-sm-auto col-xs-auto bg-light">
+                  <!--div>
+                    <label>
+                      {{ form.geneds }} </label>
+                  </div-->
                   <div class="checkbox">
                     <label>
                       {{ form.honors_only }} Show only honors courses </label>
+                  </div>
+                  <div class="btn-group">
+                    <a class="btn-small dropdown-toggle" data-toggle="dropdown" href="#">
+                      gened filters
+                      <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu search-container">
+                      {{ form.geneds }}
+                    </ul>
                   </div>
                 </div>
               </div>

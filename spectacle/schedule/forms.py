@@ -1,8 +1,83 @@
 from django import forms
 from django.core.exceptions import ValidationError
-from .models import Course, Department, Student, Term
+from .models import Course, Department, Student, Term, Gened
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
+from django.template.loader import render_to_string
+from django.utils.safestring import mark_safe
+import pickle
+
+
+# multivaluefield based off https://gist.github.com/elena/3915748
+class MultiWidgetCheckbox(forms.MultiWidget):
+    def __init__(self, choices=[], attrs=None):
+        self.choices = choices
+        widgets = [forms.CheckboxInput() for c in choices]
+        super(MultiWidgetCheckbox, self).__init__(widgets, attrs)
+        
+    def decompress(self, value):
+        if value:
+            return pickle.loads(value)
+        else:
+            return [False for c in self.choices]
+    
+    # in-house to avoid dependencies
+    # returns a list where each element is a tag
+    def parse_html(self, html):
+        tags = []
+        curr = html
+        start = 0
+        end = 0
+        while end < len(curr)-2:
+            start = curr.index('<')
+            end = curr.index('/>') + start
+            tags.append(curr[start:end+2])
+            curr = curr[end+2:]
+        return tags
+    
+    # This is very fragile!! TODO: make this more robust
+    # Also I'm sorry...
+    def render(self, name, value, attrs=None):
+        html = super(MultiWidgetCheckbox, self).render(name, value, attrs)
+        #print(html)
+        #print(self.parse_html(html))
+        
+        labeled_html = '<div class=\'row\'>'
+        tags = self.parse_html(html)
+        for i in range(len(tags)):
+            if i % 4 == 0:
+                if i != 0:
+                    labeled_html += '</div>'
+                labeled_html += '<div class=\'col-4\'>'
+            label = "<label>"+self.choices[i][0]+":</label> "
+            labeled_html += label
+            labeled_html += tags[i]
+            labeled_html += '<br>'
+        labeled_html += '</div>'
+        
+        return mark_safe(labeled_html)
+    
+class MultiBooleanField(forms.MultiValueField):
+    #widget = MultiWidgetCheckbox()
+    
+    def __init__(self, choices=[], *args, **kwargs):
+        #print(choices)
+        widgets = MultiWidgetCheckbox(choices=choices)
+        list_fields = []
+        self.choices = choices
+        for c in choices:
+            list_fields.append(forms.BooleanField(required=False, label=c[0]))
+        
+        #list_fields=[forms.BooleanField(required=False),
+        #             forms.BooleanField(required=False)]
+        super(MultiBooleanField, self).__init__(list_fields, widget=widgets, *args, **kwargs)
+
+    def compress(self, values):
+        result = {}
+        for i in range(len(values)):
+            result[self.choices[i][0]] = values[i]
+        return pickle.dumps(result)
+
 
 class ScheduleForm(forms.Form):
     keywords = forms.CharField(required=False, initial="Enter keywords...", help_text="Enter keywords to search for", max_length=200)
@@ -16,16 +91,13 @@ class ScheduleForm(forms.Form):
 
 
     # Sihua's Edit start
-    # Note: I replaced all checkboxes, but I need help to determine the search keys for course level, credits, course_status.They are not straight as weekdays constrains.
     l100 = forms.BooleanField(required=False)
     l200 = forms.BooleanField(required=False)
     l300 = forms.BooleanField(required=False)
     l400 = forms.BooleanField(required=False)
-    # Note: 500+ needs more than one keys to search or is there a better way for level?
     l500 = forms.BooleanField(required=False)
     levels = ["l100", "l200", "l300", "l400", "l500"]
 
-    # 1 credit, I tried to use 1cr as variable name but failed. 
     cr1 = forms.BooleanField(required=False)
     cr2 = forms.BooleanField(required=False)
     cr3 = forms.BooleanField(required=False)
@@ -37,17 +109,20 @@ class ScheduleForm(forms.Form):
     conflicted = forms.BooleanField(required=False, initial=True)
     honors_only = forms.BooleanField(required=False)
 
-    # need checkbox for every day and will return True or False
     Mon = forms.BooleanField(required=False)
     Tus = forms.BooleanField(required=False)
     Wed = forms.BooleanField(required=False)
     Thu = forms.BooleanField(required=False)
     Fri = forms.BooleanField(required=False)
-    # a list of False or True from checkbox
     days = ["Mon", "Tus", "Wed", "Thu", "Fri"]
     
     #Sihua's Edit End
-	
+    
+    gened_list = list(map(lambda gened: (gened.code, gened.code + ": " + gened.name), Gened.objects.all()))
+    
+    geneds = MultiBooleanField(choices=gened_list, required=False)
+    
+    
     # make either departments or keywords mandatory; at least one must be filled in
     def clean(self):
         super().clean()
