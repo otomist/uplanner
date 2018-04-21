@@ -234,11 +234,24 @@ def get_tab_data(course, request=None):
     # This creates a list of dictionaries like: [{'name': lecture, 'sections': [section1, section2]}, {'name': labratory, 'sections':[...]}...]
     # the helper functions translate each "section" into a dictionary of its fields, and then adds information about any conflicts with current courses
     
+    components = []
+    for comp in Section.COMPONENTS:
+        sections = course.section_set.filter(component=comp[0])
+        count = sections.count()
+        sections = get_section_list(sections, request)
+        comp_dict = {'name': comp[1],
+                     'count': count,
+                     'sections': sections,
+                    }
+        components.append(comp_dict)
+    
+    """
     components = map(
                  lambda comp: 
                         {'name': comp[1],
                          'sections': get_section_list(course.section_set.filter(component=comp[0]), request)},
                         Section.COMPONENTS)
+    """
     
     return {
             'course':course,
