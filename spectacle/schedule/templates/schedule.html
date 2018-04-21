@@ -74,7 +74,7 @@
                 </div>
               {% endfor %}
             {% endif %}
-            <button type="button" class="btn js-expand-btn btn-secondary btn-sm" id="searchToggleBTN">
+            <button type="button" class="btn expandBtn js-expand-btn btn-secondary btn-sm" id="searchToggleBTN">
               {% load static %}
               <img id="expandBtn" src="{% static 'images/expand.svg' %}" style="display: none">
               {% load static %}
@@ -206,18 +206,18 @@
         <ul class="nav nav-tabs" id="scheduleTab">
           <!-- Begin results tab -->
           <li class="nav-item">
-            <a class="nav-link active" id="results-tab" data-toggle="tab" href="#results">Results</a>
+            <a class="nav-link navTab active" id="results-tab" data-toggle="tab" href="#results">Results</a>
           </li>
           
           <!-- Begin current courses tab -->
           <li class="nav-item">
-            <a class="nav-link" id="courses-tab" data-toggle="tab" href="#courses">Courses</a>
+            <a class="nav-link navTab" id="courses-tab" data-toggle="tab" href="#courses">Courses</a>
           </li>
           
           <!-- Begin course detail tabs -->
           {% for tab in course_tabs %}
             <li class="nav-item" id="nav-{{tab.course.pk}}">
-              <a class="nav-link" id="{{tab.course.pk}}-tab" data-toggle="tab" href="#{{tab.course.pk}}">
+              <a class="nav-link navTab" id="{{tab.course.pk}}-tab" data-toggle="tab" href="#{{tab.course.pk}}">
                 {{tab.course.dept.code}} {{tab.course.number}}
                   <button class="btn btn-danger btn-xs js-del-tab btn-results" course-id='{{tab.course.pk}}' del-url="{% url 'delete_tab' %}">x</button>
               </a>
@@ -235,7 +235,7 @@
               <ul class="list-group fixed-panel">
               {% for course in results %}
                 <li class="list-group-item js-expand-block">
-                  <button class="btn js-expand-btn btn-info btn-xs btn-results">+</button>{{ course.dept.code }} {{ course.number }} - {{ course.title }}
+                  <button class="btn js-expand-btn btn-primary btn-xs btn-results">+</button>{{ course.dept.code }} {{ course.number }} - {{ course.title }}
                   <div class="js-expand-info">
                     <!-- Begin column information -->
                     <div class="row">
@@ -262,7 +262,7 @@
                   
                   </div>
                   <br>
-                  <button class="btn btn-info btn-xs btn-results js-make-tab" course-id="{{course.pk}}" href="{% url 'make_tab_content' %}" course-dept="{{ course.dept.code }}" course-num="{{ course.number }}" del-url="{% url 'delete_tab' %}">Full course info</button>
+                  <button class="btn btn-fullInfo btn-xs btn-results js-make-tab" course-id="{{course.pk}}" href="{% url 'make_tab_content' %}" course-dept="{{ course.dept.code }}" course-num="{{ course.number }}" del-url="{% url 'delete_tab' %}">Full course info</button>
                 </li>
               {% endfor %}
               </ul>

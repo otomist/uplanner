@@ -1,4 +1,6 @@
 <p>
-  {{course.title}} 
-  <button class="btn btn-danger btn-xs btn-results js-del" ajax-url="{% url 'del_section' %}" section-id='{{course.id}}'>Delete</button>
+  {{course.title}}
+  <div>
+    <button class="btn btn-danger btn-xs btn-results js-del" ajax-url="{% url 'del_section' %}" section-id='{{course.id}}'>Delete</button>
+  </div>
 </p>
