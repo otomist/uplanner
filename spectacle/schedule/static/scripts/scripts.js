@@ -23,7 +23,7 @@ $(function () {
             $('<li class="nav-item" id="nav-'+id+'">\
             <a class="nav-link" id="'+id+'-tab" data-toggle="tab" href="#'+id+'">'+
             dept+' '+num+
-            '  <button class="btn btn-danger btn-xs js-del-tab btn-results" course-id="'+id+'" del-url="' + url_delete + '">X</button>\
+            '  <button class="btn btn-danger btn-xs js-del-tab btn-results" course-id="'+id+'" del-url="' + url_delete + '">x</button>\
             </a>').appendTo('#scheduleTab');
             
             // Add a new tab content pane including the schedule_tabs_content.html file
