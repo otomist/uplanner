@@ -98,12 +98,10 @@ def schedule_courses(request):
     
     filters_expanded = True
     if 'filters_expanded' in request.session:
-        print("!!!!!!!!!!!!!!")
         filters_expanded = request.session['filters_expanded']
     else:
         request.session['filters_expanded'] = filters_expanded
         request.session.save()
-    print("*******filters expanded is ", filters_expanded)
     
     data = {
         'count': len(courses),
@@ -117,9 +115,7 @@ def schedule_courses(request):
     
 # ajax view for updating the session variable
 def update_session(request):
-    print("Got a request to update schedule")
     for k, v in request.GET.items():
-        print(k, v)
         request.session[k] = v
     request.session.save()
     return JsonResponse({})
@@ -252,9 +248,7 @@ def get_tab_data(course, request=None):
 # renders a single tab's contents.
 def make_tab_content(request):
     course_pk = request.GET.get('course_pk', None)
-    
-    print("===== Make tab contents!!! =====")
-    
+        
     #TODO: this will break if size of list is 0
     course = Course.objects.filter(pk=course_pk)[0]
     if 'tabs' in request.session:
@@ -330,10 +324,7 @@ def make_current_courses(request):
 def del_schedule(request):
     schedule_title = request.GET.get('schedule', None)
     new_schedule_title = request.GET.get('new_schedule', None)
-    
-    print("======== schedule title: ========")
-    print(schedule_title)
-    
+        
     #TODO: this will break if user doesn't exist
     current_user = Student.objects.get(user_email=request.user.email)
     schedule = Schedule.objects.filter(student=current_user).filter(title=schedule_title)
@@ -342,7 +333,6 @@ def del_schedule(request):
     course_ids = []
     if schedule[0].schedulecourse_set.exists():
         course_ids = list(schedule[0].schedulecourse_set.values_list('course__id', flat=True))
-        #print(course_ids)
     if schedule.exists():
         schedule[0].delete()
     request.session['active_schedule'] = new_schedule_title
@@ -378,7 +368,6 @@ def make_schedule(request):
     
 # ajax view for updating session when schedule is changed
 def change_schedule(request):
-    print("got a request!")
     active_schedule = request.GET.get('schedule_title')
     request.session['active_schedule'] = active_schedule
     request.session.save()
@@ -529,7 +518,6 @@ def schedule(request):
             geneds = pickle.loads(form.cleaned_data['geneds'])
             gened_set = None
             any_selected = False
-            #print(geneds)
             for gened, selected in geneds.items():
                 if selected:
                     any_selected = True
@@ -635,10 +623,22 @@ def schedule(request):
                              'pk': r[0].pk,
                              }, results)
     
+    filters_expanded = True
+    if 'filters_expanded' in request.session:
+        filters_expanded = request.session['filters_expanded']
+        if filters_expanded == 'true':
+            filters_expanded = True
+        else:
+            filters_expanded = False
+    else:
+        request.session['filters_expanded'] = filters_expanded
+        request.session.save()
+    
+    
     return render (
         request,
         'schedule.html',
-        {'highlight_schedule':highlight_schedule, 'form':form, 'schedule_form':schedule_form, 'results':results, 'course_tabs':course_tabs, 'user_schedules':user_schedules, 'user_courses':user_courses}
+        {'highlight_schedule':highlight_schedule, 'filters_expanded':filters_expanded, 'form':form, 'schedule_form':schedule_form, 'results':results, 'course_tabs':course_tabs, 'user_schedules':user_schedules, 'user_courses':user_courses}
     )
 
 #==================================================================#    

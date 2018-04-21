@@ -88,7 +88,7 @@
             {{ form.departments }}
           </div>
           <!-- End top search bar -->
-          <div class="js-expand-info js-expand-default">
+          <div class="js-expand-info js-expand-default" {% if filters_expanded is False %} style="display:none" {% endif %}>
             <h6 class="search-toggle">Search filters: </h6>
             <!-- Begin misc options -->
             <div class="search-container search-toggle">

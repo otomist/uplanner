@@ -189,8 +189,6 @@ function init() {
     
     var searchHidden = false;
     function toggleSearch() {
-        console.log("Toggle search!!!");
-        console.log("at start, search hidden is ", searchHidden);
         searchHidden ? searchHidden = false : searchHidden = true;
         if (searchHidden) {
             //switch between max/minimize arrows
@@ -239,14 +237,9 @@ function init() {
             var schedule = data['active_schedule'];
             var url = data['url'];
             var filters_expanded = data['filters_expanded'];
-            
-            console.log("filters_expanded: ", filters_expanded);
-            
+                        
             //I don't know why this gets converted to a string...
             if (filters_expanded === 'false') {
-                console.log("hide the filters!!!");
-                $('.js-expand-default').hide();
-                //$('#meta').attr('search-hidden', 'true');
                 toggleSearch();
             }
             
