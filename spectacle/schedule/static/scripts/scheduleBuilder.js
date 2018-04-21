@@ -3,7 +3,7 @@ function init() {
     scheduler.config.first_hour = 6;
     scheduler.config.last_hour = 20;
     scheduler.config.limit_time_select = true;
-    scheduler.config.time_step = 60;
+    scheduler.config.time_step = 5;
 
     //used to make events read_only if they have that attribute.
     function block_readonly(id) {
