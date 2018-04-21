@@ -186,6 +186,17 @@ function init() {
 		});
 	});
     
+    //On hover highlight courses
+    scheduler.templates.event_class=function(start, end, event){
+        var css = "";
+
+        if(event.id == scheduler.getState().select_id){
+            css += " selected";
+        }
+        return css; // default return
+    }
+
+
     scheduler.init('scheduler_here', new Date(2018, 0, 1), "workweek");
     
     var searchHidden = false;

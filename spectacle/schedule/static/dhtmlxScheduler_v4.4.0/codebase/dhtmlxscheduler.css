@@ -1848,3 +1848,24 @@ div.dhx_menu_head,div.dhx_menu_icon{
 .dhx_mini_calendar .dhx_cal_next_button,.dhx_mini_calendar .dhx_cal_prev_button{
     top:8px!important
 }
+.dhx_cal_event div.dhx_footer,
+.dhx_cal_event.past_event div.dhx_footer,
+.dhx_cal_event.event_english div.dhx_footer,
+.dhx_cal_event.event_math div.dhx_footer,
+.dhx_cal_event.event_science div.dhx_footer{
+	background-color: transparent !important;
+}
+.dhx_cal_event .dhx_body{
+	-webkit-transition: opacity 0.1s;
+	transition: opacity 0.1s;
+	opacity: 0.7;
+}
+.dhx_cal_event .dhx_title{
+	line-height: 12px;
+}
+.dhx_cal_event_line:hover,
+.dhx_cal_event:hover .dhx_body,
+.dhx_cal_event.selected .dhx_body,
+.dhx_cal_event.dhx_cal_select_menu .dhx_body{
+	opacity: 1;
+}
