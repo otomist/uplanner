@@ -63,7 +63,6 @@ function init() {
         
         // If the currently open tab is a course detail tab, reload it
         var active_tab = $('.course-tab.active');
-        console.log($('.course-tab.active'));
         var id = active_tab.attr('id');
         if (id) {
             id = id.slice(0, id.length-4);
@@ -188,14 +187,8 @@ function init() {
     
     //We can compare event_id's with the events that have been rendered on the scheduler and if they match
         //what we are looking for we can change the style of those events.
-        
-    $(document).on('mouseover', '.current-course', function () {
-        //console.log("Mouseover!!!")        
-        var event_target = $(event.target).closest('.current-course');
-        var course_id = event_target.attr('id');
-        var course_id = course_id.slice(5);
+    function startHighlight(course_id) {
         var schedule_title = $(".js-schedule:checked").attr('name');
-
         for (var day=0; day < 5; day++) {
             for(var i=0; i<scheduler._rendered.length; i++) {
                 if(scheduler._rendered[i].getAttribute('event_id') === course_id + '' + day + schedule_title) {
@@ -205,15 +198,10 @@ function init() {
                 }
             }
         }
-        
-    });
+    }
     
-    $(document).on('mouseout', '.current-course', function () {
-        var event_target = $(event.target).closest('.current-course');
-        var course_id = event_target.attr('id');
-        var course_id = course_id.slice(5);
+    function stopHighlight(course_id) {
         var schedule_title = $(".js-schedule:checked").attr('name');
-
         for (var day=0; day < 5; day++) {
             for(var i=0; i<scheduler._rendered.length; i++) {
                 if(scheduler._rendered[i].getAttribute('event_id') === course_id + '' + day + schedule_title) {                    
@@ -223,19 +211,46 @@ function init() {
                 }
             }
         }
+    }
+    
+    //Highlight hovered course
+    $(document).on('mouseover', '.current-course', function () {
+        var event_target = $(event.target).closest('.current-course');
+        var course_id = event_target.attr('id');
+        var course_id = course_id.slice(5);
+        startHighlight(course_id);
     });
     
-    /*
+    //Highlight hovered course
+    $(document).on('mouseout', '.current-course', function () {
+        var event_target = $(event.target).closest('.current-course');
+        var course_id = event_target.attr('id');
+        var course_id = course_id.slice(5);
+        stopHighlight(course_id);
+    });
+    
+    //Highlight conflicting courses
+    $(document).on('mouseover', '.js-add', function () {
+        var course_id = $(event.target).attr('conflict-id');
+        startHighlight(course_id);
+    });
+    
+    //Highlight conflicting courses
+    $(document).on('mouseout', '.js-add', function () {
+        var course_id = $(event.target).attr('conflict-id');
+        stopHighlight(course_id);
+    });
+    
+    
     //On hover highlight courses
     scheduler.templates.event_class=function(start, end, event){
         var css = "";
-        console.log("Do hover highlighting!!!");
         if(event.id == scheduler.getState().select_id){
             css += " selected";
         }
         return css; // default return
     }
-    */
+    
 
     scheduler.init('scheduler_here', new Date(2018, 0, 1), "workweek");
     

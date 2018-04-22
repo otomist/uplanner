@@ -446,8 +446,7 @@ def schedule(request):
             data = get_tab_data(course, request)
             course_tabs.append(get_tab_data(course, request))
     
-    # Get the currently active scedule
-    #schedule = schedule_title
+    #Get the currently active scedule
     schedule_title = None
     if 'active_schedule' in request.session and Schedule.objects.filter(student=current_user).filter(title=request.session['active_schedule']).exists():
         schedule_title = request.session['active_schedule']
@@ -458,10 +457,23 @@ def schedule(request):
         request.session.save()
     schedule = Schedule.objects.filter(student=current_user).filter(title=schedule_title)[0]
     
+    #store whether or not search filters are currently expanded
+    filters_expanded = True
+    if 'filters_expanded' in request.session:
+        filters_expanded = request.session['filters_expanded']
+        if filters_expanded == 'true':
+            filters_expanded = True
+        else:
+            filters_expanded = False
+    else:
+        request.session['filters_expanded'] = filters_expanded
+        request.session.save()
+    
     if form.is_valid():
-                
+        
+        #retrieve all courses in requested term
         term = Term.objects.get(id=form.cleaned_data['course_term'])
-        results = Course.objects.select_related().filter(section__term=term)
+        results = Course.objects.select_related().filter(section__term=term).order_by('dept__code', 'number')
         
         #filter based on department
         if form.cleaned_data['departments'] != 'NULL':
@@ -470,54 +482,56 @@ def schedule(request):
         #filter based on keywords
         if form.cleaned_data['keywords'] != '':
             keys = form.cleaned_data['keywords']
-            title_set = results.filter(title__icontains=keys)
-            desc_set = results.filter(description__icontains=keys)
-            results = title_set.union(desc_set)
+            title_filter = Q(title__icontains=keys)
+            desc_filter = Q(description__icontains=keys)
+            
+            results = results.filter(title_filter | desc_filter)
         
         #filter based on days
         #if a course has at least one related section with days
         #  containing day, keep it in the results.
         #TODO: this should have more intelligent filtering. What about courses with a lab on Fri, but no lectures?
         #      it probably shouldn't show up, but it will
-        days_set = None
+        days_filter = None
         for day in form.days:
             if form.cleaned_data[day]:
-                if days_set == None:
-                    days_set = results.select_related().filter(section__days__contains=day[:2]).distinct()
+                if days_filter == None:
+                    days_filter = Q(section__days__contains=day[:2])
                 else:
-                    days_set = days_set.union(results.select_related().filter(section__days__contains=day[:2]).distinct())
-        if days_set != None:
-            results = days_set
+                    days_filter = days_filter | Q(section__days__contains=day[:2])
+                
+        if days_filter != None:
+            results = results.select_related().filter(days_filter).distinct()
         
         #filter based on course level
-        levels_set = None
+        levels_filter = None
         for level in form.levels:
             if form.cleaned_data[level]:
                 course_level = level[1]
                 if course_level == '5':
                     course_level = '[5-9]'
                 regex = r'\w*' + course_level + '\d{2}\w*'
-                if levels_set == None:
-                    levels_set = results.filter(number__iregex=regex)
+                if levels_filter == None:
+                    levels_filter = Q(number__iregex=regex)
                 else:
-                    levels_set = levels_set.union(results.filter(number__iregex=regex))
-        if levels_set != None:
-            results = levels_set
+                    levels_filter = levels_filter | Q(number__iregex=regex)
+        if levels_filter != None:
+            results = results.filter(levels_filter)
             
         #filter based on number of credits
-        credits_set = None
+        credits_filter = None
         for credit in form.credits:
             if form.cleaned_data[credit]:
                 credit_level = credit[2]
                 regex = credit_level + '|[1-' + credit_level +' ]-[' + credit_level + '-9]'
                 if credit_level == '5':
                     regex = r'[' + credit_level + '-9]|[1-' + credit_level +' ]-[' + credit_level + '-9]'
-                if credits_set == None:
-                    credits_set = results.filter(credits__iregex=regex)
+                if credits_filter == None:
+                    credits_filter = Q(credits__iregex=regex)
                 else:
-                    credits_set = credits_set.union(results.filter(credits__iregex=regex))
-        if credits_set != None:
-            results = credits_set
+                    credits_filter = credits_filter | Q(credits__iregex=regex)
+        if credits_filter != None:
+            results = results.filter(credits_filter)
             
         # filter based on whether a course has open sections
         if not form.cleaned_data['closed']:
@@ -527,21 +541,22 @@ def schedule(request):
         if form.cleaned_data['honors_only']:
             results = results.filter(honors=True)
         
+        # filter based on whether course satisfies one of the requested geneds
+        # TODO: order by number of geneds satisfied
         if form.cleaned_data['geneds']:
             geneds = pickle.loads(form.cleaned_data['geneds'])
-            gened_set = None
+            gened_filter = None
             any_selected = False
             for gened, selected in geneds.items():
                 if selected:
                     any_selected = True
-                    if gened_set == None:
-                        gened_set = results.filter(gened__code=gened)
+                    if gened_filter == None:
+                        gened_filter = Q(gened__code=gened)
                     else:
-                        gened_set = gened_set.union(results.filter(gened__code=gened))
+                        gened_filter = gened_filter | Q(gened__code=gened)
             if any_selected:
-                results = gened_set
+                results = results.filter(gened_filter)
         
-            
         # filter out all courses that conflict with current courses
         if not form.cleaned_data['conflicted']:
             current_courses = ScheduleCourse.objects.filter(schedule=schedule)
@@ -607,12 +622,6 @@ def schedule(request):
                 #start_filter = Q(section__start__gte=section[6]) # the new course starts after the old course ends
                 #end_filter = Q(section__ending__lte=section[5])  # the new course ends before the old course starts
                 results = results.select_related().exclude(day_filter &  ~(start_filter | end_filter)).distinct()
-        
-        #TODO: this should come first and bypass further searching
-        #if department/keywords are not selected, return nothing
-        if form.cleaned_data['departments'] == 'NULL' and form.cleaned_data['keywords'] == '':
-            results = []
-            print("This shouldn't happen!!!")
     
     # Display error - no search results match
     if len(results) == 0:
@@ -621,6 +630,20 @@ def schedule(request):
     # Todo: can there be too many results? (probably)
     
     # Reformat results to assign each course an index (for js button)
+    results = map(lambda r: {'id':r.id, 
+                             'title':r.title, 
+                             'dept':r.dept,
+                             'number':r.number,
+                             'description':r.description,
+                             'reqs':r.reqs,
+                             'lab': r.section_set.exclude(component='lec').exists(),
+                             'open': r.section_set.filter(open=True).exists(),
+                             'geneds': list(map(lambda g: "{}({})".format(g.code, g.name), r.gened.all())),
+                             'conflicts': False, #TODO: implement this
+                             'credits': r.credits,
+                             'pk': r.pk,
+                             }, results)
+    """
     results = list(zip(results, [x for x in range(1, len(results)+1)]))
     results = map(lambda r: {'id':r[1], 
                              'title':r[0].title, 
@@ -635,18 +658,7 @@ def schedule(request):
                              'credits': r[0].credits,
                              'pk': r[0].pk,
                              }, results)
-    
-    filters_expanded = True
-    if 'filters_expanded' in request.session:
-        filters_expanded = request.session['filters_expanded']
-        if filters_expanded == 'true':
-            filters_expanded = True
-        else:
-            filters_expanded = False
-    else:
-        request.session['filters_expanded'] = filters_expanded
-        request.session.save()
-    
+    """
     
     return render (
         request,
