@@ -394,7 +394,7 @@ def schedule(request):
     #If GET is not empty (ie, if the user has searched for something), use those search parameters to
     # populate form and get search results
     #If they have not, then populate search form based on initial values
-    if len(request.GET):
+    if len(request.GET) and not (len(request.GET) == 1 and 'next' in request.GET):
         
         # copy request.GET into custom QueryDict
         updated_get = QueryDict(mutable=True)

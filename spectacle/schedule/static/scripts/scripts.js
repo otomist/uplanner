@@ -23,10 +23,10 @@ $(function () {
                 dept + ' ' + num +
                 '  <button class="btn btn-danger btn-xs js-del-tab btn-results" course-id="' + id + '">&times;</button>\
             </a></li>').appendTo('#scheduleTab');
-
+            
             // Add a new tab content pane including the schedule_tabs_content.html file
             $('<div class="tab-pane" id=' + id + '></div>').appendTo('#scheduleTabContent');
-
+            
             // Populate it with the schedule_tabs_content.html file through django
             $('#' + id).html('').load(
                 url_content + "?course_pk=" + id

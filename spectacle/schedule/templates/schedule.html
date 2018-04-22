@@ -5,7 +5,7 @@
 {% block title %}<title>Uplanner-Schedule</title>{% endblock %}
 {% if user.is_authenticated %}
 {% block content %}
-  <!-- Begin row -->
+  <!-- A meta div to store urls for convenient javascript access -->
   <div id="meta"
     make-tab-content-url="{% url 'make_tab_content' %}"
     update-session-url="{% url 'update_session' %}"
@@ -20,6 +20,7 @@
     change-schedule-url="{% url 'change_schedule' %}"
   ></div>
   <div class="container-fluid">
+    <!-- Begin row -->
     <div class="row">
 
       <!-- Begin dhtmlx Schedule Column-->
