@@ -53,7 +53,9 @@ function init() {
     }
     
     // Call this after changing schedule and database has been updated
-    function update_page(url) {
+    // It updates the page; reloads current courses, and reloads the active course tab
+    function update_page() {
+        var url = $('#meta').attr('make-current-courses-url');
         var schedule = $(".js-schedule:checked").attr('schedule-id');
                 
         // Reload the current courses
@@ -74,7 +76,7 @@ function init() {
         }
     }
     
-    function change_schedule(url, schedule_name) {
+    function change_schedule(schedule_name) {
         var filter_inputs_radio = document.getElementById("filters_wrapper").getElementsByTagName("input");
         for(var j=0; j<filter_inputs_radio.length; j++) {
             
@@ -90,17 +92,16 @@ function init() {
     // function for toggling radio buttons and updating display
     // to change between user schedules
     $(document).on('change', '.js-schedule', function () {
-        var url = $(event.target).attr('courses-url');
-        var schedule_url = $(event.target).attr('schedule-url');
+        var schedule_url = $('#meta').attr('change-schedule-url');
         
-        change_schedule(url, $(event.target).attr('name'));
+        change_schedule($(event.target).attr('name'));
         
         $.ajax({
             url: schedule_url,
             data: {'schedule_title': $(".js-schedule:checked").attr('name')},
             dataType: 'json',
             success: function (data) {
-                update_page(url);
+                update_page();
             }
         });
         
@@ -112,8 +113,7 @@ function init() {
     // Delete a schedule
     $('.js-del-schedule').on('click', function () {
         var schedule = $(".js-schedule:checked");
-        var url = $(event.target).attr('url');
-        var courses_url = schedule.attr('courses-url');
+        var url = $('#meta').attr('del-schedule-url');
         
         if ($('.js-schedule').length === 1) {
             //TODO: give error message to user
@@ -126,7 +126,7 @@ function init() {
         schedule.closest('.js-schedule-container').remove();
         $(".js-schedule")[0].checked = true;
         
-        change_schedule(courses_url, $(".js-schedule")[0].name);
+        change_schedule($(".js-schedule")[0].name);
                 
         //make ajax call to delete schedule from database
         $.ajax({
@@ -149,7 +149,7 @@ function init() {
                 }
                 
                 scheduler.updateView();
-                update_page(courses_url);
+                update_page();
             }
         });
     });
@@ -294,17 +294,18 @@ function init() {
     Add all previously stored classes to the schedule
     Processed as an ajax json request for convenience.
     */
+    
+    
     $.ajax({
-        url: 'ajax/schedule',       //TODO: probably shouldn't be hardcoded
+        url: $('#meta').attr('schedule-courses-url'),
         data: {},
         dataType: 'json',
         success: function (data) {
             var count = data['count'];
             var courses = data['courses'];
             var schedule = data['active_schedule'];
-            var url = data['url'];
             var filters_expanded = data['filters_expanded'];
-                        
+            
             //I don't know why this gets converted to a string...
             if (filters_expanded === 'false') {
                 toggleSearch();
@@ -316,8 +317,8 @@ function init() {
             $('.js-schedule:checked').prop('checked', false);
             $('.js-schedule[name="' + schedule + '"]').prop('checked', true);
             
-            change_schedule(url, schedule);
-            update_page(url);
+            change_schedule(schedule);
+            update_page();
         }
     });
 }

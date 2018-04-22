@@ -9,6 +9,15 @@
   <div id="meta"
     make-tab-content-url="{% url 'make_tab_content' %}"
     update-session-url="{% url 'update_session' %}"
+    make-tab-content-url="{% url 'make_tab_content' %}"
+    delete-tab-url="{% url 'delete_tab' %}"
+    make-current-course-url="{% url 'make_current_course' %}"
+    make-current-courses-url="{% url 'make_current_courses' %}"
+    add-section-url="{% url 'add_section' %}"
+    del-section-url="{% url 'del_section' %}"
+    make-schedule-url="{% url 'make_schedule' %}"
+    schedule-courses-url="{% url 'schedule_courses' %}"
+    change-schedule-url="{% url 'change_schedule' %}"
   ></div>
   <div class="container-fluid">
     <div class="row">
@@ -18,7 +27,7 @@
         <div class="filters_wrapper" id="filters_wrapper">
           {% for schedule in user_schedules %}
             <label class="js-schedule-container">
-              <input type="radio" class="js-schedule" name="{{schedule.title}}" courses-url="{% url 'make_current_courses' %}" schedule-url="{% url 'change_schedule' %}" schedule-id="{{ schedule.id }}"/>
+              <input type="radio" class="js-schedule" name="{{schedule.title}}" schedule-id="{{ schedule.id }}"/>
               {{ schedule.title }}
             </label>
           {% endfor %}
@@ -26,11 +35,11 @@
         <!-- Button that displays "add a schedule" modal-->
         <div class="bg-light text-center">
           <button class="btn btn-info btn-xs" data-toggle="modal" data-target="#schedule-modal">Add new schedule</button>
-          <button class="btn btn-danger btn-xs js-del-schedule" url="{% url 'del_schedule' %}">Remove active schedule</button>
+          <button class="btn btn-danger btn-xs js-del-schedule">Remove active schedule</button>
           <button class="btn btn-warning btn-xs" id="export-btn" type="button">Export to Spire</button>
         </div>
         <!-- "add a schedule" modal with form -->
-        <form action="{% url 'make_schedule' %}" method="post" id="js-submit-schedule-btn" form-url="{% url 'make_schedule' %}">
+        <form action="{% url 'make_schedule' %}" method="post" id="js-submit-schedule-btn">
         {% csrf_token %}
           <div class="modal fade" id="schedule-modal" tabindex="-1" role="dialog">
             <div class="modal-dialog" role="document">
@@ -241,7 +250,7 @@
             <li class="nav-item" id="nav-{{tab.course.pk}}">
               <a class="nav-link navTab course-tab" id="{{tab.course.pk}}-tab" data-toggle="tab" href="#{{tab.course.pk}}">
                 {{tab.course.dept.code}} {{tab.course.number}}
-                  <button class="btn btn-danger btn-xs js-del-tab btn-results" course-id='{{tab.course.pk}}' del-url="{% url 'delete_tab' %}">&times;</button>
+                  <button class="btn btn-danger btn-xs js-del-tab btn-results" course-id='{{tab.course.pk}}'>&times;</button>
               </a>
             </li>
           {% endfor %}
@@ -284,7 +293,7 @@
                   
                   </div>
                   <br>
-                  <button class="btn btn-fullInfo btn-xs btn-results js-make-tab" course-id="{{course.pk}}" href="{% url 'make_tab_content' %}" course-dept="{{ course.dept.code }}" course-num="{{ course.number }}" del-url="{% url 'delete_tab' %}">Full course info</button>
+                  <button class="btn btn-fullInfo btn-xs btn-results js-make-tab" course-id="{{course.pk}}" course-dept="{{ course.dept.code }}" course-num="{{ course.number }}">Full course info</button>
                 </li>
               {% endfor %}
               </ul>

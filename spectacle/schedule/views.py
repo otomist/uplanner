@@ -107,7 +107,6 @@ def schedule_courses(request):
         'count': len(courses),
         'courses': courses,
         'active_schedule': schedule,
-        'url': reverse(make_current_courses),
         'filters_expanded': filters_expanded,
     }
     
@@ -360,8 +359,6 @@ def make_schedule(request):
             title = form.cleaned_data['title']
             current_user = Student.objects.get(user_email=request.user.email)
             data['title'] = title
-            data['url'] = reverse(make_current_courses)
-            data['schedule_url'] = reverse(change_schedule)
             if not Schedule.objects.filter(student=current_user).filter(title=title):
                 data['status'] = 'SUCCESS'
                 Schedule.objects.create_schedule(title, current_user)

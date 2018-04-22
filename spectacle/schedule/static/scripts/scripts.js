@@ -12,8 +12,8 @@ $(function () {
         id = $(event.target).attr('course-id');
         dept = $(event.target).attr('course-dept');
         num = $(event.target).attr('course-num');
-        url_content = $(event.target).attr('href');
-        url_delete = $(event.target).attr('del-url');
+        url_content = $('#meta').attr('make-tab-content-url');
+        url_delete = $('#meta').attr('delete-tab-url');
 
         // If the course tab does not already exist, make a new tab for it
         if (!$("#nav-" + id).length) {
@@ -21,7 +21,7 @@ $(function () {
             $('<li class="nav-item" id="nav-' + id + '">\
             <a class="nav-link navTab course-tab" id="'+ id + '-tab" data-toggle="tab" href="#' + id + '">' +
                 dept + ' ' + num +
-                '  <button class="btn btn-danger btn-xs js-del-tab btn-results" course-id="' + id + '" del-url="' + url_delete + '">&times;</button>\
+                '  <button class="btn btn-danger btn-xs js-del-tab btn-results" course-id="' + id + '">&times;</button>\
             </a></li>').appendTo('#scheduleTab');
 
             // Add a new tab content pane including the schedule_tabs_content.html file
@@ -59,7 +59,7 @@ $(function () {
     $(document).on('click', '.js-del-tab', function () {
 
         var id = $(event.target).attr('course-id');
-        var url = $(event.target).attr('del-url');
+        var url = $('#meta').attr('delete-tab-url');
 
         //use ajax to update server session variable
         $.ajax({
@@ -70,7 +70,6 @@ $(function () {
             dataType: 'json',
             success: function (data) {
                 if ($('#nav-' + id).length) {
-                    console.log("found the course tab to delete...");
                     $('#nav-' + id).remove();
                     $('#' + id).remove();
 
@@ -91,8 +90,8 @@ $(function () {
     */
     $(document).on('click', '.js-add', function () {
         id = $(event.target).attr('section-id');
-        url_ajax = $(event.target).attr('ajax-url');
-        url_html = $(event.target).attr('html-url');
+        url_ajax = $('#meta').attr('add-section-url');
+        url_html = $('#meta').attr('make-current-course-url');
 
         var schedule = $(".js-schedule:checked").attr('name');
 
@@ -129,9 +128,7 @@ $(function () {
                     }
                 }
 
-                console.log("Add events:");
                 for (i = 0; i < days.length; i++) {
-                    console.log(id + "" + i + schedule);
                     scheduler.addEvent({
                         id: id + "" + i + schedule,
                         start_date: days[i] + data.start_time,
@@ -164,12 +161,9 @@ $(function () {
     */
     $(document).on('click', '.js-del', function () {
         var id = $(event.target).attr('section-id');
-        var url = $(event.target).attr('ajax-url');
+        var url = $('#meta').attr('del-section-url');
 
         var schedule = $(".js-schedule:checked").attr('name');
-
-        console.log("delete events:");
-        console.log(id + "0" + schedule);
 
         //TODO: adjust for saturday/sunday
         //Attempt to delete every possible occurrence of the section
@@ -221,7 +215,7 @@ $(function () {
 
         event.preventDefault(); //Prevents auto-submission of form through server
 
-        url = $(event.target).attr('form-url');
+        url = $('#meta').attr('make-schedule-url');
 
         $.ajax({
             url: url,
@@ -231,7 +225,7 @@ $(function () {
             success: function (data) {
                 if (data['status'] === 'SUCCESS') {
                     $('<label class="js-schedule-container">\
-                       <input type="radio" class="js-schedule" name="'+ data['title'] + '" courses-url="' + data['url'] + '" schedule-url="' + data['schedule_url'] + '" schedule-id="' + data['id'] + '"/>' +
+                       <input type="radio" class="js-schedule" name="'+ data['title'] + '" schedule-id="' + data['id'] + '"/>' +
                         data['title'] +
                         '</label>'
                     ).appendTo('#filters_wrapper');
