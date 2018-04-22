@@ -1,13 +1,26 @@
 <div class="fixed-panel">
   <br>
-  <h6><p>{{tab.course.dept.code}} {{tab.course.number}}</p></h6>
+  <h6>
+    <p>{{tab.course.dept.code}} {{tab.course.number}}</p>
+  </h6>
   <!--TODO: incorporate more generic fields -->
-  <p>Description: {{tab.course.description}}</p>
-  <p>Requirements: {{tab.course.reqs}}</p>
-  {% for component in tab.sections %}
-    {% if component.sections %}
-      <strong>{{component.name}}:</strong>
-      <!--div class="js-expand-block">
+  <div class="sidebar-box">
+    <p>Description: {{tab.course.description}}</p>
+    <p class="read-more">
+      <a id="btnDesc" href="#" class="btn btn-primary button">Read More</a>
+    </p>
+  </div>
+  <br>
+  <div class="sidebar-box">
+    <p>Requirements: {{tab.course.reqs}}</p>
+    <p class="read-more">
+      <a href="#" class="btn btn-primary button">Read More</a>
+    </p>
+  </div>
+  <br>
+  {% for component in tab.sections %} {% if component.sections %}
+  <strong>{{component.name}}:</strong>
+  <!--div class="js-expand-block">
         <button class="btn js-expand-btn btn-primary btn-xs btn-results">+</button> (show {{component.count}} available sections...)
         <div class="js-expand-info"-->
           <ul class="list-group">
@@ -33,8 +46,7 @@
           </ul>
         <!--/div>
       </div-->
-    {% endif %}
-  {% endfor %}
+  {% endif %} {% endfor %}
 </div>
 
 <!--
