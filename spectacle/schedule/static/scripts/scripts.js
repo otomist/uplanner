@@ -147,7 +147,7 @@ $(function () {
                 // If the course listing does not already exist, add a list element for it
                 if ( !$("#curr-"+id).length ) {
                     // Create the new list element
-                    $('<li class="list-group-item" id="curr-' + id + '"></li>').appendTo('#current-courses');
+                    $('<li class="list-group-item current-course" id="curr-' + id + '"></li>').appendTo('#current-courses');
                     
                     // Populate it with the schedule_current_courses.html file through django
                     $('#curr-'+id).html('').load(

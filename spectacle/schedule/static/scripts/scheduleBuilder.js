@@ -186,16 +186,56 @@ function init() {
 		});
 	});
     
+    //We can compare event_id's with the events that have been rendered on the scheduler and if they match
+        //what we are looking for we can change the style of those events.
+        
+    $(document).on('mouseover', '.current-course', function () {
+        //console.log("Mouseover!!!")        
+        var event_target = $(event.target).closest('.current-course');
+        var course_id = event_target.attr('id');
+        var course_id = course_id.slice(5);
+        var schedule_title = $(".js-schedule:checked").attr('name');
+
+        for (var day=0; day < 5; day++) {
+            for(var i=0; i<scheduler._rendered.length; i++) {
+                if(scheduler._rendered[i].getAttribute('event_id') === course_id + '' + day + schedule_title) {
+                    var schedule_event = scheduler._rendered[i];
+                    schedule_event.style.backgroundColor = "black";
+                    schedule_event.style.borderRadius = "6px";
+                }
+            }
+        }
+        
+    });
+    
+    $(document).on('mouseout', '.current-course', function () {
+        var event_target = $(event.target).closest('.current-course');
+        var course_id = event_target.attr('id');
+        var course_id = course_id.slice(5);
+        var schedule_title = $(".js-schedule:checked").attr('name');
+
+        for (var day=0; day < 5; day++) {
+            for(var i=0; i<scheduler._rendered.length; i++) {
+                if(scheduler._rendered[i].getAttribute('event_id') === course_id + '' + day + schedule_title) {                    
+                    var schedule_event = scheduler._rendered[i];
+                    schedule_event.style.backgroundColor = "transparent";
+                    schedule_event.style.borderRadius = "0";
+                }
+            }
+        }
+    });
+    
+    /*
     //On hover highlight courses
     scheduler.templates.event_class=function(start, end, event){
         var css = "";
-
+        console.log("Do hover highlighting!!!");
         if(event.id == scheduler.getState().select_id){
             css += " selected";
         }
         return css; // default return
     }
-
+    */
 
     scheduler.init('scheduler_here', new Date(2018, 0, 1), "workweek");
     

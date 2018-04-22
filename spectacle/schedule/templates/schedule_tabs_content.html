@@ -7,9 +7,9 @@
   {% for component in tab.sections %}
     {% if component.sections %}
       <strong>{{component.name}}:</strong>
-      <div class="js-expand-block">
+      <!--div class="js-expand-block">
         <button class="btn js-expand-btn btn-primary btn-xs btn-results">+</button> (show {{component.count}} available sections...)
-        <div class="js-expand-info">
+        <div class="js-expand-info"-->
           <ul class="list-group">
           {% for section in component.sections %}
               <li class="list-group-item">Section ID: {{section.id}}</li>
@@ -31,8 +31,8 @@
             <br>
           {% endfor %}
           </ul>
-        </div>
-      </div>
+        <!--/div>
+      </div-->
     {% endif %}
   {% endfor %}
 </div>
