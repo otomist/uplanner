@@ -229,11 +229,7 @@ def get_section_list(sections, request):
     
 # returns data needed to fill in a course tab
 def get_tab_data(course, request=None):
-    
-    # I'm sorry for the double lambda and helper functions... it started simple I promise
-    # This creates a list of dictionaries like: [{'name': lecture, 'sections': [section1, section2]}, {'name': labratory, 'sections':[...]}...]
-    # the helper functions translate each "section" into a dictionary of its fields, and then adds information about any conflicts with current courses
-    
+        
     components = []
     for comp in Section.COMPONENTS:
         sections = course.section_set.filter(component=comp[0])
@@ -245,17 +241,20 @@ def get_tab_data(course, request=None):
                     }
         components.append(comp_dict)
     
-    """
-    components = map(
-                 lambda comp: 
-                        {'name': comp[1],
-                         'sections': get_section_list(course.section_set.filter(component=comp[0]), request)},
-                        Section.COMPONENTS)
-    """
+    desc_overflow = False
+    req_overflow = False
+    
+    if len(course.description) > 250:
+        desc_overflow = True
+
+    if len(course.reqs) > 250:
+        req_overflow = True
     
     return {
             'course':course,
             'sections':components,
+            'desc_overflow':desc_overflow,
+            'req_overflow':req_overflow,
             }
     
 # renders a single tab's contents.

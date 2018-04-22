@@ -4,19 +4,23 @@
     <p>{{tab.course.dept.code}} {{tab.course.number}}</p>
   </h6>
   <!--TODO: incorporate more generic fields -->
-  <div class="sidebar-box">
+  {% if tab.desc_overflow %}<div class="sidebar-box">{% endif %}
     <p>Description: {{tab.course.description}}</p>
-    <p class="read-more">
-      <a id="btnDesc" href="#" class="btn btn-primary button">Read More</a>
-    </p>
-  </div>
+    {% if tab.desc_overflow %}
+      <p class="read-more">
+        <a id="btnDesc" href="#" class="btn btn-primary button">Read More</a>
+      </p>
+    {% endif %}
+  {% if tab.desc_overflow %}</div>{% endif %}
   <br>
-  <div class="sidebar-box">
+  {% if tab.req_overflow %}<div class="sidebar-box">{% endif %}
     <p>Requirements: {{tab.course.reqs}}</p>
-    <p class="read-more">
-      <a href="#" class="btn btn-primary button">Read More</a>
-    </p>
-  </div>
+    {% if tab.req_overflow %}
+      <p class="read-more">
+        <a href="#" class="btn btn-primary button">Read More</a>
+      </p>
+    {% endif %}
+  {% if tab.req_overflow %}</div>{% endif %}
   <br>
   {% for component in tab.sections %} {% if component.sections %}
   <strong>{{component.name}}:</strong>
