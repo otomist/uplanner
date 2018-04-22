@@ -1,6 +1,5 @@
-{% extends "base_generic.html" %}
-{% block content %}
-<div class="container" >
+{% extends "base_generic.html" %} {% block content %}
+<div class="container">
     <div class="row">
         <div class="col-md-4">
 
@@ -10,29 +9,26 @@
             <p>Register your own account for your future schedule planning at UMass Amherst!</p>
         </div>
         <div class="col-md-4">
-
         </div>
-
     </div>
-    
-        <form action="" method="post" style="background-color:rgb(230, 230, 230)" class="row">
-                {% csrf_token %}
-            <div class = "col-md-6">
-                <p class='errorlist'>{{ user_form.fieldname.errors.as_text }}</p>
-                <p>{{ user_form.as_p }}</p> 
-            </div>
-            <div class = "col-md-6" style="position:relative">
-                {% for field in student_form.visible_fields %}
-                    <p class="fieldwrapper">
-                        <p class='errorlist' >{{field.errors}}</p>
-                        <p>{{field.label_tag}}{{field}}</p></p>
-                    </p>
-                {%endfor%}
-                <input type="submit" class="btn btn-danger btn-lg" value="Register"  style="position:absolute;bottom:1em;right:1em"/>
-            </div>
-            
-        </form>
-    
+
+    <form action="" method="post" style="background-color:rgb(230, 230, 230)" class="row">
+        {% csrf_token %}
+        <div class="col-md-6">
+            <p class='errorlist'>{{ user_form.fieldname.errors.as_text }}</p>
+            <p>{{ user_form.as_p }}</p>
+        </div>
+        <div class="col-md-6" style="position:relative">
+            {% for field in student_form.visible_fields %}
+            <p class="fieldwrapper">
+                <p class='errorlist'>{{field.errors}}</p>
+                <p>{{field.label_tag}}{{field}}</p>
+            </p>
+            </p>
+            {%endfor%}
+            <input type="submit" class="btn btn-primary btn-lg" value="Register" style="position:absolute;bottom:1em;right:1em" />
+        </div>
+    </form>
 </div>
 
 

@@ -2,6 +2,7 @@
 body{
     /* Padding so that the footer doesn't block anything */
     margin-bottom: 35px;
+    background-color: #eff2f5;
 }
 #landing{
     background-image: url('../images/grad_landing.jpeg');

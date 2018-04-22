@@ -1,44 +1,43 @@
 {% extends "base_generic.html" %} {% block title %}
-<title>Uplanner-Profile</title> {% endblock %}
+<title>Uplanner-Profile</title> {% endblock %} {% if user.is_authenticated %} {% block content %}
+<!-- Begin Profile Edit-->
+<div class="container">
+  <h5 class="text-center accInfo">Account Info</h5>
+  <p>&nbsp; </p>
+  <p>
+    <strong>First Name: </strong>{{user.first_name}}</p>
+  <p>
+    <strong>Last Name: </strong>{{user.last_name}}</p>
+  <p>
+    <strong>Username: </strong>{{user.username}}</p>
+  <p>
+    <strong>Email: </strong>{{user.email}}</p>
+  <p>
+    <strong>Major: </strong>{{student.major}}</p>
+  <p>
+    <strong>SID: </strong>{{student.sid}}</p>
 
-<ul>
-  {% if user.is_authenticated %} {% block content %}
-  <!-- Begin Profile Edit-->
-  <div class="container">
-    <h5 class="text-center accInfo">Account Info</h5>
-    <p>&nbsp; </p>
-    <p>
-      <strong>First Name: </strong>{{user.first_name}}</p>
-    <p>
-      <strong>Last Name: </strong>{{user.last_name}}</p>
-    <p>
-      <strong>Username: </strong>{{user.username}}</p>
-    <p>
-      <strong>Email: </strong>{{user.email}}</p>
-    <p>
-      <strong>Major: </strong>{{student.major}}</p>
-    <p>
-      <strong>SID: </strong>{{student.sid}}</p>
-
-    <!-- Begin Acount Change links -->
-    <div class="text-center">
-      <a href="#">Change Email</a>
-    </div>
-    <div class="text-center">
-      <a href="#">Change Password</a>
-    </div>
-    <div class="text-center">
-      <a href="#">Change Major</a>
-    </div>
-    <div class="text-center">
-      <a href="{% url 'logout'%}">Sign Out</a>
-    </div>
-    <!-- End Account Change links -->
+  <!-- Begin Acount Change links -->
+  <div>
+    <a href="#">Change Name</a>
   </div>
+  <div>
+    <a href="#">Change Email</a>
+  </div>
+  <div>
+    <a href="#">Change Password</a>
+  </div>
+  <div>
+    <a href="#">Change Major</a>
+  </div>
+  <div>
+    <a href="{% url 'logout'%}">Sign Out</a>
+  </div>
+  <!-- End Account Change links -->
+</div>
 
-  {% endblock %} {% else %}
-  <li>
-    <a href="{% url 'login'%}?next={{request.path}}">Login</a>
-  </li>
-  {% endif %}
-</ul>
+{% endblock %} {% else %}
+<li>
+  <a href="{% url 'login'%}?next={{request.path}}">Login</a>
+</li>
+{% endif %}
