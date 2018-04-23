@@ -88,7 +88,6 @@ testHover {
    color: #fff;
    }
 
-
   /* Dropdown Button */
 .dropbtn {
     background-color: #3498DB;
@@ -135,3 +134,50 @@ testHover {
 
 /* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
 .show {display:block;}
+
+/*this is where all the styling for the indicator starts:*/
+
+.flowchart .courseTable{
+  position: absolute;
+  z-index: 1;
+}
+.flowchart .indicator{
+    position: relative;
+    z-index: 2;
+    float: right;
+    background-color: #e21a1a;
+    margin-top: 10px;
+    width: 3%;
+    height: 300px;
+}
+/* Style the buttons inside the indicator */
+.flowchart .indicator #gotobutton {
+    display: block;
+    background-color: inherit;
+    color: black;
+    padding: 45px 16px;
+    width: 100%;
+    border: none;
+    outline: none;
+    text-align: left;
+    cursor: pointer;
+    transition: 0.3s;
+    font-size: 17px;
+}
+
+.indicator #gotobutton:hover {
+    background-color: #ddd;
+}
+
+.indicator #gotobutton.active {
+    background-color: #ccc;
+}
+
+.indicatorcontent {
+    float: left;
+    padding: 0px 12px;
+    border: 1px solid #ccc;
+    width: 70%;
+    border-left: none;
+    height: 300px;
+}
