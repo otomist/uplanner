@@ -235,10 +235,20 @@ function totalCredits(){
 		var courseInfo = examples[key];
 		
 		if(courseInfo[2]){		
-		console.log("info:", courseInfo[2], courseInfo[4]);
+			console.log("info:", courseInfo[2], courseInfo[4]);
 		}
-		
-		credits += courseInfo[2]*courseInfo[4];
+
+		if(courseInfo[2] && courseInfo[4].length > 1)
+		{
+			console.log("range of numbers we don't know how to handle yet.");
+			console.log('FOR NOW WE TAKE A LOWER BOUND');
+			credits += courseInfo[2] * Number(courseInfo[4][0]);			
+			console.log(credits)
+		}
+		else{
+			credits += courseInfo[2] * Number(courseInfo[4][0]);			
+			console.log(credits);
+		}
 	}
 	var element = document.getElementById("credits");
 	element.innerHTML = "Total Credits: " + credits;
