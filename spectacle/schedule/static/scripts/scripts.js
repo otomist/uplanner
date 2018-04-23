@@ -164,27 +164,6 @@ $(function () {
         });
     });
     
-    //function for submitting a new user event
-    //it is an ajax call that submits a form to the server. see the
-    // submit schedule for explanation if necessary
-    $('#js-submit-user-event-btn').on('submit', function(event) {
-        event.preventDefault();
-        url = $('#meta').attr('make-user-event-url');
-        
-        $.ajax({
-            url: url,
-            data: $(this).serialize(),
-            dataType: 'json',
-            method: 'POST',
-            success: function (data) {
-                //success: add the new event to the schedule
-                if (data['status'] === 'SUCCESS') {
-                    
-                }
-            }
-        });
-    });
-    
     // function submitting a new schedule form
     // this function is a little complicated. It overrides the
     //  standard django form behavior to prevent page reloading

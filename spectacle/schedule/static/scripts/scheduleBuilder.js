@@ -76,6 +76,34 @@ function init() {
         }
     }
     
+    //function for submitting a new user event
+    //it is an ajax call that submits a form to the server. see the
+    // submit schedule for explanation if necessary
+    $('#js-submit-user-event-btn').on('submit', function(event) {
+        event.preventDefault();
+        url = $('#meta').attr('make-user-event-url');
+        
+        $.ajax({
+            url: url,
+            data: $(this).serialize(),
+            dataType: 'json',
+            method: 'POST',
+            success: function (data) {
+                //success: add the new event to the schedule
+                if (data['status'] === 'SUCCESS') {
+                    events = data['events']
+                    
+                    for (i = 0; i < events.length; i++) {
+                        scheduler.parse([events[i]], 'json');
+                    }
+                    
+                    scheduler.updateView();
+                    update_page();
+                }
+            }
+        });
+    });
+    
     function change_schedule(schedule_name) {
         var filter_inputs_radio = document.getElementById("filters_wrapper").getElementsByTagName("input");
         for(var j=0; j<filter_inputs_radio.length; j++) {
@@ -114,7 +142,7 @@ function init() {
     $('.js-del-schedule').on('click', function () {
         var schedule = $(".js-schedule:checked");
         var url = $('#meta').attr('del-schedule-url');
-        
+                
         if ($('.js-schedule').length === 1) {
             //TODO: give error message to user
             console.log("cannot delete last schedule");
@@ -127,7 +155,7 @@ function init() {
         $(".js-schedule")[0].checked = true;
         
         change_schedule($(".js-schedule")[0].name);
-                
+        
         //make ajax call to delete schedule from database
         $.ajax({
             url: url,
@@ -138,7 +166,7 @@ function init() {
             dataType: 'json',
             success: function (data) {
                 schedule = schedule.attr('name');
-                
+                                
                 for (var i = 0; i < data['course_ids'].length; i++) {
                     id = data['course_ids'][i]
                     scheduler.deleteEvent(id + "0" + schedule);

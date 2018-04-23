@@ -62,12 +62,24 @@ class Course(models.Model):
     
     def __str__(self):
         return "{} {} {}".format(self.dept, self.number, self.title)
-"""
+        
 class SectionManager(models.Manager):
-    def create_userevent(self, course, schedule):
-        section = self.create(course=course, schedule=schedule)
-        return section
-"""    
+    def create_userevent(self, start_time, end_time, days):
+        event = self.create(start=start_time, 
+                            ending=end_time, 
+                            days=days,
+                            term=Term.objects.all()[0],
+                            professor=".",
+                            room=".",
+                            open=True,
+                            cap=0,
+                            enrolled=0,
+                            wcap=0,
+                            wenrolled=0,
+                            clss=None,
+                            component='CUS')
+        return event
+
 class Section(models.Model):
     uid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     sid = models.IntegerField(default=0, help_text="The 5 digit spire course number") #default=0 for custom events
@@ -102,14 +114,13 @@ class Section(models.Model):
     )
     component = models.CharField(max_length=3, choices=COMPONENTS)
     
-    #objects = SectionManager()
+    objects = SectionManager()
     
     def __str__(self):
         return "{} {}".format(self.clss, self.sid)
         
 class Student(models.Model):
     user_email = models.EmailField(unique=True, null=False, blank = False,default='')
-    courses = models.ManyToManyField(Section, blank=True, help_text='The previous courses taken by the user')
     sid = models.CharField(max_length=8, help_text='8 digit spire id')
     major = models.ForeignKey(Department, on_delete='SET_NULL', null=True)
     credits = models.IntegerField(help_text='The current cumulative number of credits taken')
@@ -118,12 +129,11 @@ class Student(models.Model):
     def __str__(self):
         return "{} {} {}".format(self.user_email, self.sid, self.major)
     
+    
 class ScheduleManager(models.Manager):
     def create_schedule(self, title, student):
         schedule = self.create(title=title, student=student)
         return schedule
-    #def create_temp_schedule(self):
-    
     
 class Schedule(models.Model):
     title = models.CharField(max_length=100, help_text='User-set title for this schedule')
@@ -132,6 +142,7 @@ class Schedule(models.Model):
     
     def __str__(self):
         return "{} -- {}".format(self.student, self.title)
+    
     
 class ScheduleCourseManager(models.Manager):
     def create_schedulecourse(self, course, schedule):

@@ -159,8 +159,6 @@ def add_section(request):
     id = request.GET.get('id', None)
     #TODO: this will break if does not exist
     section = Section.objects.get(uid=id)
-    print("Does section exist???")
-    print(section)
     current_user = Student.objects.get(user_email=request.user.email)
     #TODO: this will break if does not exist
     schedule_id = Schedule.objects.filter(student=current_user).get(title=request.session['active_schedule']).id
@@ -348,16 +346,16 @@ def make_current_courses(request):
 
 def make_user_event(request):
     if request.is_ajax():
-        form = NewScheduleForm(request.POST)
+        form = UserEventForm(request.POST)
         data = {'status':'FAILURE'}
         if form.is_valid():
-            """
+            
             title = form.cleaned_data['title']
             start_time = form.cleaned_data['start_time']
             end_time = form.cleaned_data['end_time']
             days = form.cleaned_data['days']
-            
-            user_event_course = Course.objects.creat_userevent()
+
+            user_event_course = Section.objects.create_userevent(start_time=start_time, end_time=end_time, days=days)
             
             current_user = Student.objects.get(user_email=request.user.email)
             schedule = Schedule.objects.filter(student=current_user).get(title=request.session['active_schedule'])
@@ -365,8 +363,9 @@ def make_user_event(request):
             user_event.title = title
             user_event.save()
             
-            data = get_schedulecourse_data(user_event)
-            """
+            data['events'] = get_schedulecourse_data(user_event)
+            
+            data['status'] = 'SUCCESS'
             
         return JsonResponse(data)
     else:
@@ -376,6 +375,7 @@ def make_user_event(request):
     
 def del_schedule(request):
     #TODO: update method of getting current schedule to session
+        
     schedule_title = request.GET.get('schedule', None)
     new_schedule_title = request.GET.get('new_schedule', None)
         
@@ -386,7 +386,7 @@ def del_schedule(request):
     # that the course_ids set will be very small
     course_ids = []
     if schedule[0].schedulecourse_set.exists():
-        course_ids = list(schedule[0].schedulecourse_set.values_list('course__id', flat=True))
+        course_ids = list(schedule[0].schedulecourse_set.values_list('course__uid', flat=True))
     if schedule.exists():
         schedule[0].delete()
     request.session['active_schedule'] = new_schedule_title
