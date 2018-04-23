@@ -7,7 +7,7 @@ from django.template.loader import render_to_string
 from django.utils.safestring import mark_safe
 import pickle
 
-
+# ============== START custom widget and field for geneds =================== #
 # multivaluefield based off https://gist.github.com/elena/3915748
 class MultiWidgetCheckbox(forms.MultiWidget):
     def __init__(self, choices=[], attrs=None):
@@ -35,7 +35,7 @@ class MultiWidgetCheckbox(forms.MultiWidget):
             curr = curr[end+2:]
         return tags
     
-    # This is very fragile!! TODO: make this more robust
+    # This is very fragile!! TODO: make this more robust or probably just migrate to React
     # Also I'm sorry...
     def render(self, name, value, attrs=None):
         html = super(MultiWidgetCheckbox, self).render(name, value, attrs)
@@ -70,8 +70,9 @@ class MultiBooleanField(forms.MultiValueField):
         for i in range(len(values)):
             result[self.choices[i][0]] = values[i]
         return pickle.dumps(result)
-
-
+# ============== END custom widget and field for geneds =================== #
+        
+# form for searching for courses
 class ScheduleForm(forms.Form):
     keywords = forms.CharField(required=False, initial="Enter keywords...", help_text="Enter keywords to search for", max_length=200)
     
@@ -112,7 +113,8 @@ class ScheduleForm(forms.Form):
     #Sihua's Edit End
     
     gened_list = list(map(lambda gened: (gened.code, gened.code + ": " + gened.name), Gened.objects.all()))
-        
+    
+    #see custom field above
     geneds = MultiBooleanField(choices=gened_list, required=False)
     
     
@@ -135,21 +137,60 @@ class ScheduleForm(forms.Form):
         else:
             return self.cleaned_data
 
+# form for creating a new schedule
 class NewScheduleForm(forms.Form):
     title = forms.CharField(required=True, max_length=200)
     
     def clean_title(self):
         return self.cleaned_data['title']
         
+# form for adding a custom, user event
 class UserEventForm(forms.Form):
-    title = forms.CharField(required=True, max_length=50)
+    title = forms.CharField(required=True, label="Title of event", max_length=50)
     
-    mon = forms.BooleanField(required=False)
-    tus = forms.BooleanField(required=False)
-    wed = forms.BooleanField(required=False)
-    thu = forms.BooleanField(required=False)
-    fri = forms.BooleanField(required=False)
-
+    mon = forms.BooleanField(required=False, label="Monday")
+    tue = forms.BooleanField(required=False, label="Tuesday")
+    wed = forms.BooleanField(required=False, label="Wednesday")
+    thu = forms.BooleanField(required=False, label="Thursday")
+    fri = forms.BooleanField(required=False, label="Friday")
+    
+    start_time = forms.TimeField(required=True, label="Start time")
+    end_time = forms.TimeField(required=True, label="End time")
+    
+    def clean(self):
+        super().clean()
+        days = ''
+        errors = []
+        
+        #make sure at least one day is filled in, and reformat to "MoWeFr" etc
+        any_selected = False
+        if self.cleaned_data['mon']:
+            days += 'Mo'
+            any_selected = True
+        if self.cleaned_data['tue']:
+            days += 'Tu'
+            any_selected = True
+        if self.cleaned_data['wed']:
+            days += 'We'
+            any_selected = True
+        if self.cleaned_data['thu']:
+            days += 'Th'
+            any_selected = True
+        if self.cleaned_data['fri']:
+            days += 'Fr'
+            any_selected = True
+        if not any_selected:
+            errors.append(forms.ValidationError("At least one day must be selected.", code='nodays'))
+        self.cleaned_data['days'] = days
+        
+        # make sure start and end times are sequential
+        if self.cleaned_data['start_time'] > self.cleaned_data['end_time']:
+            errors.append(forms.ValidationError("Start time can't be after end time", code='nodays'))
+        
+        if len(errors) > 0:
+            raise ValidationError(errors)
+        
+        return self.cleaned_data
     
 class flowchartForm(forms.Form):
 	depts = map(lambda obj: (obj.code, obj.name), Department.objects.all())

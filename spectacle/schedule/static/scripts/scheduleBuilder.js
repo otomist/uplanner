@@ -314,6 +314,7 @@ function init() {
             for (i = 0; i < count; i++) {
                 scheduler.parse([courses[i]], 'json');
             }
+            
             $('.js-schedule:checked').prop('checked', false);
             $('.js-schedule[name="' + schedule + '"]').prop('checked', true);
             

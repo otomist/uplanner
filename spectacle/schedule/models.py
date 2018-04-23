@@ -62,10 +62,15 @@ class Course(models.Model):
     
     def __str__(self):
         return "{} {} {}".format(self.dept, self.number, self.title)
-    
+"""
+class SectionManager(models.Manager):
+    def create_userevent(self, course, schedule):
+        section = self.create(course=course, schedule=schedule)
+        return section
+"""    
 class Section(models.Model):
-    id = models.IntegerField(primary_key=True, help_text="The 5 digit spire course number")
-    uid = models.UUIDField(default=uuid.uuid4, editable=False)
+    uid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    sid = models.IntegerField(default=0, help_text="The 5 digit spire course number") #default=0 for custom events
     days = models.CharField(max_length=10, help_text="Days the course is taught")
     mon = models.BooleanField(blank=True, default=False)
     tue = models.BooleanField(blank=True, default=False)
@@ -97,8 +102,10 @@ class Section(models.Model):
     )
     component = models.CharField(max_length=3, choices=COMPONENTS)
     
+    #objects = SectionManager()
+    
     def __str__(self):
-        return "{} {}".format(self.clss, self.id)
+        return "{} {}".format(self.clss, self.sid)
         
 class Student(models.Model):
     user_email = models.EmailField(unique=True, null=False, blank = False,default='')

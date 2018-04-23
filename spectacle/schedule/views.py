@@ -1,5 +1,5 @@
 from .models import Course, Department, Student, Section, Schedule, ScheduleCourse, Term
-from .forms import ScheduleForm, NewScheduleForm, flowchartForm, StudentForm,UserForm
+from .forms import ScheduleForm, NewScheduleForm, flowchartForm, StudentForm, UserForm, UserEventForm
 from django.db import models
 from django.contrib.auth.models import AnonymousUser
 from django.contrib.auth.decorators import login_required
@@ -17,8 +17,6 @@ import pickle
 """
 TODO: 
  >rewrite fake json
- >don't display courses with no sections
- >fix no schedule selected error
 """
 
 
@@ -38,23 +36,7 @@ def index(request):
 #       v-------------Start schedule views------------v
 #==================================================================#
 
-# ajax view
-def schedule_courses(request):
-    """
-    An ajax view ran every time the schedule page is loaded.
-    it passes json with the current courses on the schedule to scheduleBuilder.js
-    for rendering
-    This is the main function for initializing the schedule.
-    """
-    
-    #TODO: this will fail if user does not exist
-    current_user = Student.objects.filter(user_email=request.user.email)
-    temp_courses = []
-    if current_user.exists():
-        temp_courses = ScheduleCourse.objects.filter(schedule__student=current_user[0])
-    
-    courses = []
-    
+def get_schedulecourse_data(schedulecourse):
     def parse_dates(dates):
         days = []
         for i in range(0, len(dates), 2):
@@ -71,25 +53,47 @@ def schedule_courses(request):
                 days.append('2018-01-05')
         return days
     
-    for scourse in temp_courses:
-        course = scourse.course
-        i = 0
-        for date in parse_dates(course.days):
-            d = {
-                'id': "{}{}{}".format(course.uid, i, scourse.schedule.title),
-                'start_date': date + " " + str(course.start),
-                'end_date': date + " " + str(course.ending),
-                'type': scourse.schedule.title,
-                'color': '#157ddf9f',
-                'readonly': True,
-            }
-            if course.component == "CUS":
-                d['text'] = scourse.title
-            else:
-                d['text'] = "{} {}".format(course.clss.dept.code, course.clss.number)
-            courses.append(d)
-            i += 1
+    courses = []
+    course = schedulecourse.course
+    i = 0
+    for date in parse_dates(course.days):
+        d = {
+            'id': "{}{}{}".format(course.uid, i, schedulecourse.schedule.title),
+            'start_date': date + " " + str(course.start),
+            'end_date': date + " " + str(course.ending),
+            'type': schedulecourse.schedule.title,
+            'color': '#157ddf9f',
+            'readonly': True,
+        }
+        if course.component == "CUS":
+            d['text'] = schedulecourse.title
+        else:
+            d['text'] = "{} {}".format(course.clss.dept.code, course.clss.number)
+        courses.append(d)
+        i += 1
     
+    return courses
+
+# ajax view
+def schedule_courses(request):
+    """
+    An ajax view ran every time the schedule page is loaded.
+    it passes json with the current courses on the schedule to scheduleBuilder.js
+    for rendering
+    This is the main function for initializing the schedule.
+    """
+    
+    #TODO: this will fail if user does not exist
+    current_user = Student.objects.filter(user_email=request.user.email)
+    temp_courses = []
+    if current_user.exists():
+        temp_courses = ScheduleCourse.objects.filter(schedule__student=current_user[0])
+    
+    courses = []
+
+    for scourse in temp_courses:
+        courses += get_schedulecourse_data(scourse)
+
     schedule = ''
     if 'active_schedule' in request.session:
         schedule = request.session['active_schedule']
@@ -153,38 +157,27 @@ def add_section(request):
     js schedule
     """
     id = request.GET.get('id', None)
-    schedule = request.GET.get('schedule', None)
-    
     #TODO: this will break if does not exist
     section = Section.objects.get(uid=id)
-    title = section.clss.dept.code + ' ' + section.clss.number
-    start_time = section.start
-    end_time = section.ending
-    days = section.days
+    print("Does section exist???")
+    print(section)
     current_user = Student.objects.get(user_email=request.user.email)
     #TODO: this will break if does not exist
-    schedule_id = Schedule.objects.filter(student=current_user).get(title=schedule).id
+    schedule_id = Schedule.objects.filter(student=current_user).get(title=request.session['active_schedule']).id
     
-    if not schedule == None:
-        # TODO: this will break if the schedule doesn't exist
-        schedule = Schedule.objects.get(id=schedule_id)
-        if not ScheduleCourse.objects.filter(course=section).filter(schedule=schedule).exists():
-            ScheduleCourse.objects.create_schedulecourse(section, schedule)
-
-    data = {
-        'id': id,
-        'start_time': start_time,
-        'end_time': end_time,
-        'title': title,
-        'days': days,
-        'schedule_id':schedule_id,
-    }
+    # TODO: this will break if the schedule doesn't exist
+    schedule = Schedule.objects.get(id=schedule_id)
+    if not ScheduleCourse.objects.filter(course=section).filter(schedule=schedule).exists():
+        ScheduleCourse.objects.create_schedulecourse(section, schedule)
+        
+    schedulecourse = ScheduleCourse.objects.filter(course=section).get(schedule=schedule)
+    
+    data = {'events':get_schedulecourse_data(schedulecourse), 'schedule_id':schedule_id}
     
     return JsonResponse(data)
 
 # convenience function for model -> dict, so that the dictionary can be extended with extra_fields
 def make_model_dict(model, extra_fields):
-    
     d = {}
     for field in model._meta.get_fields():
         if not isinstance(field, models.ManyToManyRel) and not isinstance(field, models.ManyToOneRel):
@@ -205,7 +198,7 @@ def get_conflicting_sections(section, request):
     #   it has at least one section with a time/day that does not conflict with any
     #   of the courses in current_courses
     
-    conflicts = current_courses.values_list('course__days', 'course__start', 'course__ending', 'course__id').distinct()
+    conflicts = current_courses.values_list('course__days', 'course__start', 'course__ending', 'course__uid').distinct()
     
     days = []
     for day_set, start, end, id in conflicts:
@@ -216,10 +209,10 @@ def get_conflicting_sections(section, request):
     conflicts = days
     
     conflict_courses = []
-    for day, start, end, course_id in conflicts:
+    for day, start, end, course_uid in conflicts:
         if day in section.days:
             if not (section.start > end or section.ending < start):
-                conflict_courses.append(Section.objects.get(id=course_id))
+                conflict_courses.append(Section.objects.get(uid=course_uid))
     
     return conflict_courses
     
@@ -303,7 +296,7 @@ def get_current_data(schedulecourse):
     component = section.component
     
     if section.component=='CUS':
-        title = schedulecourse.title
+        title = "User event: " + schedulecourse.title
         number = ''
         professor = ''
     else:
@@ -353,7 +346,36 @@ def make_current_courses(request):
         {'user_courses':user_courses,}
     )
 
+def make_user_event(request):
+    if request.is_ajax():
+        form = NewScheduleForm(request.POST)
+        data = {'status':'FAILURE'}
+        if form.is_valid():
+            """
+            title = form.cleaned_data['title']
+            start_time = form.cleaned_data['start_time']
+            end_time = form.cleaned_data['end_time']
+            days = form.cleaned_data['days']
+            
+            user_event_course = Course.objects.creat_userevent()
+            
+            current_user = Student.objects.get(user_email=request.user.email)
+            schedule = Schedule.objects.filter(student=current_user).get(title=request.session['active_schedule'])
+            user_event = ScheduleCourse.objects.create_schedulecourse(course=user_event_course, schedule=schedule)
+            user_event.title = title
+            user_event.save()
+            
+            data = get_schedulecourse_data(user_event)
+            """
+            
+        return JsonResponse(data)
+    else:
+        # THIS SHOULD NEVER HAPPEN - this is an ajax view, and shouldn't render anything
+        print("=============Error! new schedule form received non-ajax request!============")
+        return schedule(request) # attempt to salvage situation
+    
 def del_schedule(request):
+    #TODO: update method of getting current schedule to session
     schedule_title = request.GET.get('schedule', None)
     new_schedule_title = request.GET.get('new_schedule', None)
         
@@ -432,6 +454,7 @@ def schedule(request):
     
     #form = ScheduleForm(initial={'keywords': "Enter keywords..."})
     schedule_form = NewScheduleForm(request.GET)
+    user_event_form = UserEventForm()
     results = []
     highlight_schedule = True
     num_dept = 0
@@ -665,7 +688,7 @@ def schedule(request):
     return render (
         request,
         'schedule.html',
-        {'highlight_schedule':highlight_schedule, 'filters_expanded':filters_expanded, 'form':form, 'schedule_form':schedule_form, 'results':results, 'course_tabs':course_tabs, 'user_schedules':user_schedules, 'user_courses':user_courses}
+        {'highlight_schedule':highlight_schedule, 'filters_expanded':filters_expanded, 'form':form, 'user_event_form':user_event_form, 'schedule_form':schedule_form, 'results':results, 'course_tabs':course_tabs, 'user_schedules':user_schedules, 'user_courses':user_courses}
     )
 
 #==================================================================#    

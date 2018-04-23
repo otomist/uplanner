@@ -100,46 +100,16 @@ $(function () {
             url: url_ajax,
             data: {
                 'id': id,
-                'schedule': schedule,
             },
             dataType: 'json',
             success: function (data) {
-
-                var days = []
-
-                for (i = 0; i < data.days.length; i += 2) {
-                    day = data.days.charAt(i) + data.days.charAt(i + 1);
-                    switch (day) {
-                        case 'Mo':
-                            days.push('01-01-2018 ');
-                            break;
-                        case 'Tu':
-                            days.push('02-01-2018 ');
-                            break;
-                        case 'We':
-                            days.push('03-01-2018 ');
-                            break;
-                        case 'Th':
-                            days.push('04-01-2018 ');
-                            break;
-                        case 'Fr':
-                            days.push('05-01-2018 ');
-                            break;
-                    }
+                
+                events = data['events']
+                
+                for (i = 0; i < events.length; i++) {
+                    scheduler.parse([events[i]], 'json');
                 }
-
-                for (i = 0; i < days.length; i++) {
-                    scheduler.addEvent({
-                        id: id + "" + i + schedule,
-                        start_date: days[i] + data.start_time,
-                        end_date: days[i] + data.end_time,
-                        text: data.title,
-                        color: "#157ddf9f",
-                        type: schedule,
-                        readonly: true
-                    });
-                }
-
+                
                 // Add the course to the current course list
                 // If the course listing does not already exist, add a list element for it
                 if (!$("#curr-" + id).length) {
@@ -193,7 +163,28 @@ $(function () {
             }
         });
     });
-
+    
+    //function for submitting a new user event
+    //it is an ajax call that submits a form to the server. see the
+    // submit schedule for explanation if necessary
+    $('#js-submit-user-event-btn').on('submit', function(event) {
+        event.preventDefault();
+        url = $('#meta').attr('make-user-event-url');
+        
+        $.ajax({
+            url: url,
+            data: $(this).serialize(),
+            dataType: 'json',
+            method: 'POST',
+            success: function (data) {
+                //success: add the new event to the schedule
+                if (data['status'] === 'SUCCESS') {
+                    
+                }
+            }
+        });
+    });
+    
     // function submitting a new schedule form
     // this function is a little complicated. It overrides the
     //  standard django form behavior to prevent page reloading
