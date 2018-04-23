@@ -162,7 +162,6 @@ $(function () {
     $(document).on('click', '.js-del', function () {
         var id = $(event.target).attr('section-id');
         var url = $('#meta').attr('del-section-url');
-
         var schedule = $(".js-schedule:checked").attr('name');
 
         //TODO: adjust for saturday/sunday

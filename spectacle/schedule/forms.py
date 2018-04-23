@@ -141,6 +141,16 @@ class NewScheduleForm(forms.Form):
     def clean_title(self):
         return self.cleaned_data['title']
         
+class UserEventForm(forms.Form):
+    title = forms.CharField(required=True, max_length=50)
+    
+    mon = forms.BooleanField(required=False)
+    tus = forms.BooleanField(required=False)
+    wed = forms.BooleanField(required=False)
+    thu = forms.BooleanField(required=False)
+    fri = forms.BooleanField(required=False)
+
+    
 class flowchartForm(forms.Form):
 	depts = map(lambda obj: (obj.code, obj.name), Department.objects.all())
 	

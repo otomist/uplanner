@@ -51,7 +51,6 @@ def schedule_courses(request):
     current_user = Student.objects.filter(user_email=request.user.email)
     temp_courses = []
     if current_user.exists():
-        #current_user = current_user[0]
         temp_courses = ScheduleCourse.objects.filter(schedule__student=current_user[0])
     
     courses = []
@@ -77,7 +76,7 @@ def schedule_courses(request):
         i = 0
         for date in parse_dates(course.days):
             d = {
-                'id': "{}{}{}".format(course.id, i, scourse.schedule.title),
+                'id': "{}{}{}".format(course.uid, i, scourse.schedule.title),
                 'start_date': date + " " + str(course.start),
                 'end_date': date + " " + str(course.ending),
                 'type': scourse.schedule.title,
@@ -134,7 +133,7 @@ def del_section(request):
     
     current_user = Student.objects.get(user_email=request.user.email)
     # TODO: this will break if the section/schedule are not found
-    section = Section.objects.get(id=id)
+    section = Section.objects.get(uid=id)
     schedule = Schedule.objects.get(title=schedule_title, student=current_user)
     
     schedulecourse = ScheduleCourse.objects.filter(course=section).filter(schedule=schedule)
@@ -157,7 +156,7 @@ def add_section(request):
     schedule = request.GET.get('schedule', None)
     
     #TODO: this will break if does not exist
-    section = Section.objects.get(id=id)
+    section = Section.objects.get(uid=id)
     title = section.clss.dept.code + ' ' + section.clss.number
     start_time = section.start
     end_time = section.ending
@@ -299,8 +298,8 @@ def get_current_data(schedulecourse):
     return {
         'title': course.title,
         'number': course.number,
-        'id': section.id,
         'professor': section.professor,
+        'uid': section.uid,
     }
 
 def make_current_course(request):
@@ -308,7 +307,7 @@ def make_current_course(request):
     schedule_id = request.GET.get('schedule', None)
     
     # TODO: this will break if any of these do not exist
-    section = Section.objects.filter(id=course_id)[0]
+    section = Section.objects.filter(uid=course_id)[0]
     schedule = Schedule.objects.filter(id=schedule_id)[0]
     schedulecourse = section.schedulecourse_set.filter(schedule=schedule)[0]
     
@@ -645,22 +644,6 @@ def schedule(request):
                              'credits': r.credits,
                              'pk': r.pk,
                              }, results)
-    """
-    results = list(zip(results, [x for x in range(1, len(results)+1)]))
-    results = map(lambda r: {'id':r[1], 
-                             'title':r[0].title, 
-                             'dept':r[0].dept,
-                             'number':r[0].number,
-                             'description':r[0].description,
-                             'reqs':r[0].reqs,
-                             'lab': r[0].section_set.exclude(component='lec').exists(),
-                             'open': r[0].section_set.filter(open=True).exists(),
-                             'geneds': list(map(lambda g: "{}({})".format(g.code, g.name), r[0].gened.all())),
-                             'conflicts': False, #TODO: implement this
-                             'credits': r[0].credits,
-                             'pk': r[0].pk,
-                             }, results)
-    """
     
     return render (
         request,

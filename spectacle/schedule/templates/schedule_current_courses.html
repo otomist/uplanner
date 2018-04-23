@@ -1,6 +1,6 @@
 {% if user_courses %}
   {% for course in user_courses %}
-    <li class="list-group-item current-course" id="curr-{{ course.id }}">
+    <li class="list-group-item current-course" id="curr-{{ course.uid }}">
       {% include 'schedule_current_course.html' %}
     </li>
   {% endfor %}

@@ -1,6 +1,6 @@
 from django.db import models
 from django.urls import reverse
-
+import uuid
 
 class Gened(models.Model):
     name = models.CharField(max_length=200, help_text="Enter a gened category")
@@ -65,6 +65,7 @@ class Course(models.Model):
     
 class Section(models.Model):
     id = models.IntegerField(primary_key=True, help_text="The 5 digit spire course number")
+    uid = models.UUIDField(default=uuid.uuid4, editable=False)
     days = models.CharField(max_length=10, help_text="Days the course is taught")
     mon = models.BooleanField(blank=True, default=False)
     tue = models.BooleanField(blank=True, default=False)
@@ -134,8 +135,9 @@ class ScheduleCourse(models.Model):
     course = models.ForeignKey(Section, on_delete=models.CASCADE)
     schedule = models.ForeignKey(Schedule, on_delete=models.CASCADE)
     color = models.CharField(max_length=15, help_text="Enter the color for this course", default="#157ddf9f")
-    objects = ScheduleCourseManager()
     title = models.CharField(max_length=50, help_text="Enter the title of this event", blank=True, default="")
+    
+    objects = ScheduleCourseManager()
     
     def __str__(self):
         return "{} ({})".format(self.course, self.schedule)
