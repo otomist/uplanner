@@ -142,7 +142,7 @@ def del_section(request):
     
     schedulecourse = ScheduleCourse.objects.filter(course=section).filter(schedule=schedule)
     if schedulecourse.exists():
-      schedulecourse[0].delete()
+        schedulecourse[0].delete()
     
     data = {
         'success': True,

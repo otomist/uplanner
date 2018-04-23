@@ -2,6 +2,24 @@ from django.db import models
 from django.urls import reverse
 import uuid
 
+import shutil
+from django.db.models.signals import post_delete 
+from django.dispatch import receiver
+
+# https://stackoverflow.com/questions/1534986/how-do-i-override-delete-on-a-model-and-have-it-still-work-with-related-delete
+@receiver(post_delete)
+def delete_repo(sender, instance, **kwargs):
+    """
+    If a ScheduleCourse is being deleted, if it is a user-created event, it should also delete its corresponding Section
+    """
+    print("About to delete a model!!!")
+    print("Sender: ", sender)
+    print("Sender: ", instance)
+    if sender == ScheduleCourse:
+        print("Deleting a schedule course!")
+        if instance.title != '':
+            instance.course.delete()
+
 class Gened(models.Model):
     name = models.CharField(max_length=200, help_text="Enter a gened category")
     code = models.CharField(max_length=2, help_text="Enter the gened abbreviation")
@@ -125,7 +143,7 @@ class Student(models.Model):
     major = models.ForeignKey(Department, on_delete='SET_NULL', null=True)
     credits = models.IntegerField(help_text='The current cumulative number of credits taken')
     USERNAME_FIELD = 'user'
-        
+    
     def __str__(self):
         return "{} {} {}".format(self.user_email, self.sid, self.major)
     
