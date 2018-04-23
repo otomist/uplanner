@@ -724,11 +724,11 @@ def prereqs(request):
     course_list = json.dumps(list(map(lambda c: {('title' + str(c.number)):[
                                 [int(s) for s in c.reqs.split() if s.isdigit()],#listOfPre(0)... #listOfPre(0)... TODO: this extracts the numbers for the prereqs but does not do complex parsing on things like and and or statements
                                  re.search(r'\d+', c.number).group()[:1],#levelNumber(1)...The regex gets the first number in the course number
-                                 '0',#Selected(2)...default is 0
-                                 '0',#linked(3)...default is 0
+                                 0,#Selected(2)...default is 0
+                                 0,#linked(3)...default is 0
                                  str(c.credits),#credits(4)
-                                 '1',#required(5)...TODO get required from server right now using temp default to 1 
-                                 '0',#root(6)]...default is 0
+                                 1,#required(5)...TODO get required from server right now using temp default to 1 
+                                 0,#root(6)]...default is 0
                                  c.title,
                                  form.cleaned_data['departments']
                                  ]

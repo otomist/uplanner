@@ -171,7 +171,7 @@ function addOnClikerEvent(course){
 	var curr = document.getElementById(course);
 	// if(curr === null){return}//this is to stop errors but must be changed in future
 	curr.addEventListener("click", function(e){
-		console.log("called")
+		//console.log("called")
 		if(examples[course][2] === 0){
 			examples[course][2] = 1;
 			highlight(e.target);
@@ -233,6 +233,11 @@ function totalCredits(){
 	credits = 0
 	for(var key in examples){
 		var courseInfo = examples[key];
+		
+		if(courseInfo[2]){		
+		console.log("info:", courseInfo[2], courseInfo[4]);
+		}
+		
 		credits += courseInfo[2]*courseInfo[4];
 	}
 	var element = document.getElementById("credits");
