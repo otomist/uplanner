@@ -151,7 +151,6 @@ $(function () {
             url: url,
             data: {
                 'id': id,
-                'schedule': schedule,
             },
             dataType: 'json',
             success: function (data) {

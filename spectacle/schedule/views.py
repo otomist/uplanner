@@ -133,7 +133,8 @@ def del_section(request):
     a course from a js schedule. simply updates the database
     """
     id = request.GET.get('id', None)
-    schedule_title = request.GET.get('schedule', None)
+    #schedule_title = request.GET.get('schedule', None)
+    schedule_title = request.session['active_schedule']
     
     current_user = Student.objects.get(user_email=request.user.email)
     # TODO: this will break if the section/schedule are not found
@@ -312,11 +313,12 @@ def get_current_data(schedulecourse):
 
 def make_current_course(request):
     course_id = request.GET.get('course_id', None)
-    schedule_id = request.GET.get('schedule', None)
+    #schedule_id = request.GET.get('schedule', None)
+    schedule_title = request.session['active_schedule']
     
     # TODO: this will break if any of these do not exist
     section = Section.objects.filter(uid=course_id)[0]
-    schedule = Schedule.objects.filter(id=schedule_id)[0]
+    schedule = Schedule.objects.filter(title=schedule_title)[0]
     schedulecourse = section.schedulecourse_set.filter(schedule=schedule)[0]
     
     return render (
@@ -326,11 +328,11 @@ def make_current_course(request):
     )
 
 def make_current_courses(request):
-    schedule_id = request.GET.get('schedule', None)
-    
+    #schedule_id = request.GET.get('schedule', None)
+    schedule_title = request.session['active_schedule']
     #TODO: this will fail if schedule doesn't exist
     current_user = Student.objects.get(user_email=request.user.email)
-    schedule = Schedule.objects.filter(student=current_user).get(id=schedule_id)
+    schedule = Schedule.objects.filter(student=current_user).get(title=schedule_title)
     
     user_courses = []
     
@@ -376,9 +378,10 @@ def make_user_event(request):
 def del_schedule(request):
     #TODO: update method of getting current schedule to session
         
-    schedule_title = request.GET.get('schedule', None)
-    new_schedule_title = request.GET.get('new_schedule', None)
-        
+    #schedule_title = request.GET.get('schedule', None)
+    schedule_title = request.session['active_schedule']
+    #new_schedule_title = request.GET.get('new_schedule', None)
+    
     #TODO: this will break if user doesn't exist
     current_user = Student.objects.get(user_email=request.user.email)
     schedule = Schedule.objects.filter(student=current_user).filter(title=schedule_title)
@@ -389,9 +392,12 @@ def del_schedule(request):
         course_ids = list(schedule[0].schedulecourse_set.values_list('course__uid', flat=True))
     if schedule.exists():
         schedule[0].delete()
-    request.session['active_schedule'] = new_schedule_title
     
-    return JsonResponse({'course_ids':course_ids})
+    new_schedule_title = Schedule.objects.all()[0].title
+    request.session['active_schedule'] = new_schedule_title
+    request.session.save()
+    
+    return JsonResponse({'course_ids':course_ids, 'new_schedule_title':new_schedule_title})
     
 # ajax view for making a new schedule
 def make_schedule(request):

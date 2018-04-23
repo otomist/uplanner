@@ -149,32 +149,31 @@ function init() {
             return
         }
         
-        var new_schedule = $(".js-schedule")[0].name;
-        
-        schedule.closest('.js-schedule-container').remove();
-        $(".js-schedule")[0].checked = true;
-        
-        change_schedule($(".js-schedule")[0].name);
+        //var new_schedule = $(".js-schedule")[0].name;
         
         //make ajax call to delete schedule from database
         $.ajax({
             url: url,
-            data: {
-                'schedule':schedule.attr('name'),
-                'new_schedule': new_schedule,
-            },
+            data: {},
             dataType: 'json',
             success: function (data) {
-                schedule = schedule.attr('name');
-                                
+                schedule_title = schedule.attr('name');
+                
                 for (var i = 0; i < data['course_ids'].length; i++) {
                     id = data['course_ids'][i]
-                    scheduler.deleteEvent(id + "0" + schedule);
-                    scheduler.deleteEvent(id + "1" + schedule);
-                    scheduler.deleteEvent(id + "2" + schedule);
-                    scheduler.deleteEvent(id + "3" + schedule);
-                    scheduler.deleteEvent(id + "4" + schedule);
+                    scheduler.deleteEvent(id + "0" + schedule_title);
+                    scheduler.deleteEvent(id + "1" + schedule_title);
+                    scheduler.deleteEvent(id + "2" + schedule_title);
+                    scheduler.deleteEvent(id + "3" + schedule_title);
+                    scheduler.deleteEvent(id + "4" + schedule_title);
                 }
+                
+                schedule.closest('.js-schedule-container').remove();
+                new_schedule = data['new_schedule_title']
+                
+                $(".js-schedule")[0].checked = true;
+        
+                change_schedule(new_schedule);
                 
                 scheduler.updateView();
                 update_page();

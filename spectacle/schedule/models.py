@@ -12,11 +12,7 @@ def delete_repo(sender, instance, **kwargs):
     """
     If a ScheduleCourse is being deleted, if it is a user-created event, it should also delete its corresponding Section
     """
-    print("About to delete a model!!!")
-    print("Sender: ", sender)
-    print("Sender: ", instance)
     if sender == ScheduleCourse:
-        print("Deleting a schedule course!")
         if instance.title != '':
             instance.course.delete()
 
