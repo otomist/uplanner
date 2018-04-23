@@ -76,15 +76,19 @@ def schedule_courses(request):
         course = scourse.course
         i = 0
         for date in parse_dates(course.days):
-            courses.append({
+            d = {
                 'id': "{}{}{}".format(course.id, i, scourse.schedule.title),
                 'start_date': date + " " + str(course.start),
                 'end_date': date + " " + str(course.ending),
-                'text': "{} {}".format(course.clss.dept.code, course.clss.number),
                 'type': scourse.schedule.title,
                 'color': '#157ddf9f',
                 'readonly': True,
-            })
+            }
+            if course.component == "CUS":
+                d['text'] = scourse.title
+            else:
+                d['text'] = "{} {}".format(course.clss.dept.code, course.clss.number)
+            courses.append(d)
             i += 1
     
     schedule = ''
@@ -323,9 +327,10 @@ def make_current_courses(request):
     
     user_courses = []
     
-    for course in schedule.schedulecourse_set.all():
+    # exclude all user-added custom events
+    for course in schedule.schedulecourse_set.exclude(course__component='CUS'):
         user_courses.append(get_current_data(course))
-        
+    
     return render (
         request,
         'schedule_current_courses.html',
@@ -394,6 +399,7 @@ def schedule(request):
     #If GET is not empty (ie, if the user has searched for something), use those search parameters to
     # populate form and get search results
     #If they have not, then populate search form based on initial values
+    # (TODO -- ask Tim why 'next' is in url after logging in
     if len(request.GET) and not (len(request.GET) == 1 and 'next' in request.GET):
         
         # copy request.GET into custom QueryDict
@@ -495,7 +501,7 @@ def schedule(request):
                     days_filter = Q(section__days__contains=day[:2])
                 else:
                     days_filter = days_filter | Q(section__days__contains=day[:2])
-                
+        
         if days_filter != None:
             results = results.select_related().filter(days_filter).distinct()
         

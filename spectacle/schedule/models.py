@@ -81,7 +81,7 @@ class Section(models.Model):
     enrolled = models.IntegerField(help_text='The current number of students enrolled')
     wcap = models.IntegerField(help_text='The maximum size of the waitlist')
     wenrolled = models.IntegerField(help_text='The current size of the waitlist')
-    clss = models.ForeignKey(Course, on_delete=models.CASCADE, help_text='The corresponding generic class for this section')
+    clss = models.ForeignKey(Course, blank=True, null=True, on_delete=models.CASCADE, help_text='The corresponding generic class for this section')
     COMPONENTS = (
         ('LEC', 'Lecture'),
         ('DIS', 'Discussion'),
@@ -92,6 +92,7 @@ class Section(models.Model):
         ('PRA', 'Practicum'),
         ('SEM', 'Seminar'),
         ('STS', 'Studio / Skills'),
+        ('CUS', 'Custom'),
     )
     component = models.CharField(max_length=3, choices=COMPONENTS)
     
@@ -134,6 +135,7 @@ class ScheduleCourse(models.Model):
     schedule = models.ForeignKey(Schedule, on_delete=models.CASCADE)
     color = models.CharField(max_length=15, help_text="Enter the color for this course", default="#157ddf9f")
     objects = ScheduleCourseManager()
+    title = models.CharField(max_length=50, help_text="Enter the title of this event", blank=True, default="")
     
     def __str__(self):
         return "{} ({})".format(self.course, self.schedule)

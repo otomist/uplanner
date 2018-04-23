@@ -39,7 +39,11 @@
             <!-- buttons for adding / deleting classes -->        
             <button class="btn btn-primary btn-xs btn-results btnAddDelTab js-add" conflict-id='{{ section.conflicts.0.id }}' section-id='{{section.id}}'>
               {% if section.conflicts %}
-                Conflict with {{section.conflicts.0.clss.dept.code}} {{section.conflicts.0.clss.number}}
+                {% if section.conflicts.0.component == "CUS" %}
+                  Conflict with user-added event
+                {% else %}
+                  Conflict with {{section.conflicts.0.clss.dept.code}} {{section.conflicts.0.clss.number}}
+                {% endif %}
               {% else %}
                 Add
               {% endif %}
