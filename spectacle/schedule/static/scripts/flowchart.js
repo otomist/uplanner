@@ -64,6 +64,15 @@ function courseBtn(course){
 	return btn;
 }
 
+//create indicators on right side of screen for the flowchart
+function makeIndicators(){
+	ind = $('.indicator')[0]
+	courseTable = $('.courseTable')[0];
+	for (var i = courseTable.rows.length - 1; i >= 0; i--) {
+		var btn = $('<button id="gotobutton"> => </button>');
+	    btn.appendTo(ind);
+	}
+}
 
 // auto table generator.
 // append all course from data to tables. Seperate by class level. 
@@ -73,13 +82,23 @@ function makeTable(){
 	var tableDataStart = "<td>";
 	var tableDataEnd = "</td>";
 	for(var i = 1; i < 9; i++){
+		//var tr = courseTable.insertRow();
+		var indicator = "<tr class = 'indicator' id = 'indicator_NUM00'><th>=></th>";  
 		var rowStart = "<tr id = 'levelNUM00'><th>level LEL00+</th>";
 		rowStart = rowStart.replace("LEL", i);
+		indicator = indicator.replace("LEL", i);
 		table+=rowStart.replace("NUM", i);
+		//table+=indicator.replace("NUM",i);
+
 		for(var key in examples){
 			//console.log('examples[key]: ',examples[key], key)
 			var values = examples[key];
 			if(Number(values[1]) === i){
+
+				// var td = tr.insertCell();
+    			//td.appendChild(document.createTextNode('Cell'));
+    			//td.style.border = '1px solid black';
+
 				courseInfo_1 = tableDataStart.replace("courseNum", key);
 				table+=courseInfo_1;
 				table+=courseBtn(key);
@@ -89,7 +108,12 @@ function makeTable(){
 		table+=rowEnd;
 
 	}
-	document.write("<table>" + table + "</table>");
+	flowchart_elem = $('.flowchart')[0]
+	document.write("<table class='courseTable'>" + table + "</table>");
+	c_table = $('.courseTable')[0];
+	flowchart_elem.append(c_table)
+
+	makeIndicators()
 }
 function highlight(e){
 	e.style.border = "7px solid #881c1c";
