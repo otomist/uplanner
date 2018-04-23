@@ -295,11 +295,28 @@ def get_current_data(schedulecourse):
     section = schedulecourse.course
     #TODO: this will fail is course doesn't exist
     course = section.clss
+    
+    uid = section.uid
+    title = ''
+    number = ''
+    professor = ''
+    component = section.component
+    
+    if section.component=='CUS':
+        title = schedulecourse.title
+        number = ''
+        professor = ''
+    else:
+        title = course.title
+        number = course.number
+        professor = section.professor
+    
     return {
-        'title': course.title,
-        'number': course.number,
-        'professor': section.professor,
-        'uid': section.uid,
+        'title':title,
+        'number':number,
+        'professor':professor,
+        'uid':uid,
+        'component':component,
     }
 
 def make_current_course(request):
@@ -316,7 +333,7 @@ def make_current_course(request):
         'schedule_current_course.html',
         {'course':get_current_data(schedulecourse)}
     )
-    
+
 def make_current_courses(request):
     schedule_id = request.GET.get('schedule', None)
     
@@ -327,7 +344,7 @@ def make_current_courses(request):
     user_courses = []
     
     # exclude all user-added custom events
-    for course in schedule.schedulecourse_set.exclude(course__component='CUS'):
+    for course in schedule.schedulecourse_set.all():
         user_courses.append(get_current_data(course))
     
     return render (
