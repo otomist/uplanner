@@ -163,6 +163,18 @@ $(function () {
         });
     });
     
+    //Automatically focus on appropriate field
+    $('#schedule-modal').on('shown.bs.modal', function (event) {
+        $(event.target).find('input[name=title]').trigger('focus');
+    });
+    
+    $('#event-modal').on('shown.bs.modal', function (event) {
+        console.log("event:");
+        console.log($(event.target));
+        console.log($(event.target).find('input'));
+        $(event.target).find('input[name=title]').trigger('focus');
+    });
+    
     // function submitting a new schedule form
     // this function is a little complicated. It overrides the
     //  standard django form behavior to prevent page reloading
