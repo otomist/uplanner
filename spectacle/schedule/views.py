@@ -842,3 +842,8 @@ class CourseDetailView(generic.DetailView):
     lazarus course detail view for use in flowchart
     """
     model = Course
+    
+    def get_context_data(self, **kwargs):
+        context = super(CourseDetailView, self).get_context_data(**kwargs) # get the default context data
+        context['sections'] = Section.objects.filter(clss=context['course']) # add extra field to the context
+        return context

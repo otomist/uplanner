@@ -71,6 +71,9 @@ class Course(models.Model):
     start_date = models.DateField(help_text='Enter the starting date of the course')
     end_date = models.DateField(help_text='Enter the ending date of the course')
     
+    def get_absolute_url(self):
+        return reverse('course_detail', args=[str(self.id)])
+    
     def __str__(self):
         return "{} {} {}".format(self.dept, self.number, self.title)
         

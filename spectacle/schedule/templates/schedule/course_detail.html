@@ -1,6 +1,11 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
-  <h1>Title: {{ course.dept }} {{ course.number }} - {{ course.title }}</h1>
+  <h1>{{ course.dept }} {{ course.number }} - {{ course.title }}</h1>
+  
+  {% for section in sections %}
+    {{ section }}
+    <br>
+  {% endfor %}
   
 {% endblock %}
