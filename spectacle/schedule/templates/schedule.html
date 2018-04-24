@@ -30,7 +30,7 @@
         <div class="filters_wrapper" id="filters_wrapper">
           {% for schedule in user_schedules %}
             <label class="js-schedule-container">
-              <input type="radio" class="js-schedule" name="{{schedule.title}}" schedule-id="{{ schedule.id }}"/>
+              <input type="radio" class="js-schedule" name="{{schedule.title}}"/>
               {{ schedule.title }}
             </label>
           {% endfor %}

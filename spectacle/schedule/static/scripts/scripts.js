@@ -206,7 +206,7 @@ $(function () {
                 if (data['status'] === 'SUCCESS') {
                     $('#schedule-modal').modal('hide')
                     $('<label class="js-schedule-container">\
-                       <input type="radio" class="js-schedule" name="'+ data['title'] + '" schedule-id="' + data['id'] + '"/>' +
+                       <input type="radio" class="js-schedule" name="'+ data['title'] + '"/>' +
                         data['title'] +
                         '</label>'
                     ).appendTo('#filters_wrapper');

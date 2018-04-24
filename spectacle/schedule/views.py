@@ -37,6 +37,9 @@ def index(request):
 #==================================================================#
 
 def get_schedulecourse_data(schedulecourse):
+    """
+    Given a schedulecourse, get the data needed to add it to the javascript schedule
+    """
     def parse_dates(dates):
         days = []
         for i in range(0, len(dates), 2):
@@ -74,7 +77,7 @@ def get_schedulecourse_data(schedulecourse):
     
     return courses
 
-# ajax view
+
 def schedule_courses(request):
     """
     An ajax view ran every time the schedule page is loaded.
@@ -97,12 +100,14 @@ def schedule_courses(request):
     schedule = ''
     if 'active_schedule' in request.session:
         schedule = request.session['active_schedule']
-    elif current_user.exists():
+    elif current_user.exists():                         #then just fetch a random schedule
         #TODO: this breaks if doesn't exist
         schedule = Schedule.objects.filter(student=current_user[0])[0].title
         request.session['active_schedule'] = schedule
         request.session.save()
     
+    #filters_expanded is handled here and in the main schedule view. here it just tells javascript
+    # to flip the button
     filters_expanded = True
     if 'filters_expanded' in request.session:
         filters_expanded = request.session['filters_expanded']
@@ -119,21 +124,23 @@ def schedule_courses(request):
     
     return JsonResponse(data)
     
-# ajax view for updating the session variable
+    
 def update_session(request):
+    """
+    ajax view for updating the session variable
+    """
     for k, v in request.GET.items():
         request.session[k] = v
     request.session.save()
     return JsonResponse({})
     
-# ajax view
+
 def del_section(request):
     """
     A non-rendering view that handles ajax requests for deleting
     a course from a js schedule. simply updates the database
     """
     id = request.GET.get('id', None)
-    #schedule_title = request.GET.get('schedule', None)
     schedule_title = request.session['active_schedule']
     
     current_user = Student.objects.get(user_email=request.user.email)
@@ -151,7 +158,7 @@ def del_section(request):
     
     return JsonResponse(data)
     
-# ajax view
+    
 def add_section(request):
     """
     The non-rendering "view" that handles ajax requests for adding a section to the
@@ -161,21 +168,22 @@ def add_section(request):
     #TODO: this will break if does not exist
     section = Section.objects.get(uid=id)
     current_user = Student.objects.get(user_email=request.user.email)
-    #TODO next: this will break if does not exist
+    #TODO: this will break if does not exist
     schedule = Schedule.objects.filter(student=current_user).get(title=request.session['active_schedule'])
 
     if not ScheduleCourse.objects.filter(course=section).filter(schedule=schedule).exists():
         ScheduleCourse.objects.create_schedulecourse(section, schedule)
     schedulecourse = ScheduleCourse.objects.filter(course=section).get(schedule=schedule)
-    
-    print(schedulecourse)
-    
+        
     data = {'events':get_schedulecourse_data(schedulecourse)}
     
     return JsonResponse(data)
 
-# convenience function for model -> dict, so that the dictionary can be extended with extra_fields
+
 def make_model_dict(model, extra_fields):
+    """
+    convenience function for model -> dict, so that the dictionary can be extended with extra_fieldss
+    """
     d = {}
     for field in model._meta.get_fields():
         if not isinstance(field, models.ManyToManyRel) and not isinstance(field, models.ManyToOneRel):
@@ -185,9 +193,12 @@ def make_model_dict(model, extra_fields):
         d[item[0]] = item[1]
     return d
     
-# convenience function for returning a list of conflicted  with section. empty list if none
+    
 def get_conflicting_sections(section, request):
-    #TODO: may break if 'active_schedule' not in request, or user is not logged in
+    """
+    convenience function for returning a list of conflicts  with a given section. empty list if none
+    """
+    #TODO: breaks if 'active_schedule' not in request, or user is not logged in
     current_user = Student.objects.get(user_email=request.user.email)
     schedule = Schedule.objects.get(student=current_user, title=request.session['active_schedule'])
     
@@ -214,15 +225,21 @@ def get_conflicting_sections(section, request):
     
     return conflict_courses
     
+    
 def get_section_list(sections, request):
+    """
+    returns a dictionary per section where each dictionary also stores associated conflicts for that section
+    """
     if sections.exists():
         return map(lambda section: make_model_dict(section, [('conflicts', get_conflicting_sections(section, request))]), sections)
     else:
         return []
     
-# returns data needed to fill in a course tab
+    
 def get_tab_data(course, request=None):
-        
+    """
+    returns data needed to fill in a course tab
+    """
     components = []
     for comp in Section.COMPONENTS:
         sections = course.section_set.filter(component=comp[0])
@@ -237,6 +254,7 @@ def get_tab_data(course, request=None):
     desc_overflow = False
     req_overflow = False
     
+    #indicates that the description will overflow, and should be partially hidden
     if len(course.description) > 250:
         desc_overflow = True
 
@@ -250,12 +268,15 @@ def get_tab_data(course, request=None):
             'req_overflow':req_overflow,
             }
     
-# renders a single tab's contents.
+
 def make_tab_content(request):
+    """
+    renders a single tab's contents. uses get_tab_data
+    """
     course_pk = request.GET.get('course_pk', None)
         
-    #TODO: this will break if size of list is 0
-    course = Course.objects.filter(pk=course_pk)[0]
+    #TODO: this will break if course does not exist
+    course = Course.objects.get(pk=course_pk)
     if 'tabs' in request.session:
         if course_pk not in request.session['tabs']:
             request.session['tabs'].append(course_pk)
@@ -270,7 +291,11 @@ def make_tab_content(request):
         {'tab':get_tab_data(course, request)}
     )
     
+    
 def delete_tab(request):
+    """
+    deletes a tab, removing it from the sessions variable
+    """
     course_pk = request.GET.get('id', None)
     #TODO: this will fail if course doesn't exist
     course = Course.objects.filter(pk=course_pk)[0]
@@ -281,10 +306,12 @@ def delete_tab(request):
 
     return JsonResponse({'status':'SUCCESS'})
 
-# returns data needed to render a single current course listing
+    
 def get_current_data(schedulecourse):
+    """
+    returns data needed to render a single "current course" listing
+    """
     section = schedulecourse.course
-    #TODO: this will fail is course doesn't exist
     course = section.clss
     
     uid = section.uid
@@ -293,6 +320,7 @@ def get_current_data(schedulecourse):
     professor = ''
     component = section.component
     
+    #if component is "CUS", it is a user-added event with no associated class
     if section.component=='CUS':
         title = "User event: " + schedulecourse.title
         number = ''
@@ -310,7 +338,11 @@ def get_current_data(schedulecourse):
         'component':component,
     }
 
+    
 def make_current_course(request):
+    """
+    renders a single element of "current courses". uses get_current_data
+    """
     course_id = request.GET.get('course_id', None)
     schedule_title = request.session['active_schedule']
     
@@ -328,14 +360,15 @@ def make_current_course(request):
     )
 
 def make_current_courses(request):
+    """
+    renders all elements of "current courses". uses get_current_data
+    """
     schedule_title = request.session['active_schedule']
-    #TODO: this will fail if schedule doesn't exist
     current_user = Student.objects.get(user_email=request.user.email)
     schedule = Schedule.objects.filter(student=current_user).get(title=schedule_title)
     
     user_courses = []
     
-    # exclude all user-added custom events
     for course in schedule.schedulecourse_set.all():
         user_courses.append(get_current_data(course))
     
@@ -346,6 +379,9 @@ def make_current_courses(request):
     )
 
 def make_user_event(request):
+    """
+    ajax post form for creating a new user event and adding it to the schedule
+    """
     if request.is_ajax():
         form = UserEventForm(request.POST)
         data = {'status':'FAILURE'}
@@ -374,23 +410,22 @@ def make_user_event(request):
         print("=============Error! new schedule form received non-ajax request!============")
         return schedule(request) # attempt to salvage situation
     
+    
 def del_schedule(request):
-    #TODO: update method of getting current schedule to session
-        
-    #schedule_title = request.GET.get('schedule', None)
+    """
+    Deletes a schedule
+    """
     schedule_title = request.session['active_schedule']
-    #new_schedule_title = request.GET.get('new_schedule', None)
     
     #TODO: this will break if user doesn't exist
     current_user = Student.objects.get(user_email=request.user.email)
-    schedule = Schedule.objects.filter(student=current_user).filter(title=schedule_title)
+    schedule = Schedule.objects.filter(student=current_user).get(title=schedule_title)
     # using list() should normally be avoided on a queryset, but it is reasonable to assume
     # that the course_ids set will be very small
     course_ids = []
-    if schedule[0].schedulecourse_set.exists():
-        course_ids = list(schedule[0].schedulecourse_set.values_list('course__uid', flat=True))
-    if schedule.exists():
-        schedule[0].delete()
+    if schedule.schedulecourse_set.exists():
+        course_ids = list(schedule.schedulecourse_set.values_list('course__uid', flat=True))
+    schedule.delete()
     
     new_schedule_title = Schedule.objects.all()[0].title
     request.session['active_schedule'] = new_schedule_title
@@ -400,6 +435,9 @@ def del_schedule(request):
     
 # ajax view for making a new schedule
 def make_schedule(request):
+    """
+    ajax view post form for making a new schedule
+    """
     if request.is_ajax():
         form = NewScheduleForm(request.POST)
         data = {'status':'failure'}
@@ -410,21 +448,17 @@ def make_schedule(request):
             if not Schedule.objects.filter(student=current_user).filter(title=title):
                 data['status'] = 'SUCCESS'
                 Schedule.objects.create_schedule(title, current_user)
-            #TODO: this will break if does not exist
-            data['id'] = Schedule.objects.filter(student=current_user).get(title=title).id
-            
-        else:
-            # check why title is invalid??
-            pass
-            
+
         return JsonResponse(data)
     else:
         # THIS SHOULD NEVER HAPPEN - this is an ajax view, and shouldn't render anything
         print("=============Error! new schedule form received non-ajax request!============")
         return schedule(request) # attempt to salvage situation
     
-# ajax view for updating session when schedule is changed
 def change_schedule(request):
+    """
+    ajax view for updating session when schedule is changed
+    """
     active_schedule = request.GET.get('schedule_title')
     request.session['active_schedule'] = active_schedule
     request.session.save()
@@ -434,8 +468,7 @@ def change_schedule(request):
 def schedule(request):
     """
     The view for the schedule uses a form with GET for receiving search parameters
-    Eventually it will also have POST for updating the database when the user adds
-    a course to their schedule
+    It handles rendering the entire page in accordance with all sub-rendering functions
     """
     form = None
     
@@ -457,7 +490,6 @@ def schedule(request):
     else:
         form = ScheduleForm(initial={'keywords': 'Enter keywords...'})
     
-    #form = ScheduleForm(initial={'keywords': "Enter keywords..."})
     schedule_form = NewScheduleForm(request.GET)
     user_event_form = UserEventForm()
     results = []
@@ -469,7 +501,7 @@ def schedule(request):
     user_schedules = []
     context = {}
 
-    #TODO: breaks is student doesn't exist
+    #TODO: breaks if student doesn't exist
     current_user = Student.objects.get(user_email=request.user.email)
     
     # if a new user has no schedule, make them their first schedule
@@ -488,7 +520,7 @@ def schedule(request):
         tabs = request.session['tabs']
         for course_pk in tabs:
             #TODO: this will fail if course doesn't exist
-            course = Course.objects.filter(pk=course_pk)[0]
+            course = Course.objects.get(pk=course_pk)
             data = get_tab_data(course, request)
             course_tabs.append(get_tab_data(course, request))
     
@@ -497,7 +529,6 @@ def schedule(request):
     if 'active_schedule' in request.session and Schedule.objects.filter(student=current_user).filter(title=request.session['active_schedule']).exists():
         schedule_title = request.session['active_schedule']
     else:
-        #TODO: this breaks if doesn't exist
         schedule_title = Schedule.objects.filter(student=current_user)[0].title
         request.session['active_schedule'] = schedule_title
         request.session.save()
@@ -614,8 +645,7 @@ def schedule(request):
             conflicts = current_courses.values_list('course__days', 'course__start', 'course__ending').distinct()
             #conflicts = current_courses.values_list('course__mon', 'course__tue', 'course__wed', 'course__thu', 'course__fri', 'course__start', 'course__ending').distinct()
             
-            #enable for regex
-            
+            #enable for regex:
             days = set()
             for day_set, start, end in conflicts:
                 for i in range(0, len(day_set), 2):
@@ -739,6 +769,7 @@ def prereqs(request):
     # for item in c_list:
     #     abr.write("%s\n" % item)
 
+    #TODO: this should be ajax...
     #format courseNum: [(D)listOfPre(0), (D)levelNumber(1), Selected(2), linked(3), (D)credits(4), (D)required(5), root(6), title(7)]
     #this is a very silly way to tranfser the data but it works for now until I start using ajax.
     course_list = json.dumps(list(map(lambda c: {('title' + str(c.number)):[

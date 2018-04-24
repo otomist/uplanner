@@ -56,11 +56,10 @@ function init() {
     // It updates the page; reloads current courses, and reloads the active course tab
     function update_page() {
         var url = $('#meta').attr('make-current-courses-url');
-        var schedule = $(".js-schedule:checked").attr('schedule-id');
                 
         // Reload the current courses
         $('#current-courses').html('').load(
-            url + '?schedule=' + schedule
+            url
         );
         
         // If the currently open tab is a course detail tab, reload it
