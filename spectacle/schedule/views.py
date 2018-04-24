@@ -33,7 +33,8 @@ def index(request):
     )
     
 #==================================================================#    
-#       v-------------Start schedule views------------v
+#   v------------------Start schedule views------------------v
+#       contact jason.valladares3@gmail.com for questions
 #==================================================================#
 
 def get_schedulecourse_data(schedulecourse):
