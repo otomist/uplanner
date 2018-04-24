@@ -547,6 +547,8 @@ def schedule(request):
         request.session['filters_expanded'] = filters_expanded
         request.session.save()
     
+    results_exist = True
+    
     if form.is_valid():
         
         #retrieve all courses in requested term
@@ -700,10 +702,9 @@ def schedule(request):
                 #end_filter = Q(section__ending__lte=section[5])  # the new course ends before the old course starts
                 results = results.select_related().exclude(day_filter &  ~(start_filter | end_filter)).distinct()
     
-    # Display error - no search results match
-    results_exist = True
-    if len(results) == 0:
-        results_exist = False
+        # Display error - no search results match
+        if len(results) == 0:
+            results_exist = False
         
     # Todo: can there be too many results? (probably)
     
