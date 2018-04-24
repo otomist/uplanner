@@ -118,7 +118,7 @@ $(function () {
 
                     // Populate it with the schedule_current_courses.html file through django
                     $('#curr-' + id).html('').load(
-                        url_html + "?course_id=" + id + '&schedule=' + data['schedule_id']
+                        url_html + "?course_id=" + id
                     );
                 }
             }

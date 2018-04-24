@@ -161,17 +161,16 @@ def add_section(request):
     #TODO: this will break if does not exist
     section = Section.objects.get(uid=id)
     current_user = Student.objects.get(user_email=request.user.email)
-    #TODO: this will break if does not exist
-    schedule_id = Schedule.objects.filter(student=current_user).get(title=request.session['active_schedule']).id
-    
-    # TODO: this will break if the schedule doesn't exist
-    schedule = Schedule.objects.get(id=schedule_id)
+    #TODO next: this will break if does not exist
+    schedule = Schedule.objects.filter(student=current_user).get(title=request.session['active_schedule'])
+
     if not ScheduleCourse.objects.filter(course=section).filter(schedule=schedule).exists():
         ScheduleCourse.objects.create_schedulecourse(section, schedule)
-        
     schedulecourse = ScheduleCourse.objects.filter(course=section).get(schedule=schedule)
     
-    data = {'events':get_schedulecourse_data(schedulecourse), 'schedule_id':schedule_id}
+    print(schedulecourse)
+    
+    data = {'events':get_schedulecourse_data(schedulecourse)}
     
     return JsonResponse(data)
 
@@ -313,13 +312,14 @@ def get_current_data(schedulecourse):
 
 def make_current_course(request):
     course_id = request.GET.get('course_id', None)
-    #schedule_id = request.GET.get('schedule', None)
     schedule_title = request.session['active_schedule']
     
-    # TODO: this will break if any of these do not exist
+    current_user = Student.objects.get(user_email=request.user.email)
+    schedule = Schedule.objects.filter(student=current_user).get(title=schedule_title)
+    
     section = Section.objects.filter(uid=course_id)[0]
-    schedule = Schedule.objects.filter(title=schedule_title)[0]
-    schedulecourse = section.schedulecourse_set.filter(schedule=schedule)[0]
+    
+    schedulecourse = section.schedulecourse_set.get(schedule=schedule)
     
     return render (
         request,
@@ -328,7 +328,6 @@ def make_current_course(request):
     )
 
 def make_current_courses(request):
-    #schedule_id = request.GET.get('schedule', None)
     schedule_title = request.session['active_schedule']
     #TODO: this will fail if schedule doesn't exist
     current_user = Student.objects.get(user_email=request.user.email)
@@ -712,19 +711,11 @@ def profile(request):
     user = request.user
     #TODO: this will break if the student doesn't exist
     student = Student.objects.get(user_email=request.user.email)
-    remaining_credits = (120 - student.credits) if (120 - student.credits)> 0 else 0
-    user_courses = map(lambda c: {
-                                  'dept':c.clss.dept,
-                                  'number':c.clss.number,
-                                  'description':c.clss.description,
-                                  'credits':c.clss.credits,
-                                  }
-                                  , student.courses.all())
     
     return render(
         request,
         'profile.html',
-        context={'highlight_profile':highlight_profile, 'student':student, 'user':user,'user_courses':user_courses, 'remaining_credits':remaining_credits, 'credits':student.credits}
+        context={'highlight_profile':highlight_profile, 'student':student, 'user':user}
     )
     
 def prereqs(request):
@@ -812,6 +803,3 @@ def loginPage(request):
 
 def logoutPage(request):
     return render(request, 'registration/logout.html', {})
-
-class CourseDetailView(generic.DetailView):
-    model = Course

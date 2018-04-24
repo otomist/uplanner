@@ -71,9 +71,6 @@ class Course(models.Model):
     start_date = models.DateField(help_text='Enter the starting date of the course')
     end_date = models.DateField(help_text='Enter the ending date of the course')
     
-    def get_absolute_url(self):
-        return reverse('course-detail', args=[str(self.id)])
-    
     def __str__(self):
         return "{} {} {}".format(self.dept, self.number, self.title)
         
@@ -141,7 +138,7 @@ class Student(models.Model):
     USERNAME_FIELD = 'user'
     
     def __str__(self):
-        return "{} {} {}".format(self.user_email, self.sid, self.major)
+        return "{}".format(self.user_email)
     
     
 class ScheduleManager(models.Manager):
