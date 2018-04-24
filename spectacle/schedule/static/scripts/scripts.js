@@ -121,6 +121,9 @@ $(function () {
                         url_html + "?course_id=" + id
                     );
                 }
+                
+                $(".js-add[section-id=" + id + "]").css("display", "none");
+                $(".js-del[section-id=" + id + "]").css("display", "block");
             }
         });
 
@@ -159,6 +162,9 @@ $(function () {
                 if ($("#curr-" + id).length) {
                     $('#curr-' + id).remove();
                 }
+                
+                $(".js-add[section-id=" + id + "]").css("display", "block");
+                $(".js-del[section-id=" + id + "]").css("display", "none");
             }
         });
     });

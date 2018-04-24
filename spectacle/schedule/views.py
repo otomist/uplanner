@@ -226,13 +226,17 @@ def get_conflicting_sections(section, request):
     
     return conflict_courses
     
+def section_in_schedule(section, request):
+    current_user = current_user = Student.objects.get(user_email=request.user.email)
+    schedule = Schedule.objects.filter(student=current_user).get(title=request.session['active_schedule'])
+    return ScheduleCourse.objects.filter(schedule=schedule, course=section).exists()
     
 def get_section_list(sections, request):
     """
     returns a dictionary per section where each dictionary also stores associated conflicts for that section
     """
     if sections.exists():
-        return map(lambda section: make_model_dict(section, [('conflicts', get_conflicting_sections(section, request))]), sections)
+        return map(lambda section: make_model_dict(section, [('is_added', section_in_schedule(section, request)), ('conflicts', get_conflicting_sections(section, request))]), sections)
     else:
         return []
     
