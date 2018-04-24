@@ -91,6 +91,7 @@ function init() {
             success: function (data) {
                 //success: add the new event to the schedule
                 if (data['status'] === 'SUCCESS') {
+                    $('#event-modal').modal('hide');
                     events = data['events']
                     
                     for (i = 0; i < events.length; i++) {

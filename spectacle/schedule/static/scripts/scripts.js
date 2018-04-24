@@ -192,6 +192,7 @@ $(function () {
             method: 'POST',
             success: function (data) {
                 if (data['status'] === 'SUCCESS') {
+                    $('#schedule-modal').modal('hide')
                     $('<label class="js-schedule-container">\
                        <input type="radio" class="js-schedule" name="'+ data['title'] + '" schedule-id="' + data['id'] + '"/>' +
                         data['title'] +
