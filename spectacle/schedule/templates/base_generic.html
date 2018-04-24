@@ -48,9 +48,10 @@
         <li class="nav-item {% if highlight_prereqs %} active {% endif %}">
           <a class="nav-link" href="{% url 'prereqs' %}">Prereqs</a>
         </li>
-        <li class="nav-item {% if highlight_profile %} active {% endif %}">
+        <!-- Profile is deprecated -->
+        <!--li class="nav-item {% if highlight_profile %} active {% endif %}">
           <a class="nav-link" href="{% url 'profile' %}">Profile</a>
-        </li>
+        </li-->
         {% if user.is_authenticated %}
         <li class="nav-item">
           <a class="nav-link" href="{% url 'logout' %}">Logout</a>
