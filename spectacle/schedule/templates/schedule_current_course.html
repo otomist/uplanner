@@ -2,5 +2,8 @@
   {{course.title}}
   <div>
     <button class="btn btn-danger btn-xs btn-results js-del" section-id='{{course.uid}}'>Delete</button>
+    {% if course.component != 'CUS' %}
+      <button class="btn btn-fullInfo btn-xs btn-results js-make-tab" course-id="{{course.clss.pk}}" course-dept="{{ course.clss.dept.code }}" course-num="{{ course.clss.number }}">Full course info</button>
+    {% endif %}
   </div>
 </p>

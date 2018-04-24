@@ -319,29 +319,15 @@ def get_current_data(schedulecourse):
     section = schedulecourse.course
     course = section.clss
     
-    uid = section.uid
-    title = ''
-    number = ''
-    professor = ''
-    component = section.component
-    
     #if component is "CUS", it is a user-added event with no associated class
     if section.component=='CUS':
         title = "User event: " + schedulecourse.title
-        number = ''
-        professor = ''
     else:
-        title = course.title
-        number = course.number
-        professor = section.professor
+        title = course.dept.code + " " + course.number + " - " + course.title + " (" + section.component + ")"
     
-    return {
-        'title':title,
-        'number':number,
-        'professor':professor,
-        'uid':uid,
-        'component':component,
-    }
+    course_data = make_model_dict(section, [('title', title)])
+    
+    return course_data
 
     
 def make_current_course(request):

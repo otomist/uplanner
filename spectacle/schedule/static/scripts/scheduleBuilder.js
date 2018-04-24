@@ -268,6 +268,18 @@ function init() {
         stopHighlight(course_id);
     });
     
+    //Highlight course to be removed
+    $(document).on('mouseover', '.js-del', function () {
+        var course_id = $(event.target).attr('section-id');
+        startHighlight(course_id);
+    });
+    
+    //Highlight course to be removed
+    $(document).on('mouseout', '.js-del', function () {
+        var course_id = $(event.target).attr('section-id');
+        stopHighlight(course_id);
+    });
+    
     
     //On hover highlight courses
     scheduler.templates.event_class=function(start, end, event){

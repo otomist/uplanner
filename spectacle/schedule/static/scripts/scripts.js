@@ -1,7 +1,7 @@
 $(function () {
 
     // Makes a new tab in schedule.html, and populates it with course details.
-    $('.js-make-tab').on('click', function () {
+    $(document).on('click', '.js-make-tab', function () {
         /*
           Data flow upon click:
            -do ajax call or other method to update the session context variable
@@ -9,6 +9,7 @@ $(function () {
            -render the new tab from javascript
            -render the new tab contents through javascript + django html
         */
+        
         id = $(event.target).attr('course-id');
         dept = $(event.target).attr('course-dept');
         num = $(event.target).attr('course-num');
