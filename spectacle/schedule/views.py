@@ -701,8 +701,9 @@ def schedule(request):
                 results = results.select_related().exclude(day_filter &  ~(start_filter | end_filter)).distinct()
     
     # Display error - no search results match
+    results_exist = True
     if len(results) == 0:
-        pass
+        results_exist = False
         
     # Todo: can there be too many results? (probably)
     
@@ -724,7 +725,7 @@ def schedule(request):
     return render (
         request,
         'schedule.html',
-        {'highlight_schedule':highlight_schedule, 'filters_expanded':filters_expanded, 'form':form, 'user_event_form':user_event_form, 'schedule_form':schedule_form, 'results':results, 'course_tabs':course_tabs, 'user_schedules':user_schedules, 'user_courses':user_courses}
+        {'highlight_schedule':highlight_schedule, 'results_exist':results_exist, 'filters_expanded':filters_expanded, 'form':form, 'user_event_form':user_event_form, 'schedule_form':schedule_form, 'results':results, 'course_tabs':course_tabs, 'user_schedules':user_schedules, 'user_courses':user_courses}
     )
 
 #==================================================================#    

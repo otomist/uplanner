@@ -294,7 +294,7 @@
           
           <!-- Begin search results -->
           <div class="tab-pane show active" id="results">
-            {% if results %}
+            {% if results_exist %}
               <ul class="list-group fixed-panel">
               {% for course in results %}
                 <li class="list-group-item js-expand-block">
@@ -329,6 +329,8 @@
                 </li>
               {% endfor %}
               </ul>
+            {% else %}
+              <div class="fixed-panel"><p>No courses match your search</p></div>
             {% endif %}
           </div>
           
