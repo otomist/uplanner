@@ -836,3 +836,9 @@ def loginPage(request):
 
 def logoutPage(request):
     return render(request, 'registration/logout.html', {})
+    
+class CourseDetailView(generic.DetailView):
+    """
+    lazarus course detail view for use in flowchart
+    """
+    model = Course
