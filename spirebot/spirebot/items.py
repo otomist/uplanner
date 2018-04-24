@@ -65,7 +65,6 @@ class ScheduleCourseItem(DjangoItem):
     django_model = ScheduleCourse
     
 class ItemLoader(ItemLoader):
-
     #course
     def default_proc(input):
         input = remove_tags(input)
@@ -142,10 +141,33 @@ class ItemLoader(ItemLoader):
     
     #section
     def proc_days(input_str):
-        if 'Mo' not in input_str and 'Tu' not in input_str and 'We' not in input_str and 'Th' not in input_str and 'Fr' not in input_str:
+        if ('Mo' not in input_str and 
+            'Tu' not in input_str and 
+            'We' not in input_str and 
+            'Th' not in input_str and 
+            'Fr' not in input_str and
+            'Sa' not in input_str and
+            'Su' not in input_str ):
             return 'TBA'     
+
         daytime_list = re.split(r'[\s-]+', input_str)
         return daytime_list[0]
+    
+    def proc_mon(input_str):
+        return '1' if 'Mo' in input_str else '0'
+    
+    def proc_tue(input_str):
+        return '1' if 'Tu' in input_str else '0'
+    
+    def proc_wed(input_str):
+        return '1' if 'We' in input_str else '0'
+
+    def proc_thu(input_str):
+        return '1' if 'Th' in input_str else '0'
+    
+    def proc_fri(input_str):
+        return '1' if 'Fr' in input_str else '0'
+        
     
     def proc_start(input_str):
 
@@ -216,18 +238,6 @@ class ItemLoader(ItemLoader):
         return Course.objects.get(number = input_str.split()[1])
     
     def proc_component(input_str):
-        comp_dict = {
-            'Lecture' : 'lec',
-            'Discussion' : 'dis',
-            'Laboratory' : 'lab',
-            'Colloquium' : 'col',
-            'Dissertation / Thesis' : 'the',
-            'Individualized Study' : 'stu',
-            'Practicum' : 'pra',
-            'Seminar' : 'sem',
-            'Studio / Skills' : 'ski',
-        }
-
         return input_str.split('-')[1][0:3]
 
 
@@ -255,6 +265,11 @@ class ItemLoader(ItemLoader):
 
     #section model atributes
     days_in = MapCompose(default_proc, proc_days)
+    mon_in = MapCompose(default_proc, proc_mon)
+    tue_in = MapCompose(default_proc, proc_tue)
+    wed_in  = MapCompose(default_proc, proc_wed)
+    thu_in = MapCompose(default_proc, proc_thu)
+    fri_in = MapCompose(default_proc, proc_fri)
     start_in = MapCompose(default_proc, proc_start)
     ending_in = MapCompose(default_proc, proc_ending)
     term_in = MapCompose(default_proc, proc_term)
