@@ -64,8 +64,13 @@ class SpireSpider(scrapy.Spider):
     def load_sectionitem(self, page1_selector, page2_selector, term, is_open, clss, section_index, term_index, course_index): 
         section_loader = ItemLoader(item = SectionItem(), selector = page2_selector)
 
-        section_loader.add_xpath('id', '//*[@id="SSR_CLS_DTL_WRK_CLASS_NBR"]')
+        section_loader.add_xpath('sid', '//*[@id="SSR_CLS_DTL_WRK_CLASS_NBR"]')
         section_loader.add_xpath('days', '//*[@id="MTG_SCHED$0"]')
+        section_loader.add_xpath('mon', '//*[@id="MTG_SCHED$0"]')
+        section_loader.add_xpath('tue', '//*[@id="MTG_SCHED$0"]')
+        section_loader.add_xpath('wed', '//*[@id="MTG_SCHED$0"]')
+        section_loader.add_xpath('thu', '//*[@id="MTG_SCHED$0"]')
+        section_loader.add_xpath('fri', '//*[@id="MTG_SCHED$0"]')
         section_loader.add_xpath('start', '//*[@id="MTG_SCHED$0"]')
         section_loader.add_xpath('ending', '//*[@id="MTG_SCHED$0"]')
         section_loader.add_xpath('professor', '//*[@id="MTG_INSTR$0"]')
@@ -80,7 +85,7 @@ class SpireSpider(scrapy.Spider):
         section_loader.selector = page1_selector
         section_loader.add_value('open', is_open)
         section_loader.add_value('clss',  clss)
-        section_loader.add_xpath('component', '//*[@id="DERIVED_CLSRCH_SSR_CLASSNAME_LONG$'+ str(course_index) +'"]')
+        section_loader.add_xpath('component', '//*[@id="DERIVED_CLSRCH_SSR_CLASSNAME_LONG$'+ str(section_index) +'"]')
 
         return section_loader.load_item()
 
