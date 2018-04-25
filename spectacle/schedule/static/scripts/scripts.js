@@ -26,7 +26,7 @@ $(function () {
             </a></li>').appendTo('#scheduleTab');
             
             // Add a new tab content pane including the schedule_tabs_content.html file
-            $('<div class="tab-pane" id=' + id + '></div>').appendTo('#scheduleTabContent');
+            $('<div class="tab-pane fixed-panel" id=' + id + '></div>').appendTo('#scheduleTabContent');
             
             // Populate it with the schedule_tabs_content.html file through django
             $('#' + id).html('').load(
