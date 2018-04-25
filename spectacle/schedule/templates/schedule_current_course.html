@@ -1,4 +1,4 @@
-<p>
+
   {{course.title}}
   <div>
     <button class="btn btn-danger btn-xs btn-results js-del" section-id='{{course.uid}}'>Delete</button>
@@ -6,8 +6,9 @@
       <button class="btn btn-fullInfo btn-xs btn-results js-make-tab" course-id="{{course.clss.pk}}" course-dept="{{ course.clss.dept.code }}" course-num="{{ course.clss.number }}">Full course info</button>
     {% endif %}
     {% if course.schedules %}
+    <br>
       <div class="dropdown">
-        <button class="btn btn-xs btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+        <button class="btn btn-xs btn-primary dropdown-toggle btn-noleftmargin" type="button" data-toggle="dropdown">
           add to...
           <span class="caret"></span>
         </button>
@@ -19,4 +20,3 @@
       </div>
     {% endif %}
   </div>
-</p>

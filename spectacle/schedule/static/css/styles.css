@@ -46,6 +46,9 @@ body{
 .btn{
     margin: .5rem;
 }
+.btn-noleftmargin{
+    margin: .5rem .5rem .5rem 0;
+}
 h6{
     color: #000000;
     padding: 0;
@@ -132,6 +135,11 @@ h4{
 .errorlist {
     background-color: yellow;
     color:red;
+}
+.results-box{
+    border: solid 1px;
+    border-radius: 5px;
+    border-color: #abb6c2;
 }
 .btn-warning{
     color: white;

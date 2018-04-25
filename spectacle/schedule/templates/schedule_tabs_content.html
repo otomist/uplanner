@@ -1,62 +1,62 @@
 <div class="fixed-panel">
   <br>
-  <h6>
-    <p>{{tab.course.dept.code}} {{tab.course.number}}</p>
-  </h6>
-  <!--TODO: incorporate more generic fields -->
-  {% if tab.desc_overflow %}<div class="sidebar-box">{% endif %}
-    <p>Description: {{tab.course.description}}</p>
-    {% if tab.desc_overflow %}
-      <p class="read-more">
-        <a id="btnDesc" href="#" class="btn btn-primary button">Read More</a>
-      </p>
-    {% endif %}
-  {% if tab.desc_overflow %}</div>{% endif %}
-  <br>
-  {% if tab.req_overflow %}<div class="sidebar-box">{% endif %}
-    <p>Requirements: {{tab.course.reqs}}</p>
-    {% if tab.req_overflow %}
-      <p class="read-more">
-        <a href="#" class="btn btn-primary button">Read More</a>
-      </p>
-    {% endif %}
-  {% if tab.req_overflow %}</div>{% endif %}
-  <br>
-  {% for component in tab.sections %} {% if component.sections %}
-  <strong>{{component.name}}:</strong>
-  <!--div class="js-expand-block">
-        <button class="btn js-expand-btn btn-primary btn-xs btn-results">+</button> (show {{component.count}} available sections...)
-        <div class="js-expand-info"-->
-          <ul class="list-group">
-          {% for section in component.sections %}
-              <li class="list-group-item">Section ID: {{section.sid}}</li>
-              <li class="list-group-item">{{section.days}}, {{section.start}} - {{section.ending}}</li>
-              <li class="list-group-item">Professor: {{section.professor}}</li>
-              <li class="list-group-item">Room: {{section.room}}</li>
-              <li class="list-group-item">Cap: {{section.cap}} || Enrolled: {{section.enrolled}}</li>
-              <li class="list-group-item">Waitlist capacity: {{section.wcap}} || Waitlist Enrolled: {{section.wenrolled}}</li>
-            
-            <!-- buttons for adding / deleting classes -->        
-            <button class="btn btn-primary btn-xs btn-results btnAddDelTab js-add" conflict-id='{{ section.conflicts.0.uid }}' section-id='{{section.uid}}'
-            style={% if section.is_added %}"display:none;"{% else %}"display:block;"{% endif %}>
-              {% if section.conflicts %}
-                {% if section.conflicts.0.component == "CUS" %}
-                  Conflict with user-added event
+  <div class="container-fluid">
+    <h6>
+      <p>{{tab.course.dept.code}} {{tab.course.number}}</p>
+    </h6>
+    <!--TODO: incorporate more generic fields -->
+    {% if tab.desc_overflow %}<div class="sidebar-box">{% endif %}
+      <p>Description: {{tab.course.description}}</p>
+      {% if tab.desc_overflow %}
+        <p class="read-more">
+          <a id="btnDesc" href="#" class="btn btn-primary button">Read More</a>
+        </p>
+      {% endif %}
+    {% if tab.desc_overflow %}</div>{% endif %}
+    <br>
+    {% if tab.req_overflow %}<div class="sidebar-box">{% endif %}
+      <p>Requirements: {{tab.course.reqs}}</p>
+      {% if tab.req_overflow %}
+        <p class="read-more">
+          <a href="#" class="btn btn-primary button">Read More</a>
+        </p>
+      {% endif %}
+    {% if tab.req_overflow %}</div>{% endif %}
+    <br>
+    {% for component in tab.sections %} {% if component.sections %}
+    <strong>{{component.name}}:</strong>
+    <!--div class="js-expand-block">
+          <button class="btn js-expand-btn btn-primary btn-xs btn-results">+</button> (show {{component.count}} available sections...)
+          <div class="js-expand-info"-->
+            <ul class="list-group">
+            {% for section in component.sections %}
+                <li class="list-group-item">Section ID: {{section.sid}}</li>
+                <li class="list-group-item">{{section.days}}, {{section.start}} - {{section.ending}}</li>
+                <li class="list-group-item">Professor: {{section.professor}}</li>
+                <li class="list-group-item">Room: {{section.room}}</li>
+                <li class="list-group-item">Cap: {{section.cap}} || Enrolled: {{section.enrolled}}</li>
+                <li class="list-group-item">Waitlist capacity: {{section.wcap}} || Waitlist Enrolled: {{section.wenrolled}}</li>
+              
+              <!-- buttons for adding / deleting classes -->        
+              <button class="btn btn-primary btn-xs btn-results btnAddDelTab js-add" conflict-id='{{ section.conflicts.0.uid }}' section-id='{{section.uid}}'style={% if section.is_added %}"display:none;"{% else %}"display:block;"{% endif %}>
+                {% if section.conflicts %}
+                  {% if section.conflicts.0.component == "CUS" %}
+                    Conflict with user-added event
+                  {% else %}
+                    Conflict with {{section.conflicts.0.clss.dept.code}} {{section.conflicts.0.clss.number}}
+                  {% endif %}
                 {% else %}
-                  Conflict with {{section.conflicts.0.clss.dept.code}} {{section.conflicts.0.clss.number}}
+                  Add
                 {% endif %}
-              {% else %}
-                Add
-              {% endif %}
-            </button>
-            <button class="btn btn-danger btn-xs btn-results btnAddDelTab js-del" section-id='{{section.uid}}'
-            style={% if section.is_added %}"display:block;"{% else %}"display:none;"{% endif %}>Delete</button>
-            <br>
-          {% endfor %}
-          </ul>
-        <!--/div>
-      </div-->
-  {% endif %} {% endfor %}
+              </button>
+              <button class="btn btn-danger btn-xs btn-results btnAddDelTab js-del" section-id='{{section.uid}}'style={% if section.is_added %}"display:block;"{% else %}"display:none;"{% endif %}>Delete</button>
+              <br>
+            {% endfor %}
+            </ul>
+          <!--/div>
+        </div-->
+    {% endif %} {% endfor %}
+  </div>
 </div>
 
 <!--

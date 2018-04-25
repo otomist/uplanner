@@ -261,97 +261,101 @@
           </div>
           <!-- End checkbox column options -->
           <!-- Begin Start Search Button TODO: reconsider the positioning of this, or its necessity -->
-          {{ form.course_term }}
-          <input type="submit" value="Search" class="btn btn-primary btn-sm"/>
+          <div class="text-center">
+            {{ form.course_term }}
+            <input type="submit" value="Search" class="btn btn-primary btn-sm"/>
+          </div>
         </form>
 
         <!-- Begin Tabs -->
-        <ul class="nav nav-tabs" id="scheduleTab">
-          <!-- Begin results tab -->
-          <li class="nav-item">
-            <a class="nav-link navTab active" id="results-tab" data-toggle="tab" href="#results">Results</a>
-          </li>
-          
-          <!-- Begin current courses tab -->
-          <li class="nav-item">
-            <a class="nav-link navTab" id="courses-tab" data-toggle="tab" href="#courses">Courses</a>
-          </li>
-          
-          <!-- Begin course detail tabs -->
-          {% for tab in course_tabs %}
-            <li class="nav-item" id="nav-{{tab.course.pk}}">
-              <a class="nav-link navTab course-tab" id="{{tab.course.pk}}-tab" data-toggle="tab" href="#{{tab.course.pk}}">
-                {{tab.course.dept.code}} {{tab.course.number}}
-                  <button class="btn btn-danger btn-xs js-del-tab btn-results" course-id='{{tab.course.pk}}'>&times;</button>
-              </a>
+        <div class="bg-white results-box">
+          <ul class="nav nav-tabs text-center" id="scheduleTab">
+            <!-- Begin results tab -->
+            <li class="nav-item">
+              <a class="nav-link navTab active" id="results-tab" data-toggle="tab" href="#results">Results</a>
             </li>
-          {% endfor %}
-          
-        </ul>
-        
-        <!-- Begin tab contents -->
-        <div class="tab-content" id="scheduleTabContent">
-          
-          <!-- Begin search results -->
-          <div class="tab-pane show active" id="results">
-            {% if results_exist %}
-              <ul class="list-group fixed-panel">
-              {% for course in results %}
-                <li class="list-group-item js-expand-block">
-                  <button class="btn js-expand-btn btn-primary btn-xs btn-results">+</button>{{ course.dept.code }} {{ course.number }} - {{ course.title }}
-                  <div class="js-expand-info">
-                    <!-- Begin column information -->
-                    <div class="row">
-                      <!-- Left column -->
-                      <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                        {% if course.open == False %}<p>Course is closed</p>{% endif %}
-                        {% if course.lab == True %}<p>Course has labs</p>{% endif %}
-                      </div>
-                      <!-- Right column -->
-                      <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                        {% if course.conflicts == True %}<p>Course conflicts</p>{% endif %}
-                        <p>Credits: {{course.credits}}</p>
-                      </div>
-                    </div>
-                    <!-- Begin block information -->
-                    <p><strong>Description:</strong> {{course.description}}</p>
-                    <p><strong>Restrictions:</strong> {{course.reqs}}</p>
-                    {% if course.geneds %}
-                      <p><strong>Geneds:</strong>
-                      {% for gened in course.geneds %}
-                        {{gened}}
-                      {% endfor %} </p>
-                    {% endif %}
-                  
-                  </div>
-                  <br>
-                  <button class="btn btn-fullInfo btn-xs btn-results js-make-tab" course-id="{{course.pk}}" course-dept="{{ course.dept.code }}" course-num="{{ course.number }}">Full course info</button>
-                </li>
-              {% endfor %}
-              </ul>
-            {% else %}
-              <div class="fixed-panel"><p>No courses match your search</p></div>
-            {% endif %}
-          </div>
-          
-          <!-- Begin current courses -->
-          <div class="tab-pane" id="courses">
-            <ul class="list-group fixed-panel" id="current-courses">
-              <div class="fixed-panel">
-                {% include 'schedule_current_courses.html' %}
-              </div>
-            </ul>
-          </div>
-          
-          <!-- Begin course tabs -->
-          {% if course_tabs %}
+            
+            <!-- Begin current courses tab -->
+            <li class="nav-item">
+              <a class="nav-link navTab" id="courses-tab" data-toggle="tab" href="#courses">Courses</a>
+            </li>
+            
+            <!-- Begin course detail tabs -->
             {% for tab in course_tabs %}
-              <div class="tab-pane" id="{{tab.course.pk}}">
-                {% include 'schedule_tabs_content.html' %}
-              </div>
+              <li class="nav-item" id="nav-{{tab.course.pk}}">
+                <a class="nav-link navTab course-tab" id="{{tab.course.pk}}-tab" data-toggle="tab" href="#{{tab.course.pk}}">
+                  {{tab.course.dept.code}} {{tab.course.number}}
+                    <button class="btn btn-danger btn-xs js-del-tab btn-results" course-id='{{tab.course.pk}}'>&times;</button>
+                </a>
+              </li>
             {% endfor %}
-          {% endif %}
+            
+          </ul>
           
+          <!-- Begin tab contents -->
+          <div class="tab-content" id="scheduleTabContent">
+            
+            <!-- Begin search results -->
+            <div class="tab-pane show active" id="results">
+              {% if results_exist %}
+                <ul class="list-group fixed-panel">
+                {% for course in results %}
+                  <li class="list-group-item js-expand-block">
+                    <button class="btn js-expand-btn btn-primary btn-xs btn-results">+</button>{{ course.dept.code }} {{ course.number }} - {{ course.title }}
+                    <div class="js-expand-info">
+                      <!-- Begin column information -->
+                      <div class="row">
+                        <!-- Left column -->
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                          {% if course.open == False %}<p>Course is closed</p>{% endif %}
+                          {% if course.lab == True %}<p>Course has labs</p>{% endif %}
+                        </div>
+                        <!-- Right column -->
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                          {% if course.conflicts == True %}<p>Course conflicts</p>{% endif %}
+                          <p>Credits: {{course.credits}}</p>
+                        </div>
+                      </div>
+                      <!-- Begin block information -->
+                      <p><strong>Description:</strong> {{course.description}}</p>
+                      <p><strong>Restrictions:</strong> {{course.reqs}}</p>
+                      {% if course.geneds %}
+                        <p><strong>Geneds:</strong>
+                        {% for gened in course.geneds %}
+                          {{gened}}
+                        {% endfor %} </p>
+                      {% endif %}
+                    
+                    </div>
+                    <br>
+                    <button class="btn btn-fullInfo btn-xs btn-results js-make-tab" course-id="{{course.pk}}" course-dept="{{ course.dept.code }}" course-num="{{ course.number }}">Full course info</button>
+                  </li>
+                {% endfor %}
+                </ul>
+              {% else %}
+                <div class="fixed-panel"><p>No courses match your search</p></div>
+              {% endif %}
+            </div>
+            
+            <!-- Begin current courses -->
+            <div class="tab-pane" id="courses">
+              <ul class="list-group fixed-panel" id="current-courses">
+                <div class="fixed-panel">
+                  {% include 'schedule_current_courses.html' %}
+                </div>
+              </ul>
+            </div>
+            
+            <!-- Begin course tabs -->
+            {% if course_tabs %}
+              {% for tab in course_tabs %}
+                <div class="tab-pane" id="{{tab.course.pk}}">
+                  {% include 'schedule_tabs_content.html' %}
+                </div>
+              {% endfor %}
+            {% endif %}
+            
+          </div>
         </div>
       </div>
       <!-- End Columns -->
