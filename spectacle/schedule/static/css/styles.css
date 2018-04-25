@@ -46,9 +46,6 @@ body{
 .btn{
     margin: .5rem;
 }
-.btn-noleftmargin{
-    margin: .5rem .5rem .5rem 0;
-}
 h6{
     color: #000000;
     padding: 0;
