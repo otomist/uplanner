@@ -32,7 +32,26 @@
   {% load static %}
   <script src="{% static 'scripts/flowchart.js' %}"></script>
   <script>drawTable()</script>
-
+  <script type="text/javascript">
+    //this keeps the indicator on the side of the screen.
+  $(window).scroll(function(event) {
+    var x = screen.width + 110 + $(this).scrollLeft();
+    var y = $(this).scrollTop();
+    // whether that's below the form
+    if (x >= top) {
+        // if so, ad the fixed class
+        $('.flowchart .indicator').addClass('fixed');
+    } else {
+        // otherwise remove it
+        $('.flowchart .indicator').removeClass('fixed');
+    }
+    
+    $(".flowchart .indicator").offset({
+        left: x
+    });
+    
+});
+  </script>
   {% load static %}
   <!-- stylesheet used for flowchart by Sihua Chen -->
   <link href="{% static 'css/flowchart.css' %}" rel="stylesheet" type="text/css">
