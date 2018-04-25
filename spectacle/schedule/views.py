@@ -170,12 +170,16 @@ def add_section(request):
     section = Section.objects.get(uid=id)
     current_user = Student.objects.get(user_email=request.user.email)
     #TODO: this will break if does not exist
-    schedule = Schedule.objects.filter(student=current_user).get(title=request.session['active_schedule'])
+    schedule = None
+    if 'schedule' in request.GET:
+        schedule = Schedule.objects.filter(student=current_user).get(title=request.GET.get('schedule', None))
+    else:
+        schedule = Schedule.objects.filter(student=current_user).get(title=request.session['active_schedule'])
 
     if not ScheduleCourse.objects.filter(course=section).filter(schedule=schedule).exists():
         ScheduleCourse.objects.create_schedulecourse(section, schedule)
     schedulecourse = ScheduleCourse.objects.filter(course=section).get(schedule=schedule)
-        
+    
     data = {'events':get_schedulecourse_data(schedulecourse)}
     
     return JsonResponse(data)
@@ -312,7 +316,7 @@ def delete_tab(request):
     return JsonResponse({'status':'SUCCESS'})
 
     
-def get_current_data(schedulecourse):
+def get_current_data(schedulecourse, request):
     """
     returns data needed to render a single "current course" listing
     """
@@ -325,7 +329,11 @@ def get_current_data(schedulecourse):
     else:
         title = course.dept.code + " " + course.number + " - " + course.title + " (" + section.component + ")"
     
-    course_data = make_model_dict(section, [('title', title)])
+    current_user = Student.objects.get(user_email=request.user.email)
+    # each current course also has a listing of schedules it *doesn't* appear on
+    schedules = Schedule.objects.filter(student=current_user).select_related().exclude(schedulecourse__course=section)
+    
+    course_data = make_model_dict(section, [('title', title), ('schedules', schedules)])
     
     return course_data
 
@@ -347,7 +355,7 @@ def make_current_course(request):
     return render (
         request,
         'schedule_current_course.html',
-        {'course':get_current_data(schedulecourse)}
+        {'course':get_current_data(schedulecourse, request)}
     )
 
 def make_current_courses(request):
@@ -361,7 +369,7 @@ def make_current_courses(request):
     user_courses = []
     
     for course in schedule.schedulecourse_set.all():
-        user_courses.append(get_current_data(course))
+        user_courses.append(get_current_data(course, request))
     
     return render (
         request,

@@ -83,7 +83,40 @@ $(function () {
     });
 
     /*
-    This button adds a course to the schedule
+    This button adds a course to a schedule other than the currently active one
+    It uses an ajax request to retrieve the section information, then
+    uses the retrieved information to populate the schedule.
+    When the server recieves the ajax request, it updates the database
+    Unlike the function .js-add below, it does *not* update current courses
+    */
+    $(document).on('click', '.js-add-to-schedule', function () {
+        id = $(event.target).attr('section-id');
+        url_ajax = $('#meta').attr('add-section-url');
+
+        var schedule = $(event.target).attr('schedule-title');
+
+        // Execute the ajax to get course data from server, and update database
+        $.ajax({
+            url: url_ajax,
+            data: {
+                'id': id,
+                'schedule': schedule,
+            },
+            dataType: 'json',
+            success: function (data) {
+                
+                events = data['events']
+                
+                for (i = 0; i < events.length; i++) {
+                    scheduler.parse([events[i]], 'json');
+                }
+            }
+        });
+
+    });
+    
+    /*
+    This button adds a course to the currently active schedule
     It uses an ajax request to retrieve the section information, then
     uses the retrieved information to populate the schedule.
     When the server recieves the ajax request, it updates the database
@@ -123,6 +156,7 @@ $(function () {
                     );
                 }
                 
+                // toggle the add/delete button
                 $(".js-add[section-id=" + id + "]").css("display", "none");
                 $(".js-del[section-id=" + id + "]").css("display", "block");
             }
@@ -164,6 +198,7 @@ $(function () {
                     $('#curr-' + id).remove();
                 }
                 
+                // toggle the add/delete button
                 $(".js-add[section-id=" + id + "]").css("display", "block");
                 $(".js-del[section-id=" + id + "]").css("display", "none");
             }

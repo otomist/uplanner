@@ -5,5 +5,18 @@
     {% if course.component != 'CUS' %}
       <button class="btn btn-fullInfo btn-xs btn-results js-make-tab" course-id="{{course.clss.pk}}" course-dept="{{ course.clss.dept.code }}" course-num="{{ course.clss.number }}">Full course info</button>
     {% endif %}
+    {% if course.schedules %}
+      <div class="dropdown">
+        <button class="btn btn-xs btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+          add to...
+          <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+          {% for schedule in course.schedules %}
+            <button class="btn btn-xs js-add-to-schedule" section-id="{{course.uid}}" schedule-title="{{schedule.title}}"=>{{schedule.title}}</button>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
   </div>
 </p>
