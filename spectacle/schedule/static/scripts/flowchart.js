@@ -87,7 +87,7 @@ function makeTable(){
 	var tableDataEnd = "</td>";
 	for(var i = 1; i < 9; i++){
 		console.log(row_num);
-		var rowStart = "<tr id = 'levelNUM00' ><th>level LEL00+</th>";
+		var rowStart = "<tr id = 'levelNUM00' ><th>LEVEL LEL00+</th>";
 		rowStart = rowStart.replace("LEL", i);
 		table+=rowStart.replace("NUM", i);
 		var row_num = 1;
@@ -97,6 +97,8 @@ function makeTable(){
 			if(Number(values[1]) === i){
 				if(row_num === 0){
 					table+="<tr>"
+					table+=tableDataStart;
+					table+=tableDataEnd;
 					table+=tableDataStart;
 					table+=courseBtn(key);
 					table+=tableDataEnd;
@@ -246,8 +248,9 @@ function totalCredits(){
 	credits = 0
 	for(var key in examples){
 		var courseInfo = examples[key];
-
-		credits += (courseInfo[2])*Number(courseInfo[4].substring(0,1));
+		if(examples[4] != null){
+			credits += Number(courseInfo[2])*Number(courseInfo[4][1]);
+		}
 	}
 	var element = document.getElementById("credits");
 	element.innerHTML = "Total Credits: " + credits;
