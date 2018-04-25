@@ -196,9 +196,10 @@ function addLink(course){
 
 function addDoubleClickerEvent(course){
 	var curr = document.getElementById(course);
+	//console.log("::",examples[course]);
 	// if(curr == null){return}//this is to stop errors but must be changed in future
 	curr.addEventListener("dblclick", function(e){
-		window.open("courseModel.html");
+		window.open("course/" + examples[course][9]);
 	})
 }
 function addOnClikerEvent(course){

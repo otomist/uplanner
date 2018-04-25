@@ -829,8 +829,9 @@ def prereqs(request):
                                  re.findall('\d+', str(c.credits) ),#credits(4)...a list of numbers extracted from the string because there is sometimes the case of 1-6 credits for independent studies.
                                  1,#required(5)...TODO get required from server right now using temp default to 1 
                                  0,#root(6)]...default is 0
-                                 c.title,
-                                 form.cleaned_data['departments']
+                                 c.title,#course title(7)
+                                 form.cleaned_data['departments'],#course depp (8)
+                                 c.id#course id(9)
                                  ]
                                  # len(c.reqs.split(" ")),
                                  # c.description]
