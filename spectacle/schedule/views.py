@@ -663,6 +663,13 @@ def schedule(request):
                         gened_filter = gened_filter | Q(gened__code=gened)
             if any_selected:
                 results = results.filter(gened_filter)
+                
+                
+        if form.cleaned_data['start_time']:
+            results = results.select_related().filter(section__start__gte=form.cleaned_data['start_time'])
+        
+        if form.cleaned_data['end_time']:
+            results = results.select_related().filter(section__ending__lte=form.cleaned_data['end_time'])
         
         # filter out all courses that conflict with current courses
         if not form.cleaned_data['conflicted']:

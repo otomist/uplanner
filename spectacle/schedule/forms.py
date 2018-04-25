@@ -113,10 +113,11 @@ class ScheduleForm(forms.Form):
     #Sihua's Edit End
     
     gened_list = list(map(lambda gened: (gened.code, gened.code + ": " + gened.name), Gened.objects.all()))
-    
     #see custom field above
     geneds = MultiBooleanField(choices=gened_list, required=False)
     
+    start_time = forms.TimeField(required=False, label="Start time")
+    end_time = forms.TimeField(required=False, label="End time")
     
     # make either departments or keywords mandatory; at least one must be filled in
     def clean(self):

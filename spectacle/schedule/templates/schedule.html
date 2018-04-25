@@ -259,11 +259,24 @@
               </div>
               <!-- End # credits checkboxes -->
             </div>
+            <div class="row search-container search-toggle">
+              <div class="col-lg-auto col-md-auto col-sm-auto col-xs-auto bg-light">
+                <label>Earliest course start time:</label><br>
+                {{ form.start_time }}
+              </div>
+              <div class="col-lg-auto col-md-auto col-sm-auto col-xs-auto bg-light">
+                <label>Latest course end time:</label><br>
+                {{ form.end_time }}
+              </div>
+              <div class="col-lg-auto col-md-auto col-sm-auto col-xs-auto bg-light">
+                <label>Course term:</label><br>
+                {{ form.course_term }}
+              </div>
+            </div>
           </div>
           <!-- End checkbox column options -->
           <!-- Begin Start Search Button TODO: reconsider the positioning of this, or its necessity -->
           <div class="text-right">
-            {{ form.course_term }}
             <input type="submit" value="Search" class="btn btn-primary btn-sm"/>
           </div>
         </form>
