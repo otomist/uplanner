@@ -211,3 +211,6 @@ h4{
   /* "transparent" only works here because == rgba(0,0,0,0) */
   background-image: linear-gradient(to bottom, transparent, white);
 }
+.js-schedule-container{
+    margin: 3px;
+}
