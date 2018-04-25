@@ -1,11 +1,33 @@
-{% extends "base_generic.html" %}
-
-{% block content %}
-  <h1>{{ course.dept }} {{ course.number }} - {{ course.title }}</h1>
-  
-  {% for section in sections %}
-    {{ section }}
+{% extends "base_generic.html" %} {% block content %}
+<br>
+<div class="container-fluid">
+  <h2 class="text-center">
+    <p>{{course.dept.code}} {{course.number}}: {{course.title}}</p>
+  </h2>
+  <!--TODO: incorporate more generic fields -->
+  <div class="container">
+    <p>Description: {{course.description}}</p>
     <br>
-  {% endfor %}
-  
+    <p>Requirements: {{course.reqs}}</p>
+
+    {% for section in sections %}
+    <ul class="list-group">
+      <li class="list-group-item">Section ID: {{section.sid}}</li>
+      <li class="list-group-item">{{section.days}}, {{section.start}} - {{section.ending}}</li>
+      <li class="list-group-item">Professor: {{section.professor}}</li>
+      <li class="list-group-item">Room: {{section.room}}</li>
+      <li class="list-group-item">Cap: {{section.cap}} || Enrolled: {{section.enrolled}}</li>
+      <li class="list-group-item">Waitlist capacity: {{section.wcap}} || Waitlist Enrolled: {{section.wenrolled}}</li>
+    </ul>
+    <br> {% endfor %}
+  </div>
+  <!-- buttons for adding / deleting classes -->
+
+  <!--/div>
+    </div-->
+</div>
 {% endblock %}
+<!--
+sections:
+[{'name':lab, 'sections':[lab 1, lab 2,...]}, {'name':lec, 'sections':[lec1, lec2, ...]}, {'name':colloquium, 'sections':[]}]
+-->
