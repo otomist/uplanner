@@ -53,13 +53,13 @@
           <a class="nav-link" href="{% url 'profile' %}">Profile</a>
         </li-->
         {% if user.is_authenticated %}
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'logout' %}">Logout</a>
-        </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+          </li>
         {% else %}
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'profile'%}">Login</a>
-        </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'schedule'%}">Login</a>
+          </li>
         {% endif %}
         {% if request.user.is_staff %}
         <li class="nav-item {% if highlight_admin %} active {% endif %}">

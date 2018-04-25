@@ -1,5 +1,11 @@
 $(function () {
 
+    //Tutorial functions -- show tooltip for searching
+    $(function () {
+        //$('.js-search-tooltip[data-toggle="tooltip"]').tooltip('show')
+        //$('.js-tab-tooltip[data-toggle="tooltip"]').first().tooltip('show')
+    });
+
     // Makes a new tab in schedule.html, and populates it with course details.
     $(document).on('click', '.js-make-tab', function () {
         /*
@@ -36,7 +42,8 @@ $(function () {
 
         // Show the tab
         $('#' + id + '-tab').tab('show');
-
+        //console.log($('.js-add-tooltip'));
+        //$('.js-add-tooltip[data-toggle="tooltip"]').tooltip('show');
     });
 
     // Reloads a course tab every time it is visited, in case something has changed

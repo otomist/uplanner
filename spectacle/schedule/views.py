@@ -5,7 +5,7 @@ from django.contrib.auth.models import AnonymousUser
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views import generic
 from django.http import JsonResponse, QueryDict
 from django.urls import reverse
@@ -575,6 +575,18 @@ def schedule(request):
         request.session.save()
     
     results_exist = True
+        
+    search_tooltip = False
+    if 'search_tooltip' in request.session and request.session['search_tooltip']:
+        search_tooltip = True
+        
+    course_tab_tooltip = False
+    if 'course_tab_tooltip' in request.session and request.session['course_tab_tooltip']:
+        course_tab_tooltip = True
+        
+    add_course_tooltip = False
+    if 'add_course_tooltip' in request.session and request.session['add_course_tooltip']:
+        add_course_tooltip = True
     
     if form.is_valid():
         
@@ -760,7 +772,7 @@ def schedule(request):
     return render (
         request,
         'schedule.html',
-        {'highlight_schedule':highlight_schedule, 'results_exist':results_exist, 'filters_expanded':filters_expanded, 'form':form, 'user_event_form':user_event_form, 'schedule_form':schedule_form, 'results':results, 'course_tabs':course_tabs, 'user_schedules':user_schedules, 'user_courses':user_courses}
+        {'highlight_schedule':highlight_schedule, 'results_exist':results_exist, 'filters_expanded':filters_expanded, 'form':form, 'user_event_form':user_event_form, 'schedule_form':schedule_form, 'results':results, 'course_tabs':course_tabs, 'user_schedules':user_schedules, 'user_courses':user_courses, 'search_tooltip':search_tooltip, 'course_tab_tooltip':course_tab_tooltip, 'add_course_tooltip':add_course_tooltip}
     )
 
 #==================================================================#    
@@ -829,7 +841,7 @@ def prereqs(request):
     # print(type(course_list))
     # for x in course_list:
     #     print("\nDEBUG:: ", x['title'], '\n')
-
+    
     return render(
         request,
         'prereqs.html',
@@ -855,8 +867,10 @@ def register(request):
                     password=user_form.cleaned_data['password1'],
                 )
                 login(request, new_user)
-            
-            return profile(request)
+                request.session['search_tooltip'] = True
+                request.session['course_tab_tooltip'] = True
+                request.session['add_course_tooltip'] = True
+            return redirect(reverse('schedule'))
         else:
             args = {'user_form':user_form, 'student_form':student_form}
             return render(request, 'registration/registration_form.html', args)
