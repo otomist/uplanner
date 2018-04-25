@@ -565,28 +565,18 @@ def schedule(request):
     #store whether or not search filters are currently expanded
     filters_expanded = True
     if 'filters_expanded' in request.session:
+        print("in session!!!")
         filters_expanded = request.session['filters_expanded']
         if filters_expanded == 'true':
             filters_expanded = True
         else:
             filters_expanded = False
     else:
+        print("not in session!!!")
         request.session['filters_expanded'] = filters_expanded
         request.session.save()
     
     results_exist = True
-        
-    search_tooltip = False
-    if 'search_tooltip' in request.session and request.session['search_tooltip']:
-        search_tooltip = True
-        
-    course_tab_tooltip = False
-    if 'course_tab_tooltip' in request.session and request.session['course_tab_tooltip']:
-        course_tab_tooltip = True
-        
-    add_course_tooltip = False
-    if 'add_course_tooltip' in request.session and request.session['add_course_tooltip']:
-        add_course_tooltip = True
     
     if form.is_valid():
         
@@ -772,7 +762,7 @@ def schedule(request):
     return render (
         request,
         'schedule.html',
-        {'highlight_schedule':highlight_schedule, 'results_exist':results_exist, 'filters_expanded':filters_expanded, 'form':form, 'user_event_form':user_event_form, 'schedule_form':schedule_form, 'results':results, 'course_tabs':course_tabs, 'user_schedules':user_schedules, 'user_courses':user_courses, 'search_tooltip':search_tooltip, 'course_tab_tooltip':course_tab_tooltip, 'add_course_tooltip':add_course_tooltip}
+        {'highlight_schedule':highlight_schedule, 'results_exist':results_exist, 'filters_expanded':filters_expanded, 'form':form, 'user_event_form':user_event_form, 'schedule_form':schedule_form, 'results':results, 'course_tabs':course_tabs, 'user_schedules':user_schedules, 'user_courses':user_courses,}
     )
 
 #==================================================================#    
@@ -867,9 +857,6 @@ def register(request):
                     password=user_form.cleaned_data['password1'],
                 )
                 login(request, new_user)
-                request.session['search_tooltip'] = True
-                request.session['course_tab_tooltip'] = True
-                request.session['add_course_tooltip'] = True
             return redirect(reverse('schedule'))
         else:
             args = {'user_form':user_form, 'student_form':student_form}

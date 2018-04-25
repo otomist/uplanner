@@ -20,7 +20,7 @@
         {% endif %}
       {% endif %}
       
-      <form method="post" action="{% url 'login' %}" style="text-align: center;">
+      <form method="post" action="{% url 'login' %}?next={{request.path}}" style="text-align: center;">
       {% csrf_token %}
       
         <div>
@@ -33,7 +33,7 @@
         </div>
         <div>
           <input type="submit" value="login" />
-          <input type="hidden" name="next" value="{% url 'schedule'%}?next={{request.path}}" />
+          <input type="hidden" name="next" value="{% url 'schedule'%}?next={{request.path}}">
         </div>
       </form>
 

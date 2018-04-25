@@ -333,6 +333,7 @@ function init() {
         data: {},
         dataType: 'json',
         success: function (data) {
+            console.log("Ajax request!!!!");
             var count = data['count'];
             var courses = data['courses'];
             var schedule = data['active_schedule'];
@@ -340,6 +341,7 @@ function init() {
             
             //I don't know why this gets converted to a string...
             if (filters_expanded === 'false') {
+                console.log("Flip the toggle!!!");
                 toggleSearch();
             }
             

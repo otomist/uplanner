@@ -277,7 +277,7 @@
           <!-- End checkbox column options -->
           <!-- Begin Start Search Button TODO: reconsider the positioning of this, or its necessity -->
           <div class="text-right">
-            <input type="submit" value="Search" class="btn btn-primary btn-sm js-search-tooltip" data-toggle="tooltip" data-placement="left" title="Choose filters and click search to start building your schedule!" trigger="manual"/>
+            <input type="submit" value="Search" class="btn btn-primary btn-sm"/>
           </div>
         </form>
 
@@ -342,7 +342,7 @@
                     
                     </div>
                     <br>
-                    <button class="btn btn-fullInfo btn-xs btn-results js-make-tab js-tab-tooltip" course-id="{{course.pk}}" course-dept="{{ course.dept.code }}" course-num="{{ course.number }}" data-toggle="tooltip" data-placement="top" title="Click me to view all sections and add one to your schedule!" trigger="manual">Full course info</button>
+                    <button class="btn btn-fullInfo btn-xs btn-results" course-id="{{course.pk}}" course-dept="{{ course.dept.code }}" course-num="{{ course.number }}">Full course info</button>
                   </li>
                 {% endfor %}
                 </ul>
