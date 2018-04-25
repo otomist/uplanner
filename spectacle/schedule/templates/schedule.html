@@ -349,7 +349,7 @@
             <!-- Begin course tabs -->
             {% if course_tabs %}
               {% for tab in course_tabs %}
-                <div class="tab-pane" id="{{tab.course.pk}}">
+                <div class="tab-pane fixed-panel" id="{{tab.course.pk}}">
                   {% include 'schedule_tabs_content.html' %}
                 </div>
               {% endfor %}
