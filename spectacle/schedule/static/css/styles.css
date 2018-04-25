@@ -1,213 +1,127 @@
+html {
+  font-family: sans-serif;
+}
 
-body{
-    /* Padding so that the footer doesn't block anything */
-    margin-bottom: 35px;
-    background-color: #eff2f5;
+table {
+  /*border: 2px solid rgb(200,200,200);*/
+  letter-spacing: 3px;
+  font-size: 0.8rem;
 }
-#landing{
-    background-image: url('../images/grad_landing.jpeg');
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    background-position: center;
-    background-size: cover;
+
+td{
+  /*border: 1px solid rgb(190,190,190);*/
+  padding: 2px 2px;
 }
-.jumbotron{
-    background: none;
+
+th {
+  background-color: rgb(235,235,235);
+  color: grey;
+  align-content: center;
+  text-align: center;
+  padding: 2px 20px;
+}
+
+td {
+  text-align: center;
+}
+
+tr:nth-child(even) td {
+  background-color: white;
+}
+
+tr:nth-child(odd) td {
+  background-color: white;
+}
+
+caption {
+  padding: 5px;
+}
+
+.text {
+  color: black;
+}
+
+.button {
+   border: 3px solid #65a9d7;
+   background: #3e779d;
+   background: -webkit-gradient(linear, left top, left bottom, from(#65a9d7), to(#3e779d));
+   background: -webkit-linear-gradient(top, #65a9d7, #3e779d);
+   background: -moz-linear-gradient(top, #65a9d7, #3e779d);
+   background: -ms-linear-gradient(top, #65a9d7, #3e779d);
+   background: -o-linear-gradient(top, #65a9d7, #3e779d);
+   background-image: -ms-linear-gradient(top, #65a9d7 0%, #3e779d 100%);
+
+
+   -webkit-box-shadow: rgba(255,255,255,0.4) 0 0px 0, inset rgba(255,255,255,0.4) 0 1px 0;
+   -moz-box-shadow: rgba(255,255,255,0.4) 0 0px 0, inset rgba(255,255,255,0.4) 0 1px 0;
+   box-shadow: rgba(255,255,255,0.4) 0 0px 0, inset rgba(255,255,255,0.4) 0 1px 0;
+   text-shadow: #8085bd 0 1px 0;
+   color: black;
+   font-size: 14px;
+   font-family: helvetica, serif;
+   text-decoration: none;
+   vertical-align: middle;
+   height: 60px;
+   width: 150px;
+   }
+
+.button:active {
+   text-shadow: #1e4158 0 1px 0;
+   border: 5px solid #0a3c59;
+   background: #65a9d7;
+   background: -webkit-gradient(linear, left top, left bottom, from(#3e779d), to(#3e779d));
+   background: -webkit-linear-gradient(top, #3e779d, #65a9d7);
+   background: -moz-linear-gradient(top, #3e779d, #65a9d7);
+   background: -ms-linear-gradient(top, #3e779d, #65a9d7);
+   background: -o-linear-gradient(top, #3e779d, #65a9d7);
+   background-image: -ms-linear-gradient(top, #3e779d 0%, #65a9d7 100%);
+   color: #fff;
+   }
+
+
+  /* Dropdown Button */
+.dropbtn {
+    background-color: #3498DB;
     color: white;
+    padding: 6px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
 }
-.bg-umass{
-    background-color: #881c1c;
+
+/* Dropdown button on hover & focus */
+.dropbtn:hover, .dropbtn:focus {
+    background-color: #2980B9;
 }
-.bg-umass-lite{
-    background-color: #a92323;
+
+/* The container <div> - needed to position the dropdown content */
+.dropdown {
+    position: relative;
+    display: inline-block;
 }
-.navbar-dark .navbar-nav .nav-link {
-    color: rgba(255, 255, 255, .7);
-}
-.navbar{
-    color: rgba(255, 255, 255);
-}
-.nav-link:hover, .nav-link:focus{
-    border-radius: .5rem;
-    background-color: #a92323;
-    outline: none;
-}
-.footer-text{
-    color: #ffff;
-    text-align: right;
-    margin: 0; 
-    padding: 0;
-    font-size: .7rem;
-}
-.search-container{
-    padding-top: .8rem;
-    font-size: .6rem;
-}
-.btn{
-    margin: .5rem;
-}
-h6{
-    color: #000000;
-    padding: 0;
-    margin: 0;
-    font-size: 1rem;
-}
-h4{
-    padding:0.5em;
-}
-#flowchartplaceholder{
-    background-image:url("res/fchartPlacehold.png");
+
+/* Dropdown Content (Hidden by Default) */
+.dropdown-content {
+    display: none;
     position: absolute;
-    background-position: center top;
-    background-repeat: no-repeat;
-    height: 75%;
-    width:100%;
-}
-#searchToggleBTN img {
-    height: 12px;  
-    width: 12px;
-}
-#expandBtn{
-    display: none;
-}
-#hideBtn{
-    display: block;
-}
-.js-expand-info{
-    display: none;
-}
-.js-expand-default{
-    display: block;
-}
-.expandBtn:hover{
-    background-color: #8799ac;
-    border-color: #8799ac;
-}
-.expandBtn:focus{
-    background-color: #8799ac;
-    border-color: #8799ac;
-}
-.btn-results{
-    margin: 0;
-    padding: 1px 1.5px 2px 1px;
-    line-height: 1;
-}
-.list-group-item{
-    font-size: .9rem;
-}
-.fixed-panel {
-    min-height: 28rem;
-    max-height: 28rem;
-    overflow-y: scroll;
-}
-.accInfo{
-    font-size: 30px; 
-    border-bottom: 40px;
-}
-.courseDetails{
-    font-size: 14px;
-}
-.smMargin{
-    margin: .3rem;
-}
-.searchCol{
-    padding-top:1em;
-    height:20%;
-}
-#filters_wrapper{
-    text-align: center;
-}
-.highlighted_timespan {
-    transition: background-color 400ms;
-    -moz-transition: background-color 400ms;
-    -webkit-transition: background-color 400ms;
-    -o-transition: background-color 400ms;
-    opacity:0.4;
-    filter:alpha(opacity=40);
-}
-.highlighted_timespan:hover {
-    /* This color is good for classes!*/
-    background-color: #94b0ca9f;
-}
-.errorlist {
-    background-color: yellow;
-    color:red;
-}
-.results-box{
-    border: solid 1px;
-    border-radius: 5px;
-    border-color: #abb6c2;
-}
-.btn-warning{
-    color: white;
-}
-.btn-info:hover{
-    color: black;
-}
-.btn-danger:hover{
-    color: black;
-}
-.btn-primary:hover{
-    color: black;
-}
-.btn-info:focus{
-    color: black;
-}
-.btn-danger:focus{
-    color: black;
-}
-.btn-primary:focus{
-    color: black;
-}
-.btn-fullInfo {
-    color: #fff;
-    background-color: #8ac3ff;
-    border-color: #8ac3ff;
-}
-.btn-fullInfo:hover{
-    color: rgb(0, 0, 0);
-    background-color: #1f88f8;
-    border-color: #1f88f8;
-}
-.btn-fullInfo:focus{
-    color: rgb(0, 0, 0);
-    background-color: #1f88f8;
-    border-color: #1f88f8;
-}
-.navTab:hover{
-    color: white;
-    background-color: #5e7083;
-    border-color: #5e7083;
-}
-.navTab:focus{
-    color: white;
-    background-color: #5e7083;
-    border-color: #5e7083;
-}
-.input:hover{
-    background-color: #5e7083;
-    border-color: #5e7083;
-}
-.btnAddDelTab{
-    padding: 8px;
+    background-color: #f1f1f1;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
 }
 
-.sidebar-box {
-  max-height: 120px;
-  position: relative;
-  overflow: hidden;
+/* Links inside the dropdown */
+.dropdown-content a {
+    align-content: left;
+    font-size: 15px;
+    color: black;
+    padding: 10px 10px;
+    text-decoration: none;
+    display: block;
 }
-.sidebar-box .read-more { 
-  position: absolute; 
-  bottom: 0; 
-  left: 0;
-  width: 100%; 
-  text-align: center; 
-  margin: 0; padding: 30px 0; 
-	
-  /* "transparent" only works here because == rgba(0,0,0,0) */
-  background-image: linear-gradient(to bottom, transparent, white);
-}
-.js-schedule-container{
-    margin: 3px;
-}
+
+/* Change color of dropdown links on hover */
+.dropdown-content a:hover {background-color: #ddd}
+
+/* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
+.show {display:block;}

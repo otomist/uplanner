@@ -31,7 +31,9 @@ var examples = course_list
 // will add more features for more funcitons. 
 // Note: (D) means things should be loaded from server. 
 // Selected, Linked, root shouble be initialized to 0.
-// examples with format courseNum: [(D)listOfPre(0), (D)levelNumber(1), Selected(2), linked(3), (D)credits(4), (D)required(5), root(6), title(7), department(8)]
+// examples with format courseNum: [(D)listOfPre(0), 
+//(D)levelNumber(1), Selected(2), linked(3), 
+//(D)credits(4), (D)required(5), root(6), title(7), department(8)]
 
 // var examples = {
 // 	"cs121":[[],1,0,0,4,1,0],
@@ -40,15 +42,25 @@ var examples = course_list
 // 	"cs230":[["cs121","cs187"], 2,0,0,4,1,0],
 // 	"cs240":[["cs121","cs187","cs220"], 2,0,0,4,1,0],
 // 	"cs250":[["cs121","cs187","cs230"], 2,0,0,4,1,0],
-// 	"cs326":[["cs121","cs187","cs240","cs220"],3,0,0,3,0,0],
-// 	"cs383":[["cs121","cs187","cs230","cs250"],3,0,0,3,0,0],
-// 	"cs446":[["cs121","cs187","cs230","cs250"],4,0,0,3,0,0],
-// 	"cs589":[["cs230","cs250","cs383"],5,0,0,3,0,0]
+// 	"cs326":[["cs121","cs187","cs240","cs220"],2,0,0,3,0,0],
+// 	"cs383":[["cs121","cs187","cs230","cs250"],2,0,0,3,0,0],
+// 	"cs446":[["cs121","cs187","cs230","cs250"],2,0,0,3,0,0],
+// 	"cs589":[["cs230","cs250","cs383"],2,0,0,3,0,0]
 // };
 
 // create course section for each couser by button
+for(key in examples){
+	for(a in examples[key]){
+		if(examples[key][a] === "1"){
+			examples[key][a] = 1;
+		}
+		if(examples[key][a] === "0"){
+			examples[key][a] = 0;
+		}
+	}
+}
 function courseBtn(course){
-	btn = "<button class='button' id = 'Button'>TextREQURIED</br>coursetitle</br>CREDITS credits</button>";
+	btn = "<button class='button' id = 'Button'>TextREQURIED</br>CREDITS credits</button>";
 	// auto replace each button and text with .replace().
 	//console.log('course: ', course)
 	if(examples[course][5] === 1){
@@ -64,62 +76,60 @@ function courseBtn(course){
 	return btn;
 }
 
-//create indicators on right side of screen for the flowchart
-function makeIndicators(){
-	ind = $('.indicator')[0]
-	courseTable = $('.courseTable')[0];
-	for (var i = courseTable.rows.length - 1; i >= 0; i--) {
-		var btn = $('<button id="gotobutton"> => </button>');
-	    btn.appendTo(ind);
-	}
-}
 
 // auto table generator.
 // append all course from data to tables. Seperate by class level. 
 function makeTable(){
+	console.log(1);
 	var table = "";
 	var rowEnd = "</tr>";
 	var tableDataStart = "<td>";
 	var tableDataEnd = "</td>";
 	for(var i = 1; i < 9; i++){
-		//var tr = courseTable.insertRow();
-		var indicator = "<tr class = 'indicator' id = 'indicator_NUM00'><th>=></th>";  
-		var rowStart = "<tr id = 'levelNUM00'><th>level LEL00+</th>";
+		console.log(row_num);
+		var rowStart = "<tr id = 'levelNUM00' ><th>LEVEL LEL00+</th>";
 		rowStart = rowStart.replace("LEL", i);
-		indicator = indicator.replace("LEL", i);
 		table+=rowStart.replace("NUM", i);
-		//table+=indicator.replace("NUM",i);
-
+		var row_num = 1;
 		for(var key in examples){
 			//console.log('examples[key]: ',examples[key], key)
 			var values = examples[key];
 			if(Number(values[1]) === i){
-
-				// var td = tr.insertCell();
-    			//td.appendChild(document.createTextNode('Cell'));
-    			//td.style.border = '1px solid black';
-
-				courseInfo_1 = tableDataStart.replace("courseNum", key);
-				table+=courseInfo_1;
-				table+=courseBtn(key);
-				table+=tableDataEnd;
+				if(row_num === 0){
+					table+="<tr>"
+					table+=tableDataStart;
+					table+=tableDataEnd;
+					table+=tableDataStart;
+					table+=courseBtn(key);
+					table+=tableDataEnd;
+					row_num+=2;
+				}
+				else if(row_num === 8){
+					table+=tableDataStart;
+					table+=courseBtn(key);
+					table+=tableDataEnd;
+					table+=rowEnd;
+					row_num = 0;
+				}
+				//courseInfo_1 = tableDataStart.replace("courseNum", key);
+				else{
+					table+=tableDataStart;
+					table+=courseBtn(key);
+					table+=tableDataEnd;
+					row_num+=1;
+				}
 			}
 		}
 		table+=rowEnd;
 
 	}
-	flowchart_elem = $('.flowchart')[0]
-	document.write("<table class='courseTable'>" + table + "</table>");
-	c_table = $('.courseTable')[0];
-	flowchart_elem.append(c_table)
-
-	makeIndicators()
+	document.write("<table>" + table + "</table>");
 }
 function highlight(e){
-	e.style.border = "7px solid #881c1c";
+	e.style.border = "4px solid #a92323";
 }
 function unhighlight(e){
-	e.style.border = "5px solid #0a3c59";
+	e.style.border = "3px solid #65a9d7";
 }
 
 // implement the even function to all course buttons so that when mouse move over one course system will highlight all pre-req.
@@ -131,7 +141,7 @@ function addMoveOverEvent(course){
 	}
 
 	curr.addEventListener("mouseenter", function(e) {   
-		if(examples[course][2] != 1){
+		if(Number(examples[course][2]) != 1){
 	    // highlight the mouseenter target
 		// highlight by changing the border color.
 	    	highlight(e.target);
@@ -150,7 +160,7 @@ function addMoveOverEvent(course){
 	})
     // reset the color after mouse leave
     curr.addEventListener("mouseleave", function(e){
-    	if(examples[course][2] != 1){
+    	if(Number(examples[course][2]) != 1){
 	    	unhighlight(e.target);
 	    	var pre_requ = examples[course][0];
 	    	///console.log("pres: ", pre_requ)
@@ -169,7 +179,7 @@ function deleteLink(course){
 	if (examples[course][6] === 1){
 		var pre_requ = examples[course][0];
 		for(var i = 0; i < pre_requ.length; i++){
-			examples[pre_requ[i]][3]-=1;
+			examples[('title' + pre_requ[i])][3]-=1;
 		}
 		examples[course][6] = 0;
 	}
@@ -180,7 +190,7 @@ function deleteLink(course){
 function addLink(course){
 	var pre_requ = examples[course][0];
 	for(var i = 0; i< pre_requ.length; i++){
-		examples[pre_requ[i]][3]+=1;
+		examples[('title' + pre_requ[i])][3]+=1;
 	}
 }
 
@@ -195,7 +205,6 @@ function addOnClikerEvent(course){
 	var curr = document.getElementById(course);
 	// if(curr === null){return}//this is to stop errors but must be changed in future
 	curr.addEventListener("click", function(e){
-		//console.log("called")
 		if(examples[course][2] === 0){
 			examples[course][2] = 1;
 			highlight(e.target);
@@ -204,16 +213,16 @@ function addOnClikerEvent(course){
 			examples[course][6] = 1;
 	    	for( var i = 0; i<pre_requ.length; i++ ){
 	    		// selected. 
-	    		examples[pre_requ[i]][2] = 1;
+	    		examples['title' + pre_requ[i]][2] = 1;
 	    		// linked to course
-				var pre = document.getElementById(pre_requ[i]);
+				var pre = document.getElementById('title' + pre_requ[i]);
 	    		highlight(pre);
 			}
 			totalCredits();
 		}
 		else{
 			
-			if(examples[course][3] === 0){
+			if(Number(examples[course][3]) === 0){
 				examples[course][2] = 0;
 				unhighlight(e.target);
 				deleteLink(course);
@@ -228,24 +237,6 @@ function addOnClikerEvent(course){
 }
 
 
-function myFunction() {
-    document.getElementById("myDropdown").classList.toggle("show");
-}
-
-// Close the dropdown menu if the user clicks outside of it
-window.onclick = function(event) {
-  if (!event.target.matches('.dropbtn')) {
-
-    var dropdowns = document.getElementsByClassName("dropdown-content");
-    var i;
-    for (i = 0; i < dropdowns.length; i++) {
-      var openDropdown = dropdowns[i];
-      if (openDropdown.classList.contains('show')) {
-        openDropdown.classList.remove('show');
-      }
-    }
-  }
-}
 
 for(var key in examples){
 	addMoveOverEvent(key);
@@ -257,21 +248,8 @@ function totalCredits(){
 	credits = 0
 	for(var key in examples){
 		var courseInfo = examples[key];
-		
-		if(courseInfo[2]){		
-			console.log("info:", courseInfo[2], courseInfo[4]);
-		}
-
-		if(courseInfo[2] && courseInfo[4].length > 1)
-		{
-			console.log("range of numbers we don't know how to handle yet.");
-			console.log('FOR NOW WE TAKE A LOWER BOUND');
-			credits += courseInfo[2] * Number(courseInfo[4][0]);			
-			console.log(credits)
-		}
-		else{
-			credits += courseInfo[2] * Number(courseInfo[4][0]);			
-			console.log(credits);
+		if(examples[4] != null){
+			credits += Number(courseInfo[2])*Number(courseInfo[4][1]);
 		}
 	}
 	var element = document.getElementById("credits");
@@ -279,6 +257,7 @@ function totalCredits(){
 }
 function drawTable(){
 	makeTable();
+	console.log(examples)
 	for(var key in examples){
 		//console.log('key:',key)
 		addMoveOverEvent(key);
