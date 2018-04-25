@@ -200,22 +200,15 @@ class flowchartForm(forms.Form):
 
 class StudentForm(forms.ModelForm):
     error_css_class = "error"
-    sid = forms.CharField(max_length=8, required=True)
-    credits = forms.IntegerField(required=True)
     user_email = forms.EmailField(widget = forms.HiddenInput(), required=False)
     class Meta:
         model = Student
         fields = {
-            'sid',
-            'credits',
             'user_email',
-            'major',
         }
     
     def save(self, commit=True):
         student = super(StudentForm, self).save(commit=False)
-        student.sid = self.cleaned_data['sid']
-        student.credits = self.cleaned_data['credits']
         student.user_email = self.cleaned_data['user_email']
         if commit:
             student.save()
@@ -233,7 +226,6 @@ class UserForm(UserCreationForm):
         fields = (
             'first_name',
             'last_name',
-            'username',
             'password1',
             'password2',
             'email',
@@ -242,7 +234,7 @@ class UserForm(UserCreationForm):
         user = super(UserForm, self).save(commit=False)
         user.first_name = self.cleaned_data['first_name']
         user.last_name = self.cleaned_data['last_name']
-        user.username = self.cleaned_data['username']
+        user.username = self.cleaned_data['email']
         user.email = self.cleaned_data['email']
         if commit:
             user.save()

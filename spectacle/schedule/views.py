@@ -851,7 +851,7 @@ def register(request):
             if student_form.is_valid():
                 student_form.save()
                 new_user = authenticate(
-                    username=user_form.cleaned_data['username'],
+                    username=user_form.cleaned_data['email'],
                     password=user_form.cleaned_data['password1'],
                 )
                 login(request, new_user)

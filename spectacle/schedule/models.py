@@ -136,9 +136,6 @@ class Section(models.Model):
         
 class Student(models.Model):
     user_email = models.EmailField(unique=True, null=False, blank = False,default='')
-    sid = models.CharField(max_length=8, help_text='8 digit spire id')
-    major = models.ForeignKey(Department, on_delete='SET_NULL', null=True)
-    credits = models.IntegerField(help_text='The current cumulative number of credits taken')
     USERNAME_FIELD = 'user'
     
     def __str__(self):
