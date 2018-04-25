@@ -8,19 +8,19 @@
 	{{ course_list }}
 </p>
 
-<div class="container-fluid text-left">
-<h3>Course Prerequisites Flowchart</h3>
+<div align="center">
+  <h4>Course Prerequisites Flowchart</h4>
+
 	<form action="" method="get">
 		{{ form.departments }}
 		<input type="submit" value="Reload" class="btn btn-primary btn-sm"/>
 	</form>
-<p style="font-size: 11px; color: grey">Note: You have to take course(s) with * to satisfy department requirements</p>
-<p id ='credits'>Total Credits: 0</p>
+
 </div>
+
+<p style="font-size: 11px; color: grey" align="center">  Note: You have to take course(s) with * to satisfy department requirements</p>
   <!-- Begin flowchart -->
-<div class="flowchart">
-  <div class="indicator"></div>
-</div>
+
   <!-- End flowchart -->
 {% endblock %}
 
@@ -31,28 +31,10 @@
   </script>
   {% load static %}
   <script src="{% static 'scripts/flowchart.js' %}"></script>
-  <script>drawTable()</script>
-  <script type="text/javascript">
-    //this keeps the indicator on the side of the screen.
-  $(window).scroll(function(event) {
-    var x = screen.width + 110 + $(this).scrollLeft();
-    var y = $(this).scrollTop();
-    // whether that's below the form
-    if (x >= top) {
-        // if so, ad the fixed class
-        $('.flowchart .indicator').addClass('fixed');
-    } else {
-        // otherwise remove it
-        $('.flowchart .indicator').removeClass('fixed');
-    }
-    
-    $(".flowchart .indicator").offset({
-        left: x
-    });
-    
-});
-  </script>
+  <div align="center">  <script>drawTable()</script></div>
+
   {% load static %}
+  <p align="center" id ='credits'>Total Credits: 0</p>
   <!-- stylesheet used for flowchart by Sihua Chen -->
   <link href="{% static 'css/flowchart.css' %}" rel="stylesheet" type="text/css">
 {% endblock %}
