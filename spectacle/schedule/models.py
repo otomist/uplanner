@@ -1,6 +1,7 @@
 from django.db import models
 from django.urls import reverse
 import uuid
+import random
 
 import shutil
 from django.db.models.signals import post_delete 
@@ -162,19 +163,26 @@ class ScheduleCourseManager(models.Manager):
     def create_schedulecourse(self, course, schedule):
         section = self.create(course=course, schedule=schedule)
         return section
-    
+
+def init_colors():
+    return [('red', 'red'),
+            ('#157ddf9f', 'blue'),
+            ('green', 'green'),
+            ('orange', 'orange'),
+            ('purple', 'purple'),
+            ('pink', 'pink'),
+            ('brown', 'brown'),]
+        
+def get_color():
+    colors = init_colors()
+    rand = random.randint(0, len(colors)-1)
+    return colors[rand][0]
+        
 class ScheduleCourse(models.Model):
     course = models.ForeignKey(Section, on_delete=models.CASCADE)
     schedule = models.ForeignKey(Schedule, on_delete=models.CASCADE)
-    COLORS = [('blue', 'BLUE'),
-              ('red', 'RED'),
-              ('green', 'green'),
-              ('orange', 'orange'),
-              ('purple', 'purple'),
-              ('pink', 'pink'),
-              ('brown', 'brown'),
-    ]
-    color = models.CharField(max_length=15, choices=COLORS, help_text="Enter the color for this course", default="#157ddf9f")
+    COLORS = init_colors()
+    color = models.CharField(max_length=15, choices=COLORS, help_text="Enter the color for this course", default=get_color)
     title = models.CharField(max_length=50, help_text="Enter the title of this event", blank=True, default="")
     
     objects = ScheduleCourseManager()
