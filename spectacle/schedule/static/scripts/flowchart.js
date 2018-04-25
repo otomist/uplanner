@@ -102,9 +102,9 @@ function makeTable(){
 					table+=tableDataStart;
 					table+=courseBtn(key);
 					table+=tableDataEnd;
-					row_num+=1;
+					row_num+=2;
 				}
-				else if(row_num === 7){
+				else if(row_num === 8){
 					table+=tableDataStart;
 					table+=courseBtn(key);
 					table+=tableDataEnd;
