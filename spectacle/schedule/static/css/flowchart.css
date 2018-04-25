@@ -10,12 +10,15 @@ table {
 
 td, th {
   /*border: 1px solid rgb(190,190,190);*/
-  padding: 10px 10px;
+  padding: 2px 2px;
 }
 
 th {
   background-color: rgb(235,235,235);
   color: grey;
+  align-content: center;
+  text-align: center;
+
 
 }
 
@@ -24,15 +27,15 @@ td {
 }
 
 tr:nth-child(even) td {
-  background-color: rgb(250,250,250);
+  background-color: white;
 }
 
 tr:nth-child(odd) td {
-  background-color: rgb(245,245,245);
+  background-color: white;
 }
 
 caption {
-  padding: 10px;
+  padding: 5px;
 }
 
 .text {
@@ -40,7 +43,7 @@ caption {
 }
 
 .button {
-   border: 5px solid #0a3c59;
+   border: 3px solid #65a9d7;
    background: #3e779d;
    background: -webkit-gradient(linear, left top, left bottom, from(#65a9d7), to(#3e779d));
    background: -webkit-linear-gradient(top, #65a9d7, #3e779d);
@@ -48,33 +51,21 @@ caption {
    background: -ms-linear-gradient(top, #65a9d7, #3e779d);
    background: -o-linear-gradient(top, #65a9d7, #3e779d);
    background-image: -ms-linear-gradient(top, #65a9d7 0%, #3e779d 100%);
-   -webkit-border-radius: 8px;
-   -moz-border-radius: 8px;
-   border-radius: 8px;
+
+
    -webkit-box-shadow: rgba(255,255,255,0.4) 0 0px 0, inset rgba(255,255,255,0.4) 0 1px 0;
    -moz-box-shadow: rgba(255,255,255,0.4) 0 0px 0, inset rgba(255,255,255,0.4) 0 1px 0;
    box-shadow: rgba(255,255,255,0.4) 0 0px 0, inset rgba(255,255,255,0.4) 0 1px 0;
    text-shadow: #8085bd 0 1px 0;
-   color: #06426c;
-   font-size: 17px;
+   color: black;
+   font-size: 14px;
    font-family: helvetica, serif;
    text-decoration: none;
    vertical-align: middle;
-   height: 100px;
-   width: 200px;
+   height: 60px;
+   width: 150px;
    }
-testHover {
-   border: 5px solid #0a3c59;
-   text-shadow: #1e4158 0 1px 0;
-   background: #3e779d;
-   background: -webkit-gradient(linear, left top, left bottom, from(#65a9d7), to(#3e779d));
-   background: -webkit-linear-gradient(top, #65a9d7, #3e779d);
-   background: -moz-linear-gradient(top, #65a9d7, #3e779d);
-   background: -ms-linear-gradient(top, #65a9d7, #3e779d);
-   background: -o-linear-gradient(top, #65a9d7, #3e779d);
-   background-image: -ms-linear-gradient(top, #65a9d7 0%, #3e779d 100%);
-   color: #fff;
-   }
+
 .button:active {
    text-shadow: #1e4158 0 1px 0;
    border: 5px solid #0a3c59;
@@ -87,6 +78,7 @@ testHover {
    background-image: -ms-linear-gradient(top, #3e779d 0%, #65a9d7 100%);
    color: #fff;
    }
+
 
   /* Dropdown Button */
 .dropbtn {
@@ -134,50 +126,3 @@ testHover {
 
 /* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
 .show {display:block;}
-
-/*this is where all the styling for the indicator starts:*/
-
-.flowchart .courseTable{
-  position: absolute;
-  z-index: 1;
-}
-.flowchart .indicator{
-    position: relative;
-    z-index: 2;
-    float: right;
-    background-color: #e21a1a;
-    margin-top: 10px;
-    width: 3%;
-    height: 300px;
-}
-/* Style the buttons inside the indicator */
-.flowchart .indicator #gotobutton {
-    display: block;
-    background-color: inherit;
-    color: black;
-    padding: 45px 16px;
-    width: 100%;
-    border: none;
-    outline: none;
-    text-align: left;
-    cursor: pointer;
-    transition: 0.3s;
-    font-size: 17px;
-}
-
-.indicator #gotobutton:hover {
-    background-color: #ddd;
-}
-
-.indicator #gotobutton.active {
-    background-color: #ccc;
-}
-
-.indicatorcontent {
-    float: left;
-    padding: 0px 12px;
-    border: 1px solid #ccc;
-    width: 70%;
-    border-left: none;
-    height: 300px;
-}
