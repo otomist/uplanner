@@ -284,6 +284,32 @@ $(function () {
             $(event.target).text("+");
         }
     });
+    
+    $(document).on('click', '.js-change-color', function () {
+        var color = $(event.target).attr('color');
+        var course_id = $(event.target).attr('section-id');
+        var url = $('#meta').attr('change-schedulecourse-color-url');
+        var schedule_title = $(".js-schedule:checked").attr('name');
+        
+        // update course in schedule
+        for (var day=0; day < 5; day++) {
+            schedule_event = scheduler.getEvent(course_id + '' + day + schedule_title);
+            if (schedule_event) {
+                scheduler.getEvent(course_id + '' + day + schedule_title).color = color;
+                scheduler.updateEvent(course_id + '' + day + schedule_title);
+            }
+        }
+        
+        // update the database
+        $.ajax({
+            url: url,
+            data: {'id':course_id, 'color':color},
+            dataType: 'json',
+            success: function (data) {
+                
+            }
+        });
+    });
 
     //readmore button code for the course description and course requirements
     var $el, $ps, $up, totalHeight;

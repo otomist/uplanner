@@ -66,7 +66,7 @@ def get_schedulecourse_data(schedulecourse):
             'start_date': date + " " + str(course.start),
             'end_date': date + " " + str(course.ending),
             'type': schedulecourse.schedule.title,
-            'color': '#157ddf9f',
+            'color': schedulecourse.color,
             'readonly': True,
         }
         if course.component == "CUS":
@@ -77,7 +77,7 @@ def get_schedulecourse_data(schedulecourse):
         i += 1
     
     return courses
-
+    
 
 def schedule_courses(request):
     """
@@ -126,6 +126,26 @@ def schedule_courses(request):
     return JsonResponse(data)
     
     
+def change_schedulecourse_color(request):
+    """
+    ajax view for changing a schedulecourse's color
+    """
+    
+    id = request.GET.get('id')
+    color = request.GET.get('color')
+        
+    schedule_title = request.session['active_schedule']
+    
+    current_user = Student.objects.get(user_email=request.user.email)
+    # TODO: this will break if the section/schedule are not found
+    schedule = Schedule.objects.get(title=schedule_title, student=current_user)
+    section = Section.objects.get(uid=id)
+    schedulecourse = ScheduleCourse.objects.get(schedule=schedule, course=section)
+    schedulecourse.color = color
+    schedulecourse.save()
+    
+    return JsonResponse({})
+    
 def update_session(request):
     """
     ajax view for updating the session variable
@@ -169,16 +189,23 @@ def add_section(request):
     #TODO: this will break if does not exist
     section = Section.objects.get(uid=id)
     current_user = Student.objects.get(user_email=request.user.email)
-    #TODO: this will break if does not exist
+    
+    color = None
     schedule = None
     if 'schedule' in request.GET:
         schedule = Schedule.objects.filter(student=current_user).get(title=request.GET.get('schedule', None))
+        color = ScheduleCourse.objects.filter(schedule__title=request.session['active_schedule']).get(course=section).color
     else:
         schedule = Schedule.objects.filter(student=current_user).get(title=request.session['active_schedule'])
 
     if not ScheduleCourse.objects.filter(course=section).filter(schedule=schedule).exists():
         ScheduleCourse.objects.create_schedulecourse(section, schedule)
+            
     schedulecourse = ScheduleCourse.objects.filter(course=section).get(schedule=schedule)
+    
+    if color != None:
+        schedulecourse.color = color
+        schedulecourse.save()
     
     data = {'events':get_schedulecourse_data(schedulecourse)}
     
@@ -333,8 +360,10 @@ def get_current_data(schedulecourse, request):
     # each current course also has a listing of schedules it *doesn't* appear on
     schedules = Schedule.objects.filter(student=current_user).select_related().exclude(schedulecourse__course=section)
     
-    course_data = make_model_dict(section, [('title', title), ('schedules', schedules)])
+    colors = [color[0] for color in ScheduleCourse.COLORS]
     
+    course_data = make_model_dict(section, [('title', title), ('schedules', schedules), ('colors', colors)])
+        
     return course_data
 
     

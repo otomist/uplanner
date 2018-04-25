@@ -6,7 +6,6 @@
       <button class="btn btn-fullInfo btn-xs btn-results js-make-tab" course-id="{{course.clss.pk}}" course-dept="{{ course.clss.dept.code }}" course-num="{{ course.clss.number }}">Full course info</button>
     {% endif %}
     {% if course.schedules %}
-    <br>
       <div class="dropdown">
         <button class="btn btn-xs btn-primary dropdown-toggle btn-noleftmargin" type="button" data-toggle="dropdown">
           add to...
@@ -14,9 +13,20 @@
         </button>
         <ul class="dropdown-menu">
           {% for schedule in course.schedules %}
-            <button class="btn btn-xs js-add-to-schedule" section-id="{{course.uid}}" schedule-title="{{schedule.title}}"=>{{schedule.title}}</button>
+            <button class="btn btn-xs js-add-to-schedule" section-id="{{course.uid}}" schedule-title="{{schedule.title}}">{{schedule.title}}</button>
           {% endfor %}
         </ul>
       </div>
     {% endif %}
+    <div class="dropdown">
+      <button class="btn btn-xs btn-default dropdown-toggle btn-noleftmargin" type="button" data-toggle="dropdown">
+        Change color
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu">
+        {% for color in course.colors %}
+          <button class="btn btn-xs js-change-color" section-id="{{course.uid}}" color="{{color}}" style='background-color:{{color}};'></button>
+        {% endfor %}
+      </ul>
+    </div>
   </div>

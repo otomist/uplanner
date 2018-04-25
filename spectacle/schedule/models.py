@@ -166,7 +166,15 @@ class ScheduleCourseManager(models.Manager):
 class ScheduleCourse(models.Model):
     course = models.ForeignKey(Section, on_delete=models.CASCADE)
     schedule = models.ForeignKey(Schedule, on_delete=models.CASCADE)
-    color = models.CharField(max_length=15, help_text="Enter the color for this course", default="#157ddf9f")
+    COLORS = [('blue', 'BLUE'),
+              ('red', 'RED'),
+              ('green', 'green'),
+              ('orange', 'orange'),
+              ('purple', 'purple'),
+              ('pink', 'pink'),
+              ('brown', 'brown'),
+    ]
+    color = models.CharField(max_length=15, choices=COLORS, help_text="Enter the color for this course", default="#157ddf9f")
     title = models.CharField(max_length=50, help_text="Enter the title of this event", blank=True, default="")
     
     objects = ScheduleCourseManager()

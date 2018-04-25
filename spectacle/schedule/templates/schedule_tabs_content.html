@@ -37,7 +37,7 @@
                 <li class="list-group-item">Waitlist capacity: {{section.wcap}} || Waitlist Enrolled: {{section.wenrolled}}</li>
               
               <!-- buttons for adding / deleting classes -->        
-              <button class="btn btn-primary btn-xs btn-results btnAddDelTab js-add" conflict-id='{{ section.conflicts.0.uid }}' section-id='{{section.uid}}'style={% if section.is_added %}"display:none;"{% else %}"display:block;"{% endif %}>
+              <button class="btn btn-primary btn-xs btn-results btnAddDelTab js-add" conflict-id='{{ section.conflicts.0.uid }}' section-id='{{section.uid}}' style={% if section.is_added %}"display:none;"{% else %}"display:block;"{% endif %}>
                 {% if section.conflicts %}
                   {% if section.conflicts.0.component == "CUS" %}
                     Conflict with user-added event
