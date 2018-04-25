@@ -5,14 +5,6 @@ function init() {
     scheduler.config.limit_time_select = true;
     scheduler.config.time_step = 5;
     scheduler.config.readonly = true;
-
-    //used to make events read_only if they have that attribute.
-    function block_readonly(id) {
-        if (!id) return true;
-        return !this.getEvent(id).readonly;
-    }
-    scheduler.attachEvent("onBeforeDrag", block_readonly)
-    scheduler.attachEvent("onClick", block_readonly)
     
     //Work week
     scheduler.attachEvent("onTemplatesReady",function(){
