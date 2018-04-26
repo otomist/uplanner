@@ -751,7 +751,7 @@ def schedule(request):
                              'number':r.number,
                              'description':r.description,
                              'reqs':r.reqs,
-                             'lab': r.section_set.exclude(component='lec').exists(),
+                             'lab': r.section_set.exclude(component='LEC').exists(),
                              'open': r.section_set.filter(open=True).exists(),
                              'geneds': list(map(lambda g: "{}({})".format(g.code, g.name), r.gened.all())),
                              'conflicts': False, #TODO: implement this
