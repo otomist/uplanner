@@ -211,9 +211,6 @@ $(function () {
     });
     
     $('#event-modal').on('shown.bs.modal', function (event) {
-        console.log("event:");
-        console.log($(event.target));
-        console.log($(event.target).find('input'));
         $(event.target).find('input[name=title]').trigger('focus');
     });
     
@@ -314,7 +311,6 @@ $(function () {
     //readmore button code for the course description and course requirements
     var $el, $ps, $up, totalHeight;
     $(document).on('click', '.sidebar-box .button', function () {
-        console.log("Readmore was clicked");
         totalHeight = 0;
 
         $el = $(this);

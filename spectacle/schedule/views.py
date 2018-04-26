@@ -41,6 +41,7 @@ def get_schedulecourse_data(schedulecourse):
     """
     Given a schedulecourse, get the data needed to add it to the javascript schedule
     """
+        
     def parse_dates(dates):
         days = []
         for i in range(0, len(dates), 2):
@@ -189,22 +190,26 @@ def add_section(request):
     #TODO: this will break if does not exist
     section = Section.objects.get(uid=id)
     current_user = Student.objects.get(user_email=request.user.email)
-    
+        
     color = None
+    title = ""
     schedule = None
     if 'schedule' in request.GET:
         schedule = Schedule.objects.filter(student=current_user).get(title=request.GET.get('schedule', None))
-        color = ScheduleCourse.objects.filter(schedule__title=request.session['active_schedule']).get(course=section).color
+        original_schedulecourse = ScheduleCourse.objects.filter(schedule__title=request.session['active_schedule']).get(course=section)
+        color = original_schedulecourse.color
+        title = original_schedulecourse.title
     else:
         schedule = Schedule.objects.filter(student=current_user).get(title=request.session['active_schedule'])
 
     if not ScheduleCourse.objects.filter(course=section).filter(schedule=schedule).exists():
         ScheduleCourse.objects.create_schedulecourse(section, schedule)
-            
+    
     schedulecourse = ScheduleCourse.objects.filter(course=section).get(schedule=schedule)
     
     if color != None:
         schedulecourse.color = color
+        schedulecourse.title = title
         schedulecourse.save()
     
     data = {'events':get_schedulecourse_data(schedulecourse)}
