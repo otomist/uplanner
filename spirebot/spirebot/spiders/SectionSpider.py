@@ -134,7 +134,7 @@ class SectionSpider(scrapy.Spider):
         ignored_exceptions=(EC.NoSuchElementException,EC.StaleElementReferenceException,)
         result = False
         attempts = 0
-        while(attempts < 20):
+        while(attempts < 100):
             try:
                 self.driver.find_element_by_xpath(xpath).click()
                 result = True
@@ -144,10 +144,10 @@ class SectionSpider(scrapy.Spider):
             except EC.NoSuchElementException:
                 break     
             
-            try:
-                WebDriverWait(self.driver, 10, ignored_exceptions= ignored_exceptions).until(EC.invisibility_of_element_located((By.XPATH, xpath)))
-            except TimeoutException:
-                pass
+            # try:
+            #     WebDriverWait(self.driver, 10, ignored_exceptions= ignored_exceptions).until(EC.invisibility_of_element_located((By.XPATH, xpath)))
+            # except TimeoutException:
+            #     pass
 
             attempts = attempts + 1
         return result
@@ -156,7 +156,7 @@ class SectionSpider(scrapy.Spider):
         ignored_exceptions=(EC.NoSuchElementException,EC.StaleElementReferenceException,)
         result = False
         attempts = 0
-        while(attempts < 20):
+        while(attempts < 100):
             try:
                 self.driver.find_element_by_css_selector(css).click()
                 result = True
@@ -166,10 +166,10 @@ class SectionSpider(scrapy.Spider):
             except EC.NoSuchElementException:
                 break
 
-            try:
-                WebDriverWait(self.driver, 10, ignored_exceptions= ignored_exceptions).until(EC.invisibility_of_element_located((By.CSS_SELECTOR, css)))
-            except TimeoutException:
-                pass   
+            # try:
+            #     WebDriverWait(self.driver, 10, ignored_exceptions= ignored_exceptions).until(EC.invisibility_of_element_located((By.CSS_SELECTOR, css)))
+            # except TimeoutException:
+            #     pass   
                   
             attempts = attempts + 1
         return result
@@ -331,4 +331,4 @@ class SectionSpider(scrapy.Spider):
             term_index = term_index + 1
         self.driver.quit()
 
-        #there are some obscure cases where some class attributes return null and is not entered into the database
+        #there are some obscure cases where some class attributes return null and is not entered into the datab
