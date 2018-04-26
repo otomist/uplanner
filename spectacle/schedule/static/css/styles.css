@@ -80,6 +80,9 @@ h4{
     padding: 1px 1.5px 2px 1px;
     line-height: 1;
 }
+.js-expand-info{
+    display: none;
+}
 .list-group-item{
     font-size: .9rem;
 }
