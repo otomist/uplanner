@@ -1,7 +1,7 @@
 {% extends "base_generic.html" %}
 
 {% block title %}<title>Uplanner-Prereqs</title>{% endblock %}
-
+{% if user.is_authenticated %}
 {% block content %}
 
 <p style="display:none;" id="course_list_json">
@@ -23,7 +23,9 @@
 
   <!-- End flowchart -->
 {% endblock %}
-
+{% else %}
+<li><a href="{% url 'login'%}?next={{request.path}}">Login</a></li>
+{% endif %}
 {% block imports %}
 <!-- This is a temp solution until I start using ajax-->
   <script type="text/javascript">

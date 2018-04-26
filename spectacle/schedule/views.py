@@ -786,7 +786,7 @@ def profile(request):
         'profile.html',
         context={'highlight_profile':highlight_profile, 'student':student, 'user':user}
     )
-    
+@login_required(login_url='/profile/login/')
 def prereqs(request):
 
     form = flowchartForm(request.GET)
@@ -849,6 +849,10 @@ def register(request):
         # this links the UserForm and StudentForm:
         request.POST['user_email'] = request.POST['email']
         request.POST._mutable = False
+        if request.POST['email'] not in ['umass.edu', 'cs.umass.edu']:
+            user_form.errors['email'] = ["Please Use Your UMass Email!"]
+            args = {'user_form':user_form, 'student_form':student_form}
+            return render(request, 'registration/registration_form.html', args)
         if user_form.is_valid():
             user_form.save()
             if student_form.is_valid():
