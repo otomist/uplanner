@@ -15,7 +15,8 @@ def delete_repo(sender, instance, **kwargs):
     """
     if sender == ScheduleCourse:
         if instance.title != '':
-            instance.course.delete()
+            if ScheduleCourse.objects.filter(course=instance.course).exclude(schedule=instance.schedule).count() == 0:
+                instance.course.delete()
 
 class Gened(models.Model):
     name = models.CharField(max_length=200, help_text="Enter a gened category")

@@ -52,7 +52,15 @@ $(function () {
             );
         }
     });
-
+    
+    // Reloads the current course tab every time it is visited, in case changes have occurred
+    $('#courses-tab').on('show.bs.tab', function () {
+        var url = $('#meta').attr('make-current-courses-url');
+        $('#current-courses').html('').load(
+            url
+        );
+    });
+    
     /*
     Adds the delete function to any element currently in the page or
     added dynamically later. deletes the tab and its contents

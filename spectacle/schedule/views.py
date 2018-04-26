@@ -592,8 +592,9 @@ def schedule(request):
             keys = form.cleaned_data['keywords']
             title_filter = Q(title__icontains=keys)
             desc_filter = Q(description__icontains=keys)
+            level_filter = Q(number=keys)
             
-            results = results.filter(title_filter | desc_filter)
+            results = results.filter(title_filter | desc_filter | level_filter).distinct()
         
         #filter based on days
         #if a course has at least one related section with days
@@ -736,7 +737,7 @@ def schedule(request):
                 #start_filter = Q(section__start__gte=section[6]) # the new course starts after the old course ends
                 #end_filter = Q(section__ending__lte=section[5])  # the new course ends before the old course starts
                 results = results.select_related().exclude(day_filter &  ~(start_filter | end_filter)).distinct()
-    
+        results = results.distinct()
         # Display error - no search results match
         if len(results) == 0:
             results_exist = False
