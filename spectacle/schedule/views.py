@@ -147,14 +147,14 @@ def change_schedulecourse_color(request):
     
     return JsonResponse({})
     
-def update_session(request):
+def toggle_filters(request):
     """
     ajax view for updating the session variable
     """
-    for k, v in request.GET.items():
-        request.session[k] = v
+    
+    request.session['filters_expanded'] = not request.session['filters_expanded']
     request.session.save()
-    return JsonResponse({})
+    return JsonResponse({'new_value':request.session['filters_expanded']})
     
 
 def del_section(request):
@@ -570,14 +570,8 @@ def schedule(request):
     #store whether or not search filters are currently expanded
     filters_expanded = True
     if 'filters_expanded' in request.session:
-        print("in session!!!")
         filters_expanded = request.session['filters_expanded']
-        if filters_expanded == 'true':
-            filters_expanded = True
-        else:
-            filters_expanded = False
     else:
-        print("not in session!!!")
         request.session['filters_expanded'] = filters_expanded
         request.session.save()
     

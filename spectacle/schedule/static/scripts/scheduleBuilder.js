@@ -286,32 +286,30 @@ function init() {
 
     scheduler.init('scheduler_here', new Date(2018, 0, 1), "workweek");
     
-    var searchHidden = false;
     function toggleSearch() {
-        searchHidden ? searchHidden = false : searchHidden = true;
-        if (searchHidden) {
-            //switch between max/minimize arrows
-            expandBtn.style.display = 'block';
-            hideBtn.style.display = 'none';
-
-            //change the size of results to larger when search filters hidden
-            $('.fixed-panel').css('min-height', '42rem');
-            $('.fixed-panel').css('max-height', '42rem'); 
-        } else {
-            //switch between max/minimize arrows
-            expandBtn.style.display = 'none';
-            hideBtn.style.display = 'block';
-
-            //change the size of results to smaller when search filters shown
-            $('.fixed-panel').css('min-height', '28rem');
-            $('.fixed-panel').css('max-height', '28rem');
-        }
         $.ajax({
-            url: $('#meta').attr('update-session-url'),
-            data: {'filters_expanded': !searchHidden,},
+            url: $('#meta').attr('toggle-filters-url'),
+            data: {},
             dataType: 'json',
             success: function (data) {
-                
+                filters_expanded = data['new_value']
+                if (!filters_expanded) {
+                    //switch between max/minimize arrows
+                    expandBtn.style.display = 'block';
+                    hideBtn.style.display = 'none';
+
+                    //change the size of results to larger when search filters hidden
+                    $('.fixed-panel').css('min-height', '42rem');
+                    $('.fixed-panel').css('max-height', '42rem'); 
+                } else {
+                    //switch between max/minimize arrows
+                    expandBtn.style.display = 'none';
+                    hideBtn.style.display = 'block';
+
+                    //change the size of results to smaller when search filters shown
+                    $('.fixed-panel').css('min-height', '28rem');
+                    $('.fixed-panel').css('max-height', '28rem');
+                }
             }
         });
     }
@@ -333,17 +331,9 @@ function init() {
         data: {},
         dataType: 'json',
         success: function (data) {
-            console.log("Ajax request!!!!");
             var count = data['count'];
             var courses = data['courses'];
             var schedule = data['active_schedule'];
-            var filters_expanded = data['filters_expanded'];
-            
-            //I don't know why this gets converted to a string...
-            if (filters_expanded === 'false') {
-                console.log("Flip the toggle!!!");
-                toggleSearch();
-            }
             
             for (i = 0; i < count; i++) {
                 scheduler.parse([courses[i]], 'json');

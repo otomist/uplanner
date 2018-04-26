@@ -67,18 +67,6 @@ h4{
     height: 12px;  
     width: 12px;
 }
-#expandBtn{
-    display: none;
-}
-#hideBtn{
-    display: block;
-}
-.js-expand-info{
-    display: none;
-}
-.js-expand-default{
-    display: block;
-}
 .expandBtn:hover{
     background-color: #8799ac;
     border-color: #8799ac;

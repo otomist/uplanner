@@ -8,7 +8,7 @@
   <!-- A meta div to store urls for convenient javascript access -->
   <div id="meta"
     make-tab-content-url="{% url 'make_tab_content' %}"
-    update-session-url="{% url 'update_session' %}"
+    toggle-filters-url="{% url 'toggle_filters' %}"
     change-schedulecourse-color-url="{% url 'change_schedulecourse_color' %}"
     make-tab-content-url="{% url 'make_tab_content' %}"
     delete-tab-url="{% url 'delete_tab' %}"
@@ -122,15 +122,16 @@
             {% endif %}
             <button type="button" class="btn expandBtn js-expand-btn btn-secondary btn-sm" id="searchToggleBTN">
               {% load static %}
-              <img id="expandBtn" src="{% static 'images/expand.svg' %}" style="display: none">
+              <img id="expandBtn" src="{% static 'images/expand.svg' %}" {% if filters_expanded is True %} style="display:none" {% else %} style="display:block" {% endif %}>
               {% load static %}
-              <img id="hideBtn" src="{% static 'images/hide.svg' %}">
+              <img id="hideBtn" src="{% static 'images/hide.svg' %}" {% if filters_expanded is True %} style="display:block" {% else %} style="display:none" {% endif %}>
             </button>
             {{ form.keywords }}
             {{ form.departments }}
           </div>
           <!-- End top search bar -->
-          <div class="js-expand-info js-expand-default" {% if filters_expanded is False %} style="display:none" {% endif %}>
+          {{ filters_expanded }}
+          <div class="js-expand-info js-expand-default" {% if filters_expanded is True %} style="display:block" {% else %} style="display:none" {% endif %}>
             <h6 class="search-toggle">Search filters: </h6>
             <!-- Begin misc options -->
             <div class="search-container search-toggle">
