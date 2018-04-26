@@ -49,7 +49,7 @@ class Course(models.Model):
     number = models.CharField(max_length=6, help_text="Enter the course's title number (220 in COMPSCI 220)")
     description = models.TextField(max_length=1000, help_text="Enter the course description")
     reqs = models.TextField(max_length=1000, blank=True, default="", help_text="Enter the course requirements")
-    credits = models.CharField(max_length=3, help_text="Enter # of credits")
+    credits = models.CharField(max_length=4, help_text="Enter # of credits")
     honors = models.BooleanField("Enter whether this class is an honors course")
     CAREERS = (
         ('u', 'Undergraduate'),
@@ -62,6 +62,8 @@ class Course(models.Model):
         ('un', 'University'),
         ('uc', 'University Eligible/CPE'),
         ('ud', 'University Non-standard Dates'),
+        ('ce', 'CPE Continuing Education'),
+        ('cu', 'CPE Non-Standard Dates'),
         ('c1', 'CPE Summer Session 1'),
         ('c2', 'CPE Summer Session 2'),
         ('c3', 'CPE Summer Session 3'),
