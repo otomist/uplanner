@@ -43,6 +43,12 @@ body{
     padding-top: .8rem;
     font-size: .6rem;
 }
+.search-head{
+    padding-top: .5rem;
+    font-size: 0.8rem;
+    min-height: 2rem;
+    max-height: 2rem;
+}
 .btn{
     margin: .5rem;
 }
@@ -188,7 +194,7 @@ h4{
   position: relative;
   overflow: hidden;
 }
-.sidebar-box .read-more { 
+.sidebar-box .read-more {
   position: absolute; 
   bottom: 0; 
   left: 0;

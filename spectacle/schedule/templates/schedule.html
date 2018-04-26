@@ -126,8 +126,10 @@
               {% load static %}
               <img id="hideBtn" src="{% static 'images/hide.svg' %}" {% if filters_expanded is True %} style="display:block" {% else %} style="display:none" {% endif %}>
             </button>
-            {{ form.keywords }}
-            {{ form.departments }}
+            <div class="search-head">
+              {{ form.keywords }}
+              {{ form.departments }}
+            </div>
           </div>
           <!-- End top search bar -->
           <div class="js-expand-info js-expand-default" {% if filters_expanded is True %} style="display:block" {% else %} style="display:none" {% endif %}>

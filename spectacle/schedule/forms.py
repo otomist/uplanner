@@ -74,6 +74,7 @@ class MultiBooleanField(forms.MultiValueField):
         
 # form for searching for courses
 class ScheduleForm(forms.Form):
+
     keywords = forms.CharField(required=False, initial="Enter keywords...", help_text="Enter keywords to search for", max_length=200)
     
     depts = list(map(lambda obj: (obj.code, obj.name), Department.objects.all()))

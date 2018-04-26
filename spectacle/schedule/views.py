@@ -576,8 +576,8 @@ def schedule(request):
         request.session.save()
     
     results_exist = True
-    
     if form.is_valid():
+        
         
         #retrieve all courses in requested term
         term = Term.objects.get(id=form.cleaned_data['course_term'])
