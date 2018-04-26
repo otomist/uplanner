@@ -12,13 +12,7 @@ from scrapy_djangoitem import DjangoItem
 from scrapy.loader.processors import TakeFirst, Compose, MapCompose, Join, Identity
 from scrapy.utils.markup import (remove_tags, replace_escape_chars)
 
-from schedule.models import Gened
-from schedule.models import Department
-from schedule.models import Term
-from schedule.models import Course
-from schedule.models import Section
-from schedule.models import Schedule
-from schedule.models import ScheduleCourse
+from schedule.models import Term, Department, Course, Section, Gened
 
 class CourseInfo(scrapy.Item):
     name = scrapy.Field()
@@ -44,33 +38,32 @@ class CourseInfo(scrapy.Item):
 
 class CourseItem(DjangoItem):
     django_model = Course
+    all_gened = scrapy.Field()
 
 class GenedItem(DjangoItem):
     django_model = Gened
-
+    
 class DepartmentItem(DjangoItem):
     django_model = Department
 
 class TermItem(DjangoItem):
     django_model = Term
-    season = scrapy.Field()
     
 class SectionItem(DjangoItem):
     django_model = Section
-
-class ScheduleItem(DjangoItem):
-    django_model = Schedule
-
-class ScheduleCourseItem(DjangoItem):
-    django_model = ScheduleCourse
     
 class ItemLoader(ItemLoader):
-    #course
+    #default processor
     def default_proc(input):
         input = remove_tags(input)
         input = replace_escape_chars(input)
         return input
 
+    #department
+    def proc_deptcode(input_str):
+        return input_str.split()[0]
+
+    #course
     def proc_title(input_str):
         title = ''     
         words = input_str.split()
@@ -107,23 +100,36 @@ class ItemLoader(ItemLoader):
             'University' : 'un',
             'University Eligible/CPE' : 'uc',
             'University Non-standard Dates' : 'ud',
+            'CPE (Continuing Education)' : 'ce',
+            'CPE Non-standard Dates' : 'cu',
             'CPE Summer Session 1' : 'c1',
             'CPE Summer Session 2' : 'c2',
             'CPE Summer Session 3' : 'c3',
         }
 
-        return session_dict[input_str[1:]]
+        if('*' in input_str) :
+            return session_dict[input_str[1:]]
+        else:
+            return session_dict[input_str]
     
     def proc_start_date(input_str):
         date_list = re.split(r'[\s-]+', input_str)
+        if(len(date_list) < 2):
+            return '6666-6-6'
         start_date = date_list[0]
         date_split = start_date.split('/')
+        if(len(date_split) < 3):
+            return '6666-6-6'
         return date_split[2] + '-' + date_split[0] + '-' + date_split[1]
     
     def proc_end_date(input_str):
         date_list = re.split(r'[\s-]+', input_str)
+        if(len(date_list) < 2):
+            return '6666-6-6'
         end_date = date_list[1]  #"month/day/year"
         date_split = end_date.split('/')  #["month", "day", "year"]
+        if(len(date_split) < 3):
+            return '6666-6-6'
         return date_split[2] + '-' + date_split[0] + '-' + date_split[1]  #"year-month-day"
 
     #term
@@ -140,6 +146,9 @@ class ItemLoader(ItemLoader):
         return input_str.split(' ')[0]
     
     #section
+    def proc_clss(input_object):
+        return input_object
+
     def proc_days(input_str):
         if ('Mo' not in input_str and 
             'Tu' not in input_str and 
@@ -179,7 +188,7 @@ class ItemLoader(ItemLoader):
 
         daytime_list = re.split(r'[\s-]+', input_str)
 
-        if 'Mo' not in input_str and 'Tu' not in input_str and 'We' not in input_str and 'Th' not in input_str and 'Fr' not in input_str:
+        if 'Mo' not in input_str and 'Tu' not in input_str and 'We' not in input_str and 'Th' not in input_str and 'Fr' not in input_str and 'Sa' not in input_str and 'Su' not in input_str:
             start_time = daytime_list[0]
         else:
             start_time = daytime_list[1]
@@ -205,7 +214,7 @@ class ItemLoader(ItemLoader):
 
         daytime_list = re.split(r'[\s-]+', input_str)
 
-        if 'Mo' not in input_str and 'Tu' not in input_str and 'We' not in input_str and 'Th' not in input_str and 'Fr' not in input_str:
+        if 'Mo' not in input_str and 'Tu' not in input_str and 'We' not in input_str and 'Th' not in input_str and 'Fr' not in input_str and 'Sa' not in input_str and 'Su' not in input_str:
             end_time = daytime_list[0]
         else:
             end_time = daytime_list[2]
@@ -233,20 +242,17 @@ class ItemLoader(ItemLoader):
     
     def proc_open(input_str):
         return '1' if input_str == 'Open' else '0'
-
-    def proc_clss(input_str):
-        return Course.objects.get(number = input_str.split()[1])
     
     def proc_component(input_str):
         return input_str.split('-')[1][0:3]
 
 
-
-
     default_item_class = CourseInfo
-    
     default_input_processor = MapCompose(default_proc)
     default_output_processor = TakeFirst()
+
+    #department model attribute
+    code_in = MapCompose(default_proc, proc_deptcode)
 
     #course model attributes
     title_in = MapCompose(default_proc, proc_title)
@@ -274,5 +280,5 @@ class ItemLoader(ItemLoader):
     ending_in = MapCompose(default_proc, proc_ending)
     term_in = MapCompose(default_proc, proc_term)
     open_in = MapCompose(default_proc, proc_open)
-    clss_in = MapCompose(default_proc, proc_clss)
+    clss_in = MapCompose(proc_clss)
     component_in = MapCompose(default_proc, proc_component)
