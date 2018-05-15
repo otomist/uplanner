@@ -115,21 +115,21 @@ class ItemLoader(ItemLoader):
     def proc_start_date(input_str):
         date_list = re.split(r'[\s-]+', input_str)
         if(len(date_list) < 2):
-            return '6666-6-6'
+            return '1111-11-11'
         start_date = date_list[0]
         date_split = start_date.split('/')
         if(len(date_split) < 3):
-            return '6666-6-6'
+            return '1111-11-11'
         return date_split[2] + '-' + date_split[0] + '-' + date_split[1]
     
     def proc_end_date(input_str):
         date_list = re.split(r'[\s-]+', input_str)
         if(len(date_list) < 2):
-            return '6666-6-6'
+            return '1111-11-11'
         end_date = date_list[1]  #"month/day/year"
         date_split = end_date.split('/')  #["month", "day", "year"]
         if(len(date_split) < 3):
-            return '6666-6-6'
+            return '1111-11-11'
         return date_split[2] + '-' + date_split[0] + '-' + date_split[1]  #"year-month-day"
 
     #term
@@ -182,52 +182,75 @@ class ItemLoader(ItemLoader):
 
         start_time = None
 
-        if(input_str == 'TBA'):
+        if(input_str == 'TBA' or len(input_str) == 0):
             return '00:00:00'
+
         militarytime = None
 
         daytime_list = re.split(r'[\s-]+', input_str)
 
-        if 'Mo' not in input_str and 'Tu' not in input_str and 'We' not in input_str and 'Th' not in input_str and 'Fr' not in input_str and 'Sa' not in input_str and 'Su' not in input_str:
+        if(len(daytime_list) < 3):
+            return '00:00:00'
+
+        if ('Mo' not in input_str and 
+            'Tu' not in input_str and 
+            'We' not in input_str and 
+            'Th' not in input_str and 
+            'Fr' not in input_str and 
+            'Sa' not in input_str and 
+            'Su' not in input_str):
+
             start_time = daytime_list[0]
         else:
-            start_time = daytime_list[1]
+            start_time = daytime_list[1] 
 
-        if 'PM' in start_time:
+        hour_min = re.sub(r'[APM]+','', start_time).split(':') #5:15PM becomes ["5","15"]
+
+        if 'PM' in start_time and hour_min[0] != '12':
             militarytime = 12
-        if 'AM' in start_time:
+        else:
             militarytime = 0
 
-        time = re.sub(r'[APM]+','', start_time).split(':') #5:15PM becomes ["5","15"]
-        militarytime = militarytime + int(time[0])
+        militarytime = militarytime + int(hour_min[0])
 
-        return str(militarytime) + ':' + time[1] + ':00'
+        return str(militarytime) + ':' + hour_min[1] + ':00'
 
     def proc_ending(input_str):
         
         end_time = None
 
-        if(input_str == 'TBA'):
+        if(input_str == 'TBA' or len(input_str) == 0):
             return '00:00:00'
 
         militarytime = None
 
         daytime_list = re.split(r'[\s-]+', input_str)
 
-        if 'Mo' not in input_str and 'Tu' not in input_str and 'We' not in input_str and 'Th' not in input_str and 'Fr' not in input_str and 'Sa' not in input_str and 'Su' not in input_str:
+        if(len(daytime_list) < 3):
+            return '00:00:00'
+
+        if ('Mo' not in input_str and 
+            'Tu' not in input_str and 
+            'We' not in input_str and 
+            'Th' not in input_str and 
+            'Fr' not in input_str and 
+            'Sa' not in input_str and 
+            'Su' not in input_str):
+
             end_time = daytime_list[0]
         else:
             end_time = daytime_list[2]
 
-        if 'PM' in end_time:
+        hour_min = re.sub(r'[APM]+','', end_time).split(':') #5:15PM becomes ["5","15"]
+
+        if ('PM' in end_time and hour_min[0] != '12'):
             militarytime = 12
-        if 'AM' in end_time:
+        else:
             militarytime = 0
 
-        time = re.sub(r'[APM]+','', end_time).split(':') #5:15PM becomes ["5","15"]
-        militarytime = militarytime + int(time[0])
+        militarytime = militarytime + int(hour_min[0])
 
-        return str(militarytime) + ':' + time[1] + ':00'
+        return str(militarytime) + ':' + hour_min[1] + ':00'
 
     def proc_term(input_str):
         season_dict = {

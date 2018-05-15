@@ -6,10 +6,21 @@
 # See: https://doc.scrapy.org/en/latest/topics/item-pipeline.html
 
 from schedule.models import Term, Department, Course, Section, Gened
+import logging
 
 class spirebotPipeline(object):
 
+    def __init__(self):
+        self.logger1 = logging.getLogger(__name__)
+        logFormatter = logging.Formatter('%(asctime)s %(levelname)s: %(message)s')
+        # file handler
+        fileHandler = logging.FileHandler("./item_error.log", mode = 'w')
+        fileHandler.setLevel(logging.DEBUG)
+        fileHandler.setFormatter(logFormatter)
+        self.logger1.addHandler(fileHandler)
+
     def process_item(self, item, spider):
+
         if ('code' in item.fields and 'code' in item and Department.objects.filter(code = item['code']).exists()):
             if(item['code'] == Department.object.get(code = item['code']).code):
                 return
@@ -55,7 +66,12 @@ class spirebotPipeline(object):
                 'SI' : 'Science Interdisciplinary',
             }
 
-            item.save()
+            try:
+                item.save() #save scraped attributes to django database 
+            except Exception:
+                self.logger1.DEBUG(str(item))
+                raise
+
             course_object = Course.objects.filter(title = item['title']).filter(session = item['session']).get(number = item['number'])
 
             for gened_attr in item['all_gened'].split(' '):
@@ -65,8 +81,13 @@ class spirebotPipeline(object):
                 course_object.gened.add(Gened.objects.get(code = gened_attr))
 
             return item
+
+        try:
+            item.save() #save scraped attributes to django database 
+        except Exception:
+            self.logger1.DEBUG(str(item))
+            raise
         
-        item.save() #save scraped attributes to django database 
         return item
         
         

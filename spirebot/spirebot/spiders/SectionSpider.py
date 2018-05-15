@@ -8,14 +8,18 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
+from selenium.common.exceptions import StaleElementReferenceException
+from selenium.common.exceptions import NoSuchElementException
 import scrapy
 from scrapy.selector import Selector
 from scrapy.http import HtmlResponse
 from scrapy.http import Request
 from scrapy.shell import inspect_response
 from scrapy.utils.markup import (remove_tags, replace_escape_chars)
-
+import logging
+from scrapy.utils.log import configure_logging
 from schedule.models import Term, Department, Course, Section, Gened
+import time
 
 
 
@@ -26,6 +30,10 @@ class SectionSpider(scrapy.Spider):
 
     def __init__(self):
         self.driver = webdriver.Chrome('C:/Users/Kerry Ngan\Miniconda3/chromedriver.exe')
+        self.term_index = 1
+        self.session_index = 2
+        self.dept_index = 2
+        self.doAgain = False
     
     def load_deptitem(self, page1_selector, dept):
         dept_loader = ItemLoader(item = DepartmentItem(), selector = page1_selector)
@@ -96,36 +104,37 @@ class SectionSpider(scrapy.Spider):
         section_loader.selector = page1_selector
         section_loader.add_value('open', is_open)
         
-        words = replace_escape_chars(remove_tags(page1_selector.css("[id^='DERIVED_CLSRCH_DESCR200$" + str(course_index) + "']").extract_first())).split()
+        if( page1_selector.css("[id^='DERIVED_CLSRCH_DESCR200$" + str(course_index) + "']").extract_first() != None):
+            words = replace_escape_chars(remove_tags(page1_selector.css("[id^='DERIVED_CLSRCH_DESCR200$" + str(course_index) + "']").extract_first())).split()
 
-        title = ''     
+            title = ''     
 
-        for word in words[2:]:
-            title = title + word + ' '
+            for word in words[2:]:
+                title = title + word + ' '
 
-        number = words[1]
+            number = words[1]
 
-        dept = Department.objects.get(code = words[0])
+            dept = Department.objects.get(code = words[0])
 
-        input_str = replace_escape_chars(remove_tags(page2_selector.css("[id='PSXLATITEM_XLATLONGNAME']").extract_first()))
-        session = ''
-        session_dict = {
-            'University' : 'un',
-            'University Eligible/CPE' : 'uc',
-            'University Non-standard Dates' : 'ud',
-            'CPE (Continuing Education)' : 'ce',
-            'CPE Non-standard Dates' : 'cu',
-            'CPE Summer Session 1' : 'c1',
-            'CPE Summer Session 2' : 'c2',
-            'CPE Summer Session 3' : 'c3',
-        }
+            input_str = replace_escape_chars(remove_tags(page2_selector.css("[id='PSXLATITEM_XLATLONGNAME']").extract_first()))
+            session = ''
+            session_dict = {
+                'University' : 'un',
+                'University Eligible/CPE' : 'uc',
+                'University Non-standard Dates' : 'ud',
+                'CPE (Continuing Education)' : 'ce',
+                'CPE Non-standard Dates' : 'cu',
+                'CPE Summer Session 1' : 'c1',
+                'CPE Summer Session 2' : 'c2',
+                'CPE Summer Session 3' : 'c3',
+            }
 
-        if('*' in input_str) :
-            session = session_dict[input_str[1:]]
-        else:
-            session = session_dict[input_str]
+            if('*' in input_str) :
+                session = session_dict[input_str[1:]]
+            else:
+                session = session_dict[input_str]
 
-        section_loader.add_value('clss',  Course.objects.filter(title = title, session = session, dept = dept).get(number = number))
+            section_loader.add_value('clss',  Course.objects.filter(title = title, session = session, dept = dept).get(number = number))
         section_loader.add_xpath('component', '//*[@id="DERIVED_CLSRCH_SSR_CLASSNAME_LONG$'+ str(section_index) +'"]')
 
         return section_loader.load_item()
@@ -134,7 +143,7 @@ class SectionSpider(scrapy.Spider):
         ignored_exceptions=(EC.NoSuchElementException,EC.StaleElementReferenceException,)
         result = False
         attempts = 0
-        while(attempts < 100):
+        while(attempts < 4):
             try:
                 self.driver.find_element_by_xpath(xpath).click()
                 result = True
@@ -143,11 +152,6 @@ class SectionSpider(scrapy.Spider):
                 pass
             except EC.NoSuchElementException:
                 break     
-            
-            # try:
-            #     WebDriverWait(self.driver, 10, ignored_exceptions= ignored_exceptions).until(EC.invisibility_of_element_located((By.XPATH, xpath)))
-            # except TimeoutException:
-            #     pass
 
             attempts = attempts + 1
         return result
@@ -156,7 +160,7 @@ class SectionSpider(scrapy.Spider):
         ignored_exceptions=(EC.NoSuchElementException,EC.StaleElementReferenceException,)
         result = False
         attempts = 0
-        while(attempts < 100):
+        while(attempts < 4):
             try:
                 self.driver.find_element_by_css_selector(css).click()
                 result = True
@@ -164,13 +168,8 @@ class SectionSpider(scrapy.Spider):
             except EC.StaleElementReferenceException :
                 pass
             except EC.NoSuchElementException:
-                break
-
-            # try:
-            #     WebDriverWait(self.driver, 10, ignored_exceptions= ignored_exceptions).until(EC.invisibility_of_element_located((By.CSS_SELECTOR, css)))
-            # except TimeoutException:
-            #     pass   
-                  
+                break  
+            
             attempts = attempts + 1
         return result
 
@@ -178,8 +177,12 @@ class SectionSpider(scrapy.Spider):
     def parse(self, response):
         wait = WebDriverWait(self.driver,10)
         ignored_exceptions=(EC.NoSuchElementException,EC.StaleElementReferenceException,)
+        #logged_in = False
+        #while True:     
+           # try:
+               # if logged_in == False:
 
-        #login to spire
+                    #login to spire
         self.driver.get(response.url)
         username = self.driver.find_element_by_id('userid')
         password = self.driver.find_element_by_id('pwd')
@@ -200,6 +203,11 @@ class SectionSpider(scrapy.Spider):
         student_center_url =self.driver.find_element_by_xpath('//*[@id="ptifrmtgtframe"]').get_attribute('src')
         self.driver.get(student_center_url)
 
+        try:
+            WebDriverWait(self.driver, 10, ignored_exceptions= ignored_exceptions).until(EC.element_to_be_clickable((By.XPATH,'//*[@id="DERIVED_SSS_SCL_SSS_GO_4$83$"]')))
+        except TimeoutException:
+            pass
+
         #click on class search button
         self.retryingFindClick('//*[@id="DERIVED_SSS_SCL_SSS_GO_4$83$"]') 
 
@@ -209,43 +217,46 @@ class SectionSpider(scrapy.Spider):
             pass
         
         #select options for searching   
-        term_index = 3
         
         self.driver.find_element_by_xpath('//*[@id="CLASS_SRCH_WRK2_SSR_OPEN_ONLY"]').click() #uncheck only open courses
+        logged_in = True
 
-        
-        while self.driver.find_elements_by_xpath('//*[@id="UM_DERIVED_SA_UM_TERM_DESCR"]/option['+ str(term_index) +']'):
+        last_term = False
+        while self.driver.find_elements_by_xpath('//*[@id="UM_DERIVED_SA_UM_TERM_DESCR"]/option['+ str(self.term_index) +']'):
             try:
-                WebDriverWait(self.driver, 10, ignored_exceptions= ignored_exceptions).until(EC.element_to_be_clickable((By.XPATH,'//*[@id="UM_DERIVED_SA_UM_TERM_DESCR"]/option['+ str(term_index) +']')))
+                WebDriverWait(self.driver, 10, ignored_exceptions= ignored_exceptions).until(EC.element_to_be_clickable((By.XPATH,'//*[@id="UM_DERIVED_SA_UM_TERM_DESCR"]/option['+ str(self.term_index) +']')))
             except TimeoutException:
                 pass
-           
-            self.retryingFindClick('//*[@id="UM_DERIVED_SA_UM_TERM_DESCR"]/option['+ str(term_index) +']')#spring 2018
-            term = self.driver.find_element_by_xpath('//*[@id="UM_DERIVED_SA_UM_TERM_DESCR"]/option['+ str(term_index) +']').text #example  '2018 Spring'
+        
+            self.retryingFindClick('//*[@id="UM_DERIVED_SA_UM_TERM_DESCR"]/option['+ str(self.term_index) +']')#spring 2018
+            term = str(self.driver.find_element_by_xpath('//*[@id="UM_DERIVED_SA_UM_TERM_DESCR"]/option['+ str(self.term_index) +']').text) #example  '2018 Spring'
+            if(term == '1984 Fall'):
+                last_term = True
             option_selector = Selector(text = self.driver.page_source)
-            yield self.load_termitem(option_selector, term_index)
-            if term_index == 3 :
-                dept_index = 42
-            else: 
-                dept_index = 2
+            yield self.load_termitem(option_selector, self.term_index)
+            
+            if self.doAgain == False:
+                self.dept_index = 2
 
-            while self.driver.find_elements_by_xpath('//*[@id="CLASS_SRCH_WRK2_SUBJECT$108$"]/option['+ str(dept_index) +']'):
+            while self.driver.find_elements_by_xpath('//*[@id="CLASS_SRCH_WRK2_SUBJECT$108$"]/option['+ str(self.dept_index) +']'):
                 try:
-                    WebDriverWait(self.driver, 10, ignored_exceptions= ignored_exceptions).until(EC.element_to_be_clickable((By.XPATH,'//*[@id="CLASS_SRCH_WRK2_SUBJECT$108$"]/option['+ str(dept_index) +']')))
+                    WebDriverWait(self.driver, 10, ignored_exceptions= ignored_exceptions).until(EC.element_to_be_clickable((By.XPATH,'//*[@id="CLASS_SRCH_WRK2_SUBJECT$108$"]/option['+ str(self.dept_index) +']')))
                 except TimeoutException:
                     pass       
                 
-                dept = self.driver.find_element_by_xpath('//*[@id="CLASS_SRCH_WRK2_SUBJECT$108$"]/option['+ str(dept_index) +']').text
-                self.retryingFindClick('//*[@id="CLASS_SRCH_WRK2_SUBJECT$108$"]/option['+ str(dept_index) +']') #computer science
-                session_index = 2
+                dept = self.driver.find_element_by_xpath('//*[@id="CLASS_SRCH_WRK2_SUBJECT$108$"]/option['+ str(self.dept_index) +']').text
+                self.retryingFindClick('//*[@id="CLASS_SRCH_WRK2_SUBJECT$108$"]/option['+ str(self.dept_index) +']') 
+                if self.doAgain == False:
+                    self.session_index = 2
+                self.doAgain == False
 
-                while self.driver.find_elements_by_xpath('//*[@id="CLASS_SRCH_WRK2_SESSION_CODE$12$"]/option['+ str(session_index) +']'):
+                while self.driver.find_elements_by_xpath('//*[@id="CLASS_SRCH_WRK2_SESSION_CODE$12$"]/option['+ str(self.session_index) +']'):
                     try:
-                        WebDriverWait(self.driver, 10, ignored_exceptions= ignored_exceptions).until(EC.element_to_be_clickable((By.XPATH,'//*[@id="CLASS_SRCH_WRK2_SESSION_CODE$12$"]/option['+ str(session_index) +']')))
+                        WebDriverWait(self.driver, 10, ignored_exceptions= ignored_exceptions).until(EC.element_to_be_clickable((By.XPATH,'//*[@id="CLASS_SRCH_WRK2_SESSION_CODE$12$"]/option['+ str(self.session_index) +']')))
                     except TimeoutException:
                         pass
                     
-                    self.retryingFindClick('//*[@id="CLASS_SRCH_WRK2_SESSION_CODE$12$"]/option['+ str(session_index) +']') #university
+                    self.retryingFindClick('//*[@id="CLASS_SRCH_WRK2_SESSION_CODE$12$"]/option['+ str(self.session_index) +']') #university
                     self.retryingFindClick('//*[@id="CLASS_SRCH_WRK2_SSR_PB_CLASS_SRCH"]') #start search
                     
                     try:
@@ -255,11 +266,11 @@ class SectionSpider(scrapy.Spider):
                         WebDriverWait(self.driver, 10, ignored_exceptions= ignored_exceptions).until(EC.element_to_be_clickable((By.CSS_SELECTOR,"[id^='DERIVED_CLSRCH_SSR_CLASSNAME_LONG$']")))
                     except TimeoutException:
                         pass
-                           
+                        
                     if self.driver.find_elements_by_css_selector("#DERIVED_CLSMSG_ERROR_TEXT") :
-                        session_index = session_index + 1
+                        self.session_index = self.session_index + 1
                         continue
-                     
+                    
 
                     #start scraping spire for course information
                     try:
@@ -300,7 +311,7 @@ class SectionSpider(scrapy.Spider):
                                 yield self.load_courseitem(page1_selector, page2_selector, course_index)
                                 is_course = True
 
-                            yield self.load_sectionitem(page1_selector, page2_selector, term, is_open, clss, selector_index, term_index, course_index)
+                            yield self.load_sectionitem(page1_selector, page2_selector, term, is_open, clss, selector_index, self.term_index, course_index)
 
                             self.retryingFindClick_css("[id^='CLASS_SRCH_WRK2_SSR_PB_BACK']") #clicks on view search results to go back
 
@@ -316,19 +327,31 @@ class SectionSpider(scrapy.Spider):
                         except TimeoutException:
                             pass
                         course_index = course_index + 1
-                    
+                            
                     try:
                         WebDriverWait(self.driver, 10, ignored_exceptions = ignored_exceptions).until(EC.element_to_be_clickable((By.CSS_SELECTOR,"[id^='CLASS_SRCH_WRK2_SSR_PB_NEW_SEARCH']")))
                     except TimeoutException:
                         pass
                     self.retryingFindClick_css("[id^='CLASS_SRCH_WRK2_SSR_PB_NEW_SEARCH']")
                     try:
-                        WebDriverWait(self.driver, 10, ignored_exceptions= ignored_exceptions).until(EC.element_to_be_clickable((By.XPATH,'//*[@id="CLASS_SRCH_WRK2_SESSION_CODE$12$"]/option['+ str(session_index) +']')))
+                        WebDriverWait(self.driver, 10, ignored_exceptions= ignored_exceptions).until(EC.element_to_be_clickable((By.XPATH,'//*[@id="CLASS_SRCH_WRK2_SESSION_CODE$12$"]/option['+ str(self.session_index) +']')))
                     except TimeoutException:
                         pass
-                    session_index = session_index + 1
-                dept_index = dept_index + 1
-            term_index = term_index + 1
-        self.driver.quit()
-
-        #there are some obscure cases where some class attributes return null and is not entered into the datab
+                    self.session_index = self.session_index + 1
+                self.dept_index = self.dept_index + 1
+            self.term_index = self.term_index + 1 
+                # if(last_term != True):
+                #     raise TimeoutException
+                # else: 
+                #     break
+                
+            # except (TimeoutException, StaleElementReferenceException, NoSuchElementException):
+            #     self.doAgain = True
+            #     if(self.term_index - 1 >= 1):
+            #         self.term_index - 1
+            #     if(self.session_index - 1 >= 2):
+            #         self.session_index  = self.session_index - 1
+            #     if(self.dept_index - 1 >= 2):
+            #         self.dept_index = self.dept_index - 1
+            #     self.driver.refresh()
+            #     continue
